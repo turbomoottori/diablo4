@@ -118,12 +118,4 @@ public class playerMovement : MonoBehaviour {
         Dashing,
         Cooldown
     }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (dashState == DashState.Dashing && collision.gameObject.tag=="enemy") {
-            print("jees");
-        }
-    }
-
 }
