@@ -6,22 +6,29 @@ public class enemy : MonoBehaviour {
 
     public float destRadius;
     public float maxTimer;
+    private float timer;
     private Transform target;
     private UnityEngine.AI.NavMeshAgent agent;
-    private float timer;
+    Rigidbody rb;
 
-	// Use this for initialization
+    public bool isThrown;
+    public bool isAttacked;
+
 	void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         timer = maxTimer;
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    // Update is called once per frame
+    void Update () {
         //timer to change destination
         timer += Time.deltaTime;
-        if (timer >= maxTimer)
+        if (timer >= maxTimer && !isThrown && !isAttacked)
         {
             Vector3 newPos = RandomDestination(transform.position, destRadius, -1);
             agent.SetDestination(newPos);
@@ -37,4 +44,43 @@ public class enemy : MonoBehaviour {
         return navHit.position;
     }
 
+    public IEnumerator Thrown(Vector3 playerPos)
+    {
+        if (isThrown)
+            yield break;
+        isThrown = true;
+
+        Vector3 dir = transform.position - playerPos;
+        dir.x *= 10;
+        dir.z *= 10;
+        dir.y = 75f;
+
+        agent.enabled = false;
+        rb.isKinematic = false;
+        rb.AddForce(dir, ForceMode.Impulse);
+        yield return new WaitForSeconds(1f);
+        rb.isKinematic = true;
+        agent.enabled = true;
+        isThrown = false;
+    }
+
+    public IEnumerator Attacked(Vector3 playerPos)
+    {
+        if (isAttacked)
+            yield break;
+        isAttacked = true;
+
+        Vector3 dir = transform.position - playerPos;
+        dir.x *= 10;
+        dir.z *= 10;
+        dir.y = 75f;
+
+        agent.enabled = false;
+        rb.isKinematic = false;
+        rb.AddForce(dir, ForceMode.Impulse);
+        yield return new WaitForSeconds(1f);
+        rb.isKinematic = true;
+        agent.enabled = true;
+        isAttacked = false;
+    }
 }
