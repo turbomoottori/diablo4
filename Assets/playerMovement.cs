@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class playerMovement : MonoBehaviour {
-
+public class playerMovement : MonoBehaviour
+{
     public float speed;
     public float rotationSpeed;
     public float jumpForce;
@@ -22,13 +23,18 @@ public class playerMovement : MonoBehaviour {
     public float maxDash = 20f;
     Vector3 savedVelocity;
 
-    void Start () {
+    public GameObject sword;
+    float swordTime = 0.2f;
+    bool swordActive;
+
+    void Start()
+    {
         rb = GetComponent<Rigidbody>();
         canMove = true;
-	}
-	
-	void Update () {
+    }
 
+    void Update()
+    {
         //MOVEMENT
         if (canMove)
         {
@@ -56,12 +62,13 @@ public class playerMovement : MonoBehaviour {
             transform.LookAt(ray.GetPoint(distance));
         }
 
-       
+
 
         //JUMP AND DOUBLE JUMP
 
-        if (Input.GetButtonDown("Jump")) {
-            canJump = (Physics.Raycast(transform.position, Vector3.down, 1f));
+        if (Input.GetButtonDown("Jump"))
+        {
+            canJump = (Physics.Raycast(transform.position, Vector3.down, 1.5f));
 
             if (canJump)
             {
@@ -69,7 +76,8 @@ public class playerMovement : MonoBehaviour {
                 canDoubleJump = true;
                 rb.velocity = new Vector3(0, jumpForce, 0);
             }
-            else if (canDoubleJump) {
+            else if (canDoubleJump)
+            {
                 canDoubleJump = false;
                 rb.velocity = new Vector3(0, jumpForce, 0);
             }
@@ -97,6 +105,14 @@ public class playerMovement : MonoBehaviour {
                     rb.velocity = savedVelocity;
                     dashState = DashState.Cooldown;
                 }
+                GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemy");
+                for (int i = 0; i < enemies.Length; i++)
+                {
+                    if (Vector3.Distance(transform.position, enemies[i].transform.position) <= 5f)
+                    {
+                        StartCoroutine(enemies[i].GetComponent<enemy>().Thrown(transform.position));
+                    }
+                }
                 break;
             case DashState.Cooldown:
                 canMove = true;
@@ -109,7 +125,12 @@ public class playerMovement : MonoBehaviour {
                 break;
         }
 
+        //ATTACKING
 
+        if (Input.GetButtonDown("Fire2"))
+        {
+            StartCoroutine(Attack(Vector3.up, 90f, swordTime));
+        }
     }
 
     public enum DashState
@@ -117,5 +138,30 @@ public class playerMovement : MonoBehaviour {
         Ready,
         Dashing,
         Cooldown
+    }
+
+    IEnumerator Attack(Vector3 axis, float angle, float time)
+    {
+        if (swordActive)
+            yield break;
+        swordActive = true;
+        GameObject sw;
+        sw = Instantiate(sword, transform.position, transform.rotation);
+        sw.transform.parent = transform;
+        sw.transform.Rotate(0, -45, 0, Space.Self);
+        Quaternion from = sw.transform.rotation;
+        Quaternion to = sw.transform.rotation;
+        to *= Quaternion.Euler(axis * angle);
+        float t = 0f;
+        while (t < time)
+        {
+            sw.transform.rotation = Quaternion.Slerp(from, to, t / time);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        sw.transform.rotation = to;
+        Destroy(sw);
+        swordActive = false;
+        yield return null;
     }
 }
