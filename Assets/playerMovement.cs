@@ -26,11 +26,17 @@ public class playerMovement : MonoBehaviour
     public GameObject sword;
     float swordTime = 0.2f;
     bool swordActive;
+    bool slowTime;
+
+    ConstantForce fakeGrav;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         canMove = true;
+        slowTime = false;
+
+        fakeGrav = GetComponent<ConstantForce>();
     }
 
     void Update()
@@ -42,7 +48,10 @@ public class playerMovement : MonoBehaviour
             float moveVertical = Input.GetAxis("Vertical");
             Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
             movement.Normalize();
-            rb.MovePosition(transform.position + movement * speed);
+            Vector3 pos = transform.position;
+            Vector3 targ = transform.position + movement;
+            pos += (targ - pos) * Time.deltaTime * speed;
+            transform.position = pos;
         }
 
         //LOOKAT MOVEMENT DIRECTION
@@ -130,6 +139,37 @@ public class playerMovement : MonoBehaviour
         if (Input.GetButtonDown("Fire2"))
         {
             StartCoroutine(Attack(Vector3.up, 90f, swordTime));
+        }
+
+        //SLOW TIME
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SlowTime();
+        }
+    }
+
+    void SlowTime()
+    {
+        if (!slowTime)
+        {
+            Time.timeScale = 0.5f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            speed *= 2;
+            fakeGrav.relativeForce = Vector3.down * 500;
+            jumpForce *= 2;
+            swordTime /= 2;
+            slowTime = true;
+        }
+        else
+        {
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 0.02f;
+            speed /= 2;
+            fakeGrav.relativeForce = Vector3.zero;
+            jumpForce /= 2;
+            swordTime *= 2;
+            slowTime = false;
         }
     }
 

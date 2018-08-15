@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class cameraMovement : MonoBehaviour {
 
-    public GameObject player;
-    private Vector3 offset;
+    public Transform player;
+    public float camSpeed;
+    Vector3 offset;
 
 	// Use this for initialization
 	void Start () {
-        offset = transform.position - player.transform.position;
+        offset = transform.position - player.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = player.transform.position + offset;
+        Vector3 targetPos = player.position;
+        Vector3 targ = targetPos + offset;
+        Vector3 curr = transform.position;
+        curr += (targ - curr) * Time.deltaTime * camSpeed;
+        transform.position = curr;
 	}
 }

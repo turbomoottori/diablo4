@@ -523,7 +523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5339e49604f091449c10f1268d33539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1575445887}
+  player: {fileID: 1575445892}
+  camSpeed: 4
 --- !u!1 &538462548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,6 +1368,7 @@ GameObject:
   - component: {fileID: 1575445889}
   - component: {fileID: 1575445893}
   - component: {fileID: 1575445888}
+  - component: {fileID: 1575445894}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1469,12 +1471,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff530dad3b20548a5527f8619791c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.2
+  speed: 7
   rotationSpeed: 10
   jumpForce: 18
   dashForce: 50
   maxDash: 0.5
   sword: {fileID: 1481012630774066, guid: 78811a75ac4af9740a965bad9d825ab9, type: 2}
+--- !u!75 &1575445894
+ConstantForce:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1575445887}
+  m_Enabled: 1
+  m_Force: {x: 0, y: 0, z: 0}
+  m_RelativeForce: {x: 0, y: 0, z: 0}
+  m_Torque: {x: 0, y: 0, z: 0}
+  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1577232833
 GameObject:
   m_ObjectHideFlags: 0
