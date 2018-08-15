@@ -1,29 +1,8 @@
 fileFormatVersion: 2
-guid: f8d89fe8bae2a3644bb530d3e9563aa5
+guid: ece71ce7fd3e0dd49a385669f4142c85
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Cube
-    100002: Cylinder
-    100004: Cylinder_001
-    100006: //RootNode
-    400000: Cube
-    400002: Cylinder
-    400004: Cylinder_001
-    400006: //RootNode
-    2100000: unnamed
-    2100002: Material
-    2300000: Cube
-    2300002: Cylinder
-    2300004: Cylinder_001
-    3300000: Cube
-    3300002: Cylinder
-    3300004: Cylinder_001
-    4300000: Cylinder_001
-    4300002: Cylinder
-    4300004: Cube
-    7400000: Default Take
-    9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:

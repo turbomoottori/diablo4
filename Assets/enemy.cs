@@ -15,6 +15,7 @@ public class enemy : MonoBehaviour {
     public bool isThrown;
     public bool isAttacked;
     bool isGrounded;
+    GameObject player;
 
     void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -23,6 +24,7 @@ public class enemy : MonoBehaviour {
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("player");
         rb = GetComponent<Rigidbody>();
     }
 
@@ -95,11 +97,37 @@ public class enemy : MonoBehaviour {
         isAttacked = false;
     }
 
+    public IEnumerator AttackStun(Vector3 playerPos)
+    {
+        if (isAttacked)
+            yield break;
+        isAttacked = true;
+        Vector3 dir = transform.position - playerPos;
+        dir.x *= 10;
+        dir.z *= 10;
+        dir.y = 75f;
+
+        agent.enabled = false;
+        rb.isKinematic = false;
+        rb.AddForce(dir * 1.5f, ForceMode.Impulse);
+        yield return new WaitForSeconds(0.2f);
+        yield return new WaitUntil(() => isGrounded == true);
+        print("stun");
+        yield return new WaitForSeconds(2f);
+        print("stun ends");
+        rb.isKinematic = true;
+        agent.enabled = true;
+        isAttacked = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "sword")
         {
+            if (player.GetComponent<playerMovement>().attackNum == 1)
                StartCoroutine(Attacked(other.gameObject.transform.parent.position));
+            else if (player.GetComponent<playerMovement>().attackNum == 2)
+                StartCoroutine(AttackStun(other.gameObject.transform.parent.position));
         }
     }
 }

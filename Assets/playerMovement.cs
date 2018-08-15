@@ -18,15 +18,23 @@ public class playerMovement : MonoBehaviour
     bool canDoubleJump;
     bool canMove;
 
+    //dash variables
     DashState dashState;
     float dashTimer;
     public float maxDash = 20f;
     Vector3 savedVelocity;
 
+    //attack variables
     public GameObject sword;
     float swordTime = 0.2f;
+    float swordSpinTime = 0.5f;
     bool swordActive;
-    bool slowTime;
+    public int attackNum;
+
+    //slow motion variables
+    bool slowTime, slowmocd;
+    Vector3 gravForce = Vector3.down * 500;
+    UnityEngine.UI.Image slowmobar;
 
     ConstantForce fakeGrav;
 
@@ -35,8 +43,8 @@ public class playerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         canMove = true;
         slowTime = false;
-
         fakeGrav = GetComponent<ConstantForce>();
+        slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();
     }
 
     void Update()
@@ -50,7 +58,14 @@ public class playerMovement : MonoBehaviour
             movement.Normalize();
             Vector3 pos = transform.position;
             Vector3 targ = transform.position + movement;
-            pos += (targ - pos) * Time.deltaTime * speed;
+
+            //check if the player runs or walks
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                pos += (targ - pos) * Time.deltaTime * (speed * 1.5f);
+            }
+            else {
+                pos += (targ - pos) * Time.deltaTime * speed;
+            }
             transform.position = pos;
         }
 
@@ -65,13 +80,11 @@ public class playerMovement : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane hPlane = new Plane(Vector3.up, transform.position);
-        float distance = 0;
-        if (hPlane.Raycast(ray, out distance))
+        float direction = 0;
+        if (hPlane.Raycast(ray, out direction))
         {
-            transform.LookAt(ray.GetPoint(distance));
+            transform.LookAt(ray.GetPoint(direction));
         }
-
-
 
         //JUMP AND DOUBLE JUMP
 
@@ -97,9 +110,11 @@ public class playerMovement : MonoBehaviour
         switch (dashState)
         {
             case DashState.Ready:
-                var isDashKeyDown = Input.GetButtonDown("Fire1");
+                var isDashKeyDown = Input.GetKeyDown(KeyCode.Alpha2);
                 if (isDashKeyDown)
                 {
+                    if (slowTime)
+                        fakeGrav.relativeForce = Vector3.zero;
                     savedVelocity = rb.velocity;
                     rb.velocity = transform.forward * dashForce;
                     dashState = DashState.Dashing;
@@ -125,6 +140,10 @@ public class playerMovement : MonoBehaviour
                 break;
             case DashState.Cooldown:
                 canMove = true;
+                if (slowTime)
+                    fakeGrav.relativeForce = gravForce;
+                else
+                    fakeGrav.relativeForce = Vector3.zero;
                 dashTimer -= Time.deltaTime;
                 if (dashTimer <= 0)
                 {
@@ -136,40 +155,23 @@ public class playerMovement : MonoBehaviour
 
         //ATTACKING
 
-        if (Input.GetButtonDown("Fire2"))
+        if (Input.GetButtonDown("Fire1") && !swordActive)
         {
             StartCoroutine(Attack(Vector3.up, 90f, swordTime));
         }
 
+        // SPIN ATTACK 
+
+        if (Input.GetButtonDown("Fire2") && !swordActive)
+        {
+            StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+        }
+
         //SLOW TIME
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd)
         {
-            SlowTime();
-        }
-    }
-
-    void SlowTime()
-    {
-        if (!slowTime)
-        {
-            Time.timeScale = 0.5f;
-            Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            speed *= 2;
-            fakeGrav.relativeForce = Vector3.down * 500;
-            jumpForce *= 2;
-            swordTime /= 2;
-            slowTime = true;
-        }
-        else
-        {
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = 0.02f;
-            speed /= 2;
-            fakeGrav.relativeForce = Vector3.zero;
-            jumpForce /= 2;
-            swordTime *= 2;
-            slowTime = false;
+            StartCoroutine(SlowTime(3f, 6f));
         }
     }
 
@@ -180,11 +182,58 @@ public class playerMovement : MonoBehaviour
         Cooldown
     }
 
+    IEnumerator SlowTime(float time, float cooldownTime)
+    {
+        //set slow motion
+        slowTime = true;
+        slowmocd = true;
+        Time.timeScale = 0.5f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        speed *= 2;
+        fakeGrav.relativeForce = gravForce;
+        jumpForce *= 2;
+        swordTime /= 2;
+        swordSpinTime /= 2;
+
+        //duration 
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            slowmobar.fillAmount = 1 - t / time;
+            yield return null;
+        }
+        slowTime = false;
+
+        //set normal speed
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.02f;
+        speed /= 2;
+        fakeGrav.relativeForce = Vector3.zero;
+        jumpForce /= 2;
+        swordTime *= 2;
+        swordSpinTime *= 2;
+
+        //cooldown
+        t = 0f;
+        while (t < cooldownTime)
+        {
+            t += Time.deltaTime;
+            slowmobar.fillAmount = t / cooldownTime;
+            yield return null;
+        }
+
+        slowmocd = false;
+        yield return null;
+    }
+
+    //spawns, animates and destroys sword placeholder
     IEnumerator Attack(Vector3 axis, float angle, float time)
     {
         if (swordActive)
             yield break;
         swordActive = true;
+        attackNum = 1;
         GameObject sw;
         sw = Instantiate(sword, transform.position, transform.rotation);
         sw.transform.parent = transform;
@@ -200,6 +249,30 @@ public class playerMovement : MonoBehaviour
             yield return null;
         }
         sw.transform.rotation = to;
+        Destroy(sw);
+        swordActive = false;
+        yield return null;
+    }
+
+    IEnumerator AttackTwo(Vector3 axis, float time)
+    {
+        if (swordActive)
+            yield break;
+        swordActive = true;
+        attackNum = 2;
+        GameObject sw;
+        sw = Instantiate(sword, transform.position, transform.rotation);
+        sw.transform.parent = transform;
+        float from = transform.eulerAngles.y;
+        float to = from + 360f;
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            float yRot = Mathf.Lerp(from, to, t / time) % 360f;
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRot, transform.eulerAngles.z);
+            yield return null;
+        }
         Destroy(sw);
         swordActive = false;
         yield return null;
