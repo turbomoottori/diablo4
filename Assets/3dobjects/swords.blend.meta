@@ -3,6 +3,33 @@ guid: ece71ce7fd3e0dd49a385669f4142c85
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
+    100000: Plane
+    100002: sword1
+    100004: sword2
+    100006: sword3
+    100008: //RootNode
+    400000: Plane
+    400002: sword1
+    400004: sword2
+    400006: sword3
+    400008: //RootNode
+    2100000: unnamed
+    2100002: Material_1
+    2100004: Material_002
+    2300000: Plane
+    2300002: sword1
+    2300004: sword2
+    2300006: sword3
+    3300000: Plane
+    3300002: sword1
+    3300004: sword2
+    3300006: sword3
+    4300000: Plane
+    4300002: sword1
+    4300004: sword2
+    4300006: sword3
+    7400000: Default Take
+    9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
@@ -56,7 +83,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
     previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

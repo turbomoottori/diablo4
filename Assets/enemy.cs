@@ -17,6 +17,8 @@ public class enemy : MonoBehaviour {
     bool isGrounded;
     GameObject player;
 
+    int enemyHealth;
+
     void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         timer = maxTimer;
@@ -26,6 +28,7 @@ public class enemy : MonoBehaviour {
     {
         player = GameObject.FindGameObjectWithTag("player");
         rb = GetComponent<Rigidbody>();
+        enemyHealth = 50;
     }
 
     void Update () {
@@ -39,6 +42,9 @@ public class enemy : MonoBehaviour {
         }
 
         isGrounded = (Physics.Raycast(transform.position, Vector3.down, 1.3f, mask));
+
+        if (enemyHealth < 0)
+            StartCoroutine(Dead(0.5f));
     }
 
     public static Vector3 RandomDestination(Vector3 origin, float distance, int layermask) {
@@ -62,6 +68,7 @@ public class enemy : MonoBehaviour {
 
         agent.enabled = false;
         rb.isKinematic = false;
+        enemyHealth -= 5;
         rb.AddForce(dir, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
         yield return new WaitUntil(() => isGrounded == true);
@@ -83,8 +90,10 @@ public class enemy : MonoBehaviour {
         if (isGrounded)
         {
             rb.AddForce(dir, ForceMode.Impulse);
+            enemyHealth -= 5;
         } else {
             rb.AddForce(dir * 3, ForceMode.Impulse);
+            enemyHealth -= 10;
         }
 
         if (isAttacked)
@@ -109,15 +118,32 @@ public class enemy : MonoBehaviour {
 
         agent.enabled = false;
         rb.isKinematic = false;
+        enemyHealth -= 10;
         rb.AddForce(dir * 1.5f, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
         yield return new WaitUntil(() => isGrounded == true);
         print("stun");
         yield return new WaitForSeconds(2f);
+        yield return new WaitUntil(() => isGrounded == true);
         print("stun ends");
         rb.isKinematic = true;
         agent.enabled = true;
         isAttacked = false;
+    }
+
+    public IEnumerator Dead(float time)
+    {
+        yield return new WaitUntil(() => isGrounded == true);
+        Vector3 from = transform.localScale;
+        Vector3 to = Vector3.zero;
+        float t = 0f;
+        while (t < time)
+        {
+            transform.localScale = Vector3.Slerp(from, to, t / time);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        Destroy(this.gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

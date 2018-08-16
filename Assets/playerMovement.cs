@@ -10,6 +10,9 @@ public class playerMovement : MonoBehaviour
     public float jumpForce;
     public float dashForce;
 
+    public int health;
+    UnityEngine.UI.Image healthbar;
+
     private Rigidbody rb;
     Vector3 refVelocity;
     RaycastHit hit;
@@ -45,6 +48,7 @@ public class playerMovement : MonoBehaviour
         slowTime = false;
         fakeGrav = GetComponent<ConstantForce>();
         slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();
+        healthbar = GameObject.Find("Health").GetComponent<UnityEngine.UI.Image>();
     }
 
     void Update()

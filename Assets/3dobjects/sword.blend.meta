@@ -3,6 +3,87 @@ guid: 63cd0c2afb7f5e547ba6e00e183f4d9e
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
+    100000: Cube
+    100002: Cube_001
+    100004: Cube_002
+    100006: Cube_003
+    100008: Cube_004
+    100010: Cube_005
+    100012: Cylinder
+    100014: Cylinder_001
+    100016: Cylinder_002
+    100018: Cylinder_003
+    100020: Cylinder_004
+    100022: Cylinder_005
+    100024: Cylinder_006
+    100026: Plane
+    100028: //RootNode
+    100030: sword1
+    400000: Cube
+    400002: Cube_001
+    400004: Cube_002
+    400006: Cube_003
+    400008: Cube_004
+    400010: Cube_005
+    400012: Cylinder
+    400014: Cylinder_001
+    400016: Cylinder_002
+    400018: Cylinder_003
+    400020: Cylinder_004
+    400022: Cylinder_005
+    400024: Cylinder_006
+    400026: Plane
+    400028: //RootNode
+    400030: sword1
+    2100000: Material_001
+    2100002: Material_000
+    2300000: Cube
+    2300002: Cube_001
+    2300004: Cube_002
+    2300006: Cube_003
+    2300008: Cube_004
+    2300010: Cube_005
+    2300012: Cylinder
+    2300014: Cylinder_001
+    2300016: Cylinder_002
+    2300018: Cylinder_003
+    2300020: Cylinder_004
+    2300022: Cylinder_005
+    2300024: Cylinder_006
+    2300026: Plane
+    2300028: sword1
+    3300000: Cube
+    3300002: Cube_001
+    3300004: Cube_002
+    3300006: Cube_003
+    3300008: Cube_004
+    3300010: Cube_005
+    3300012: Cylinder
+    3300014: Cylinder_001
+    3300016: Cylinder_002
+    3300018: Cylinder_003
+    3300020: Cylinder_004
+    3300022: Cylinder_005
+    3300024: Cylinder_006
+    3300026: Plane
+    3300028: sword1
+    4300000: Cylinder_006
+    4300002: Cylinder_005
+    4300004: Cylinder_004
+    4300006: Cylinder_003
+    4300008: Cube_005
+    4300010: Cylinder_002
+    4300012: Plane
+    4300014: Cube_004
+    4300016: Cube_003
+    4300018: Cube_002
+    4300020: Cylinder_001
+    4300022: Cube_001
+    4300024: Cube
+    4300026: Cylinder
+    4300028: sword1
+    7400000: Default Take
+    9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
@@ -56,7 +137,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
     previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
