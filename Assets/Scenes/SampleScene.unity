@@ -2080,7 +2080,6 @@ MonoBehaviour:
   rotationSpeed: 10
   jumpForce: 18
   dashForce: 40
-  health: 0
   maxDash: 0.5
   sword: {fileID: 1481012630774066, guid: 78811a75ac4af9740a965bad9d825ab9, type: 2}
   attackNum: 0

@@ -10,7 +10,7 @@ public class playerMovement : MonoBehaviour
     public float jumpForce;
     public float dashForce;
 
-    public int health;
+    int health, maxHP;
     UnityEngine.UI.Image healthbar;
 
     private Rigidbody rb;
@@ -41,6 +41,12 @@ public class playerMovement : MonoBehaviour
 
     ConstantForce fakeGrav;
 
+    private void Awake()
+    {
+        maxHP = 50;
+        health = maxHP;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -53,6 +59,14 @@ public class playerMovement : MonoBehaviour
 
     void Update()
     {
+        // HEALTH
+
+        healthbar.fillAmount = (float)health / (float)maxHP;
+        if (health <= 0)
+        {
+            print("kuolee");
+        }
+
         //MOVEMENT
         if (canMove)
         {
@@ -280,5 +294,13 @@ public class playerMovement : MonoBehaviour
         Destroy(sw);
         swordActive = false;
         yield return null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "enemysword")
+        {
+            health -= 2;
+        }
     }
 }

@@ -206,6 +206,8 @@ MonoBehaviour:
     m_Bits: 311
   isThrown: 0
   isAttacked: 0
+  healthBar: {fileID: 1474540235049702, guid: c5c166de04886b540a14f3ac47f29e13, type: 2}
+  sword: {fileID: 1999600413507056, guid: e0287a2d40c471444b32456c0c3f2ca4, type: 2}
 --- !u!136 &136678021330627062
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -229,10 +231,10 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5000001
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 10
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 999
+  m_StoppingDistance: 1.6
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
