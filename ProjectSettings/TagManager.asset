@@ -9,6 +9,7 @@ TagManager:
   - sword
   - player
   - enemysword
+  - roof
   layers:
   - Default
   - TransparentFX

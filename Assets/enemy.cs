@@ -47,6 +47,20 @@ public class enemy : MonoBehaviour {
         hostile = false;
     }
 
+    float Distance(Vector3 st, Vector3 en)
+    {
+        float d = 0.0f;
+
+        float dx = st.x - en.x;
+        float dy = st.y - en.y;
+        float dz = st.z - en.z;
+
+        d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
+
+
+        return d;
+    }
+
     void Update () {
         //timer to change destination
         timer += Time.deltaTime;
@@ -62,7 +76,12 @@ public class enemy : MonoBehaviour {
         if (hostile)
         {
             agent.SetDestination(player.transform.position);
-            if (agent.remainingDistance <= 1.6f)
+
+            float dist = Distance(player.transform.position, agent.transform.position);
+
+
+            
+            if (dist <= 1.6f)
             {
                 StartCoroutine(Attack(Vector3.up, 90f, 0.5f));
             } 
