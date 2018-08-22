@@ -41,6 +41,10 @@ public class playerMovement : MonoBehaviour
 
     ConstantForce fakeGrav;
 
+    int money = 0;
+    int moneyValue = 10;
+    UnityEngine.UI.Text moneyui;
+
     private void Awake()
     {
         maxHP = 50;
@@ -55,6 +59,10 @@ public class playerMovement : MonoBehaviour
         fakeGrav = GetComponent<ConstantForce>();
         slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();
         healthbar = GameObject.Find("Health").GetComponent<UnityEngine.UI.Image>();
+        moneyui = GameObject.Find("MoneyText").GetComponent<UnityEngine.UI.Text>();
+
+        moneyui.text = money.ToString();
+        moneyui.gameObject.SetActive(false);
     }
 
     void Update()
@@ -296,11 +304,39 @@ public class playerMovement : MonoBehaviour
         yield return null;
     }
 
+    //SHOW AND UPDATE MONEY UI
+
+    IEnumerator AddMoney(int tempMoney, float time)
+    {
+        moneyui.gameObject.SetActive(true);
+        money += moneyValue;
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            moneyui.text = tempMoney.ToString() + " + " + (money - tempMoney).ToString();
+            yield return null;
+        }
+        moneyui.text = money.ToString();
+        yield return new WaitForSeconds(2f);
+        moneyui.gameObject.SetActive(false);
+        yield return null;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "enemysword")
         {
             health -= 2;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "coin")
+        {
+            StartCoroutine(AddMoney(money, 3f));
+            Destroy(collision.gameObject);
         }
     }
 }

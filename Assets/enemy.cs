@@ -29,6 +29,9 @@ public class enemy : MonoBehaviour {
     public GameObject sword;
     bool hostile;
 
+    public GameObject money;
+    public int minMoney, maxMoney;
+
     void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         maxHP = 50;
@@ -37,6 +40,7 @@ public class enemy : MonoBehaviour {
         hpb.transform.SetParent(GameObject.Find("Canvas").transform, false);
         hpTimer = 5;
         hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>();
+        
 	}
 
     void Start()
@@ -208,6 +212,15 @@ public class enemy : MonoBehaviour {
         yield return new WaitUntil(() => isGrounded == true);
         Vector3 from = transform.localScale;
         Vector3 to = Vector3.zero;
+
+        GameObject coin;
+
+        for(var i = 0; i < Random.Range(minMoney,maxMoney); i++)
+        {
+            coin = Instantiate(money, transform.position + Vector3.up * 2, transform.rotation);
+            coin.GetComponent<Rigidbody>().AddForce(Vector3.up, ForceMode.Impulse);
+        }
+
         float t = 0f;
         while (t < time)
         {
