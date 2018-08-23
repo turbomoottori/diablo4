@@ -17,9 +17,7 @@ public class playerMovement : MonoBehaviour
     Vector3 refVelocity;
     RaycastHit hit;
 
-    bool canJump;
-    bool canDoubleJump;
-    bool canMove;
+    bool canJump, canDoubleJump, canMove;
 
     //dash variables
     DashState dashState;
@@ -40,10 +38,14 @@ public class playerMovement : MonoBehaviour
     UnityEngine.UI.Image slowmobar;
 
     ConstantForce fakeGrav;
+    public bool paused = false;
+    GameObject pauseScreen;
 
+    //money variables
     int money = 0;
     int moneyValue = 10;
     UnityEngine.UI.Text moneyui;
+    bool uiActive = false;
 
     private void Awake()
     {
@@ -60,6 +62,8 @@ public class playerMovement : MonoBehaviour
         slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();
         healthbar = GameObject.Find("Health").GetComponent<UnityEngine.UI.Image>();
         moneyui = GameObject.Find("MoneyText").GetComponent<UnityEngine.UI.Text>();
+        pauseScreen = GameObject.Find("PauseScreen");
+        pauseScreen.SetActive(false);
 
         moneyui.text = money.ToString();
         moneyui.gameObject.SetActive(false);
@@ -75,129 +79,137 @@ public class playerMovement : MonoBehaviour
             print("kuolee");
         }
 
-        //MOVEMENT
-        if (canMove)
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Pause();
+
+        if (!paused)
         {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-            Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
-            movement.Normalize();
-            Vector3 pos = transform.position;
-            Vector3 targ = transform.position + movement;
-
-            //check if the player runs or walks
-            if (Input.GetKey(KeyCode.LeftShift)) {
-                pos += (targ - pos) * Time.deltaTime * (speed * 1.5f);
-            }
-            else {
-                pos += (targ - pos) * Time.deltaTime * speed;
-            }
-            transform.position = pos;
-        }
-
-        //LOOKAT MOVEMENT DIRECTION
-
-        /*if (movement != Vector3.zero) {
-            Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-        }*/
-
-        //LOOKAT MOUSE POSITION
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane hPlane = new Plane(Vector3.up, transform.position);
-        float direction = 0;
-        if (hPlane.Raycast(ray, out direction))
-        {
-            transform.LookAt(ray.GetPoint(direction));
-        }
-
-        //JUMP AND DOUBLE JUMP
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            canJump = (Physics.Raycast(transform.position, Vector3.down, 1.5f));
-
-            if (canJump)
+            //MOVEMENT
+            if (canMove)
             {
-                canJump = false;
-                canDoubleJump = true;
-                rb.velocity = new Vector3(0, jumpForce, 0);
-            }
-            else if (canDoubleJump)
-            {
-                canDoubleJump = false;
-                rb.velocity = new Vector3(0, jumpForce, 0);
-            }
-        }
+                float moveHorizontal = Input.GetAxis("Horizontal");
+                float moveVertical = Input.GetAxis("Vertical");
+                Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
+                movement.Normalize();
+                Vector3 pos = transform.position;
+                Vector3 targ = transform.position + movement;
 
-        //DASHING
-
-        switch (dashState)
-        {
-            case DashState.Ready:
-                var isDashKeyDown = Input.GetKeyDown(KeyCode.Alpha2);
-                if (isDashKeyDown)
+                //check if the player runs or walks
+                if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    if (slowTime)
-                        fakeGrav.relativeForce = Vector3.zero;
-                    savedVelocity = rb.velocity;
-                    rb.velocity = transform.forward * dashForce;
-                    dashState = DashState.Dashing;
+                    pos += (targ - pos) * Time.deltaTime * (speed * 1.5f);
                 }
-                break;
-            case DashState.Dashing:
-                canMove = false;
-                dashTimer += Time.deltaTime * 3;
-                if (dashTimer >= maxDash)
-                {
-                    dashTimer = maxDash;
-                    rb.velocity = savedVelocity;
-                    dashState = DashState.Cooldown;
-                }
-                GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemy");
-                for (int i = 0; i < enemies.Length; i++)
-                {
-                    if (Vector3.Distance(transform.position, enemies[i].transform.position) <= 5f)
-                    {
-                        StartCoroutine(enemies[i].GetComponent<enemy>().Thrown(transform.position));
-                    }
-                }
-                break;
-            case DashState.Cooldown:
-                canMove = true;
-                if (slowTime)
-                    fakeGrav.relativeForce = gravForce;
                 else
-                    fakeGrav.relativeForce = Vector3.zero;
-                dashTimer -= Time.deltaTime;
-                if (dashTimer <= 0)
                 {
-                    dashTimer = 0;
-                    dashState = DashState.Ready;
+                    pos += (targ - pos) * Time.deltaTime * speed;
                 }
-                break;
-        }
+                transform.position = pos;
+            }
 
-        //ATTACKING
+            //LOOKAT MOVEMENT DIRECTION
 
-        if (Input.GetButtonDown("Fire1") && !swordActive)
-        {
-            StartCoroutine(Attack(Vector3.up, 90f, swordTime));
-        }
+            /*if (movement != Vector3.zero) {
+                Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            }*/
 
-        // SPIN ATTACK 
+            //LOOKAT MOUSE POSITION
 
-        if (Input.GetButtonDown("Fire2") && !swordActive)
-        {
-            StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
-        }
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Plane hPlane = new Plane(Vector3.up, transform.position);
+            float direction = 0;
+            if (hPlane.Raycast(ray, out direction))
+            {
+                transform.LookAt(ray.GetPoint(direction));
+            }
 
-        //SLOW TIME
+            //JUMP AND DOUBLE JUMP
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd)
-        {
-            StartCoroutine(SlowTime(3f, 6f));
+            if (Input.GetButtonDown("Jump"))
+            {
+                canJump = (Physics.Raycast(transform.position, Vector3.down, 1.5f));
+
+                if (canJump)
+                {
+                    canJump = false;
+                    canDoubleJump = true;
+                    rb.velocity = new Vector3(0, jumpForce, 0);
+                }
+                else if (canDoubleJump)
+                {
+                    canDoubleJump = false;
+                    rb.velocity = new Vector3(0, jumpForce, 0);
+                }
+            }
+
+            //DASHING
+
+            switch (dashState)
+            {
+                case DashState.Ready:
+                    var isDashKeyDown = Input.GetKeyDown(KeyCode.Alpha2);
+                    if (isDashKeyDown)
+                    {
+                        if (slowTime)
+                            fakeGrav.relativeForce = Vector3.zero;
+                        savedVelocity = rb.velocity;
+                        rb.velocity = transform.forward * dashForce;
+                        dashState = DashState.Dashing;
+                    }
+                    break;
+                case DashState.Dashing:
+                    canMove = false;
+                    dashTimer += Time.deltaTime * 3;
+                    if (dashTimer >= maxDash)
+                    {
+                        dashTimer = maxDash;
+                        rb.velocity = savedVelocity;
+                        dashState = DashState.Cooldown;
+                    }
+                    GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemy");
+                    for (int i = 0; i < enemies.Length; i++)
+                    {
+                        if (Vector3.Distance(transform.position, enemies[i].transform.position) <= 5f)
+                        {
+                            StartCoroutine(enemies[i].GetComponent<enemy>().Thrown(transform.position));
+                        }
+                    }
+                    break;
+                case DashState.Cooldown:
+                    canMove = true;
+                    if (slowTime)
+                        fakeGrav.relativeForce = gravForce;
+                    else
+                        fakeGrav.relativeForce = Vector3.zero;
+                    dashTimer -= Time.deltaTime;
+                    if (dashTimer <= 0)
+                    {
+                        dashTimer = 0;
+                        dashState = DashState.Ready;
+                    }
+                    break;
+            }
+
+            //ATTACKING
+
+            if (Input.GetButtonDown("Fire1") && !swordActive)
+            {
+                StartCoroutine(Attack(Vector3.up, 90f, swordTime));
+            }
+
+            // SPIN ATTACK 
+
+            if (Input.GetButtonDown("Fire2") && !swordActive)
+            {
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+            }
+
+            //SLOW TIME
+
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused)
+            {
+                StartCoroutine(SlowTime(3f, 6f));
+            }
         }
     }
 
@@ -206,6 +218,30 @@ public class playerMovement : MonoBehaviour
         Ready,
         Dashing,
         Cooldown
+    }
+
+    public void Pause()
+    {
+        if (!paused)
+        {
+            paused = true;
+            pauseScreen.SetActive(true);
+            Time.timeScale = 0;
+        } else
+        {
+            paused = false;
+            if (slowTime)
+            {
+                Time.timeScale = 0.5f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            } else
+            {
+                Time.timeScale = 1;
+                Time.fixedDeltaTime = 0.02f;
+            }
+
+            pauseScreen.SetActive(false);
+        }
     }
 
     IEnumerator SlowTime(float time, float cooldownTime)
@@ -308,8 +344,10 @@ public class playerMovement : MonoBehaviour
 
     IEnumerator AddMoney(int tempMoney, float time)
     {
+        if (uiActive)
+            yield break;
+        uiActive = true;
         moneyui.gameObject.SetActive(true);
-        money += moneyValue;
         float t = 0f;
         while (t < time)
         {
@@ -320,6 +358,7 @@ public class playerMovement : MonoBehaviour
         moneyui.text = money.ToString();
         yield return new WaitForSeconds(2f);
         moneyui.gameObject.SetActive(false);
+        uiActive = false;
         yield return null;
     }
 
@@ -336,6 +375,7 @@ public class playerMovement : MonoBehaviour
         if (collision.gameObject.tag == "coin")
         {
             StartCoroutine(AddMoney(money, 3f));
+            money += moneyValue;
             Destroy(collision.gameObject);
         }
     }
