@@ -4,30 +4,40 @@ using UnityEngine;
 
 public class npcSpeech : MonoBehaviour {
 
+    [TextArea]
     public string speaks;
     public int pages;
-    GameObject player, globals;
+    GameObject player, globals, e;
     float dist;
+    public bool wantsToTalk = true;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         player = GameObject.Find("Player");
         globals = GameObject.Find("Globals");
-	}
+
+        e = Instantiate(Resources.Load("interact", typeof(GameObject))) as GameObject;
+        e.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        
+    }
 	
 	// Update is called once per frame
 	void Update () {
         dist = Distance(player.transform.position, transform.position);
+        e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
 
         //player is close enough to interact
-        if (dist < 2f)
+        if (wantsToTalk && dist < 2f)
         {
-            print("can interact");
+            e.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E) && globals.GetComponent<menus>().txtActive == false)
             {
                 globals.GetComponent<menus>().ChangeText(speaks, pages);
                 globals.GetComponent<menus>().txtActive = true;
             }
+        } else
+        {
+            e.SetActive(false);
         }
 	}
 

@@ -26,21 +26,20 @@ public class playerMovement : MonoBehaviour
     Vector3 savedVelocity;
 
     //attack variables
-    public GameObject sword;
+    GameObject sword;
     float swordTime = 0.2f;
     float swordSpinTime = 0.5f;
     bool swordActive;
     public int attackNum;
 
     //slow motion variables
-    bool slowTime, slowmocd;
+    public bool slowTime;
+    bool slowmocd;
     Vector3 gravForce = Vector3.down * 500;
     UnityEngine.UI.Image slowmobar;
 
     ConstantForce fakeGrav;
     public bool paused = false;
-    public bool talks = false;
-    GameObject pauseScreen;
 
     //money variables
     int money = 0;
@@ -63,9 +62,7 @@ public class playerMovement : MonoBehaviour
         slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();
         healthbar = GameObject.Find("Health").GetComponent<UnityEngine.UI.Image>();
         moneyui = GameObject.Find("MoneyText").GetComponent<UnityEngine.UI.Text>();
-        pauseScreen = GameObject.Find("PauseScreen");
-        pauseScreen.SetActive(false);
-
+        sword = Resources.Load<GameObject>("sword");
         moneyui.text = money.ToString();
         moneyui.gameObject.SetActive(false);
     }
@@ -79,9 +76,6 @@ public class playerMovement : MonoBehaviour
         {
             print("kuolee");
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape) && !talks)
-            Pause();
 
         if (!paused)
         {
@@ -219,30 +213,6 @@ public class playerMovement : MonoBehaviour
         Ready,
         Dashing,
         Cooldown
-    }
-
-    public void Pause()
-    {
-        if (!paused)
-        {
-            paused = true;
-            pauseScreen.SetActive(true);
-            Time.timeScale = 0;
-        } else
-        {
-            paused = false;
-            if (slowTime)
-            {
-                Time.timeScale = 0.5f;
-                Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            } else
-            {
-                Time.timeScale = 1;
-                Time.fixedDeltaTime = 0.02f;
-            }
-
-            pauseScreen.SetActive(false);
-        }
     }
 
     IEnumerator SlowTime(float time, float cooldownTime)

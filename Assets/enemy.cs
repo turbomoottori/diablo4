@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour {
 
-    public float destRadius;
-    public float maxTimer;
+    public float destRadius, maxTimer;
     private float timer;
     private Transform target;
     private UnityEngine.AI.NavMeshAgent agent;
     Rigidbody rb;
     public LayerMask mask;
 
-    public bool isThrown;
-    public bool isAttacked;
+    public bool isThrown, isAttacked;
     bool isGrounded;
     GameObject player;
 
-    public GameObject healthBar;
     GameObject hpb;
     UnityEngine.UI.Image hp;
     Transform hpPos;
@@ -26,21 +23,22 @@ public class enemy : MonoBehaviour {
     bool dying = false;
 
     bool swordActive = false;
-    public GameObject sword;
+    GameObject sword;
     bool hostile;
 
-    public GameObject money;
+    GameObject money;
     public int minMoney, maxMoney;
 
     void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         maxHP = 50;
         timer = maxTimer;
-        hpb = Instantiate(healthBar);
+        hpb = Instantiate(Resources.Load("enemyhealth", typeof(GameObject))) as GameObject;
         hpb.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        money = Resources.Load<GameObject>("coin");
+        sword = Resources.Load<GameObject>("sword");
         hpTimer = 5;
-        hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>();
-        
+        hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>(); 
 	}
 
     void Start()
@@ -79,11 +77,12 @@ public class enemy : MonoBehaviour {
 
         if (hostile)
         {
+            if (GetComponent<npcSpeech>() != null) {
+                GetComponent<npcSpeech>().wantsToTalk = false;
+            }
             agent.SetDestination(player.transform.position);
 
             float dist = Distance(player.transform.position, agent.transform.position);
-
-
             
             if (dist <= 1.6f)
             {

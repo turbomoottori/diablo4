@@ -5,10 +5,14 @@ using UnityEngine;
 public class menus : MonoBehaviour {
 
     GameObject player, optionsMenu, pauseMenu, speech, speechBox;
-    UnityEngine.UI.Text txt;
-    float moveBox = 126f;
+    UnityEngine.UI.Text txt, pauseTitle, volumeVal;
+    float moveBox = 176f;
     int page, maxPages;
     public bool txtActive = false;
+
+    GameObject pauseScreen;
+    bool pauseMenuActive, talks, optionsActive = false;
+    UnityEngine.UI.Slider volumeSlider;
 
     // Use this for initialization
     void Start () {
@@ -17,32 +21,60 @@ public class menus : MonoBehaviour {
         pauseMenu = GameObject.Find("GeneralPause");
         speech = GameObject.Find("SpeechText");
         speechBox = GameObject.Find("SpeechBox");
+        pauseScreen = GameObject.Find("PauseScreen");
+
+        pauseTitle = GameObject.Find("PauseTitle").GetComponent<UnityEngine.UI.Text>();
+        volumeSlider = GameObject.Find("VolumeControl").GetComponent<UnityEngine.UI.Slider>();
         txt = speech.GetComponent<UnityEngine.UI.Text>();
-        optionsMenu.SetActive(false);
+        volumeVal = GameObject.Find("VolumeValue").GetComponent<UnityEngine.UI.Text>();
+
         page = 0;
         maxPages = 1;
+
+        optionsMenu.SetActive(false);
         speechBox.SetActive(false);
-	}
+        pauseScreen.SetActive(false);
+    }
 
     private void Update()
     {
         if (txtActive && Input.GetKeyDown(KeyCode.E))
-            ScrollText();   
+            ScrollText();
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !talks)
+        {
+            if (optionsActive)
+            {
+                Back();
+            } else
+            {
+                pauseMenuActive = true;
+                Pause();
+            }
+        }
+
+        AudioListener.volume = volumeSlider.value / 100;
+        volumeVal.text = volumeSlider.value.ToString();
     }
 
     public void Continue()
     {
-        player.GetComponent<playerMovement>().Pause();
+        Pause();
     }
 
+    //open options menu
     public void Options()
     {
+        optionsActive = true;
+        pauseTitle.text = "OPTIONS";
         pauseMenu.SetActive(false);
         optionsMenu.SetActive(true);
     }
 
     public void Back()
     {
+        optionsActive = false;
+        pauseTitle.text = "PAUSED";
         pauseMenu.SetActive(true);
         optionsMenu.SetActive(false);
     }
@@ -52,6 +84,7 @@ public class menus : MonoBehaviour {
         print("save and exit");
     }
 
+    //change text to whatever npc is saying
     public void ChangeText(string NPCtext, int pages)
     {
         txt.text = NPCtext;
@@ -69,10 +102,12 @@ public class menus : MonoBehaviour {
             box.offsetMin = Vector2.zero;
             txtActive = false;
             page = 0;
-            player.GetComponent<playerMovement>().talks = false;
+            talks = false;
+            Pause();
         } else if (page == 0) {
             speechBox.SetActive(true);
-            player.GetComponent<playerMovement>().talks = true;
+            talks = true;
+            Pause();
             page += 1;
         } else
         {
@@ -81,6 +116,42 @@ public class menus : MonoBehaviour {
             box.anchoredPosition = nextPos;
             box.offsetMin = Vector2.zero;
             page += 1;
+        }
+    }
+
+    //toggle pause 
+    public void Pause()
+    {
+        if (player.GetComponent<playerMovement>().paused == false)
+        {
+            player.GetComponent<playerMovement>().paused = true;
+
+            //activate pause menu
+            if (pauseMenuActive)
+                pauseScreen.SetActive(true);
+
+            Time.timeScale = 0;
+        }
+        else
+        {
+            player.GetComponent<playerMovement>().paused = false;
+            if (player.GetComponent<playerMovement>().slowTime)
+            {
+                Time.timeScale = 0.5f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                Time.fixedDeltaTime = 0.02f;
+            }
+
+            //deactivate pause menu
+            if (pauseMenuActive)
+            {
+                pauseScreen.SetActive(false);
+                pauseMenuActive = false;
+            }
         }
     }
 }
