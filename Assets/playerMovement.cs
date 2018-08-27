@@ -39,6 +39,7 @@ public class playerMovement : MonoBehaviour
 
     ConstantForce fakeGrav;
     public bool paused = false;
+    public bool talks = false;
     GameObject pauseScreen;
 
     //money variables
@@ -79,7 +80,7 @@ public class playerMovement : MonoBehaviour
             print("kuolee");
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !talks)
             Pause();
 
         if (!paused)
