@@ -2,54 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class enemy : MonoBehaviour {
 
+    //navmesh variables
     public float destRadius, maxTimer;
     private float timer;
     private Transform target;
-    private UnityEngine.AI.NavMeshAgent agent;
+    protected UnityEngine.AI.NavMeshAgent agent;
     Rigidbody rb;
     public LayerMask mask;
 
-    public bool isThrown, isAttacked;
-    bool isGrounded;
-    GameObject player;
+    Vector3 lastPos, vel;
+    bool isThrown, isAttacked, isGrounded;
+    protected GameObject player, hpb, money;
 
-    GameObject hpb;
+    //hp variables
     UnityEngine.UI.Image hp;
     Transform hpPos;
-    int enemyHealth, maxHP;
-    float hpTimer;
-    bool dying = false;
+    int enemyHealth;
+    public int maxHP;
+    float hpTimer = 5f;
 
-    bool swordActive = false;
-    GameObject sword;
-    bool hostile;
+    protected bool dying, hostile = false;
 
-    GameObject money;
     public int minMoney, maxMoney;
 
-    void OnEnable () {
+    protected virtual void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        maxHP = 50;
         timer = maxTimer;
         hpb = Instantiate(Resources.Load("enemyhealth", typeof(GameObject))) as GameObject;
         hpb.transform.SetParent(GameObject.Find("Canvas").transform, false);
         money = Resources.Load<GameObject>("coin");
-        sword = Resources.Load<GameObject>("sword");
-        hpTimer = 5;
         hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>(); 
 	}
 
-    void Start()
+    protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("player");
         rb = GetComponent<Rigidbody>();
         enemyHealth = maxHP;
         hostile = false;
+        lastPos = transform.position;
     }
 
-    float Distance(Vector3 st, Vector3 en)
+    public float Distance(Vector3 st, Vector3 en)
     {
         float d = 0.0f;
 
@@ -63,7 +60,7 @@ public class enemy : MonoBehaviour {
         return d;
     }
 
-    void Update () {
+    protected virtual void Update () {
         //timer to change destination
         timer += Time.deltaTime;
         if (timer >= maxTimer && !hostile)
@@ -74,33 +71,48 @@ public class enemy : MonoBehaviour {
         }
 
         //ATTACK PLAYER
-
         if (hostile)
         {
+            //disables interaction
             if (GetComponent<npcSpeech>() != null) {
                 GetComponent<npcSpeech>().wantsToTalk = false;
             }
-            agent.SetDestination(player.transform.position);
 
-            float dist = Distance(player.transform.position, agent.transform.position);
-            
-            if (dist <= 1.6f)
-            {
-                StartCoroutine(Attack(Vector3.up, 90f, 0.5f));
-            } 
+            //follows player
+            agent.SetDestination(player.transform.position);
         }
 
         //SHOW HP BAR
-
         hpTimer += Time.deltaTime;
         if (hpTimer >= 2f)
             HideHP();
 
+        //raycast to ground
         isGrounded = (Physics.Raycast(transform.position, Vector3.down, 1.3f, mask));
 
+        //check movement direction
+        vel = transform.position - lastPos;
+        lastPos = transform.position;
+
+        //jump and fall
+        if(agent.isOnOffMeshLink)
+        {
+            if (vel.y > 0.1f)
+            {
+                print("up");
+                //jump animation here
+            } else if (vel.y < -0.1f)
+            {
+                print("down");
+                //fall animation here
+            }
+        }
+
+        //DYING
         if (enemyHealth <= 0)
             StartCoroutine(Dead(0.5f));
 
+        //enemy health bar
         hpb.transform.position = Camera.main.WorldToScreenPoint(transform.position);
         hp.fillAmount = (float)enemyHealth / (float)maxHP;
     }
@@ -124,6 +136,7 @@ public class enemy : MonoBehaviour {
         return navHit.position;
     }
 
+    //dashed
     public IEnumerator Thrown(Vector3 playerPos)
     {
         if (isThrown)
@@ -147,6 +160,7 @@ public class enemy : MonoBehaviour {
         isThrown = false;
     }
 
+    //attacked with basic attack
     public IEnumerator Attacked(Vector3 playerPos)
     {
         hostile = true;
@@ -177,6 +191,7 @@ public class enemy : MonoBehaviour {
         isAttacked = false;
     }
 
+    //attacked with stun attack
     public IEnumerator AttackStun(Vector3 playerPos)
     {
         if (isAttacked)
@@ -203,6 +218,7 @@ public class enemy : MonoBehaviour {
         isAttacked = false;
     }
 
+    //dying
     public IEnumerator Dead(float time)
     {
         if (dying)
@@ -229,31 +245,6 @@ public class enemy : MonoBehaviour {
         }
         Destroy(hpb);
         Destroy(this.gameObject);
-    }
-
-    IEnumerator Attack(Vector3 axis, float angle, float time)
-    {
-        if (swordActive)
-            yield break;
-        swordActive = true;
-        GameObject sw;
-        sw = Instantiate(sword, transform.position, transform.rotation);
-        sw.transform.parent = transform;
-        sw.transform.Rotate(0, -45, 0, Space.Self);
-        Quaternion from = sw.transform.rotation;
-        Quaternion to = sw.transform.rotation;
-        to *= Quaternion.Euler(axis * angle);
-        float t = 0f;
-        while (t < time)
-        {
-            sw.transform.rotation = Quaternion.Slerp(from, to, t / time);
-            t += Time.deltaTime;
-            yield return null;
-        }
-        sw.transform.rotation = to;
-        Destroy(sw);
-        swordActive = false;
-        yield return null;
     }
 
     private void OnTriggerEnter(Collider other)

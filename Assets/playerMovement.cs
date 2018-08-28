@@ -337,7 +337,15 @@ public class playerMovement : MonoBehaviour
     {
         if (other.gameObject.tag == "enemysword")
         {
-            health -= 2;
+            if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 1)
+            {
+                health -= 1;
+                print("regular attack");
+            } else if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 2)
+            {
+                health -= 2;
+                print("stun attack");
+            }
         }
     }
 
