@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
-    public float speed;
-    public float rotationSpeed;
-    public float jumpForce;
-    public float dashForce;
+    public float speed, rotationSpeed, jumpForce, dashForce;
+    public bool runs, dashes;
 
     int health, maxHP;
     UnityEngine.UI.Image healthbar;
@@ -20,7 +18,7 @@ public class playerMovement : MonoBehaviour
     bool canJump, canDoubleJump, canMove;
 
     //dash variables
-    DashState dashState;
+    public DashState dashState;
     float dashTimer;
     public float maxDash = 20f;
     Vector3 savedVelocity;
@@ -93,10 +91,12 @@ public class playerMovement : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
                     pos += (targ - pos) * Time.deltaTime * (speed * 1.5f);
+                    runs = true;
                 }
                 else
                 {
                     pos += (targ - pos) * Time.deltaTime * speed;
+                    runs = false;
                 }
                 transform.position = pos;
             }
@@ -154,6 +154,7 @@ public class playerMovement : MonoBehaviour
                     break;
                 case DashState.Dashing:
                     canMove = false;
+                    dashes = true;
                     dashTimer += Time.deltaTime * 3;
                     if (dashTimer >= maxDash)
                     {
@@ -172,6 +173,7 @@ public class playerMovement : MonoBehaviour
                     break;
                 case DashState.Cooldown:
                     canMove = true;
+                    dashes = false;
                     if (slowTime)
                         fakeGrav.relativeForce = gravForce;
                     else
