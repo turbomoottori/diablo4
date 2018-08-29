@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 4332113169886994}
   - component: {fileID: 95790471025323362}
   m_Layer: 0
-  m_Name: New Prefab
+  m_Name: portaat_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

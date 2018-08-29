@@ -7,14 +7,16 @@ public class enemy : MonoBehaviour {
 
     //navmesh variables
     public float destRadius, maxTimer;
+    float minTimer = 2f;
+    float changeTimer;
     private float timer;
     private Transform target;
     protected UnityEngine.AI.NavMeshAgent agent;
-    Rigidbody rb;
+    protected Rigidbody rb;
     public LayerMask mask;
 
     Vector3 lastPos, vel;
-    bool isThrown, isAttacked, isGrounded;
+    protected bool isThrown, isAttacked, isGrounded;
     protected GameObject player, hpb, money;
 
     //hp variables
@@ -44,6 +46,8 @@ public class enemy : MonoBehaviour {
         enemyHealth = maxHP;
         hostile = false;
         lastPos = transform.position;
+        changeTimer = Random.Range(minTimer, maxTimer);
+
     }
 
     public float Distance(Vector3 st, Vector3 en)
@@ -63,7 +67,7 @@ public class enemy : MonoBehaviour {
     protected virtual void Update () {
         //timer to change destination
         timer += Time.deltaTime;
-        if (timer >= maxTimer && !hostile)
+        if (timer >= changeTimer && !hostile)
         {
             Vector3 newPos = RandomDestination(transform.position, destRadius, -1);
             agent.SetDestination(newPos);
@@ -99,11 +103,9 @@ public class enemy : MonoBehaviour {
         {
             if (vel.y > 0.1f)
             {
-                print("up");
                 //jump animation here
             } else if (vel.y < -0.1f)
             {
-                print("down");
                 //fall animation here
             }
         }
