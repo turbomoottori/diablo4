@@ -12,6 +12,7 @@ TagManager:
   - roof
   - coin
   - talks
+  - bullet
   layers:
   - Default
   - TransparentFX

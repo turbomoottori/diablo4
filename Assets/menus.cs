@@ -6,6 +6,7 @@ public class menus : MonoBehaviour {
 
     GameObject player, optionsMenu, pauseMenu, speech, speechBox;
     UnityEngine.UI.Text txt, pauseTitle, volumeVal;
+    UnityEngine.UI.Image healthbar;
     float moveBox = 176f;
     int page, maxPages;
     public bool txtActive = false;
@@ -27,6 +28,7 @@ public class menus : MonoBehaviour {
         volumeSlider = GameObject.Find("VolumeControl").GetComponent<UnityEngine.UI.Slider>();
         txt = speech.GetComponent<UnityEngine.UI.Text>();
         volumeVal = GameObject.Find("VolumeValue").GetComponent<UnityEngine.UI.Text>();
+        healthbar = GameObject.Find("Health").GetComponent<UnityEngine.UI.Image>();
 
         page = 0;
         maxPages = 1;
@@ -52,6 +54,14 @@ public class menus : MonoBehaviour {
                 Pause();
             }
         }
+
+        // HEALTH
+        healthbar.fillAmount = (float)savedData.hp / (float)savedData.maxhp;
+        if (savedData.hp <= 0)
+        {
+            print("kuolee");
+        }
+
 
         AudioListener.volume = volumeSlider.value / 100;
         volumeVal.text = volumeSlider.value.ToString();

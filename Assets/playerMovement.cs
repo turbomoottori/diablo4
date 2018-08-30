@@ -7,15 +7,12 @@ public class playerMovement : MonoBehaviour
 {
     public float speed, rotationSpeed, jumpForce, dashForce;
     public bool runs, dashes;
-
-    int health, maxHP;
-    UnityEngine.UI.Image healthbar;
+    bool canJump, canDoubleJump, canMove;
+    int activeWeapon;
 
     private Rigidbody rb;
     Vector3 refVelocity;
     RaycastHit hit;
-
-    bool canJump, canDoubleJump, canMove;
 
     //dash variables
     public DashState dashState;
@@ -45,20 +42,16 @@ public class playerMovement : MonoBehaviour
     UnityEngine.UI.Text moneyui;
     bool uiActive = false;
 
-    private void Awake()
-    {
-        maxHP = 50;
-        health = maxHP;
-    }
-
     void Start()
     {
+        savedData.maxhp = 50;
+        savedData.hp = 50;
+
         rb = GetComponent<Rigidbody>();
         canMove = true;
         slowTime = false;
         fakeGrav = GetComponent<ConstantForce>();
-        slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();
-        healthbar = GameObject.Find("Health").GetComponent<UnityEngine.UI.Image>();
+        slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();  
         moneyui = GameObject.Find("MoneyText").GetComponent<UnityEngine.UI.Text>();
         sword = Resources.Load<GameObject>("sword");
         moneyui.text = money.ToString();
@@ -67,14 +60,6 @@ public class playerMovement : MonoBehaviour
 
     void Update()
     {
-        // HEALTH
-
-        healthbar.fillAmount = (float)health / (float)maxHP;
-        if (health <= 0)
-        {
-            print("kuolee");
-        }
-
         if (!paused)
         {
             //MOVEMENT
@@ -187,19 +172,24 @@ public class playerMovement : MonoBehaviour
                     break;
             }
 
+            //CHANGE ACTIVE WEAPON
+            if(Input.GetAxis("Mouse ScrollWheel") > 0f && activeWeapon != 0)
+            {
+                activeWeapon = 0;
+                print("weapon 1 selected");
+            } else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 1)
+            {
+                activeWeapon = 1;
+                print("weapon 2 selected");
+            }
+
             //ATTACKING
 
-            if (Input.GetButtonDown("Fire1") && !swordActive)
-            {
-                StartCoroutine(Attack(Vector3.up, 90f, swordTime));
-            }
+            if (Input.GetButtonDown("Fire1"))
+                BasicAttack();
 
-            // SPIN ATTACK 
-
-            if (Input.GetButtonDown("Fire2") && !swordActive)
-            {
-                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
-            }
+            if (Input.GetButtonDown("Fire2"))
+                SpecialAttack();
 
             //SLOW TIME
 
@@ -215,6 +205,35 @@ public class playerMovement : MonoBehaviour
         Ready,
         Dashing,
         Cooldown
+    }
+
+    void BasicAttack()
+    {
+        if(activeWeapon==0 && !swordActive)
+            StartCoroutine(Attack(Vector3.up, 90f, swordTime));
+        if (activeWeapon == 1)
+            Shoot(40f);
+    }
+
+    void SpecialAttack()
+    {
+        if (activeWeapon == 0 && !swordActive)
+            StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+        if (activeWeapon == 1)
+            print("gun special attack");
+    }
+
+    void Shoot(float maxRange)
+    {
+        Vector3 bPos = transform.position + transform.forward;
+        GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
+        b.transform.position = bPos;
+        b.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
+        float range = 0f;
+        while (range < maxRange)
+        {
+            range += Time.deltaTime;
+        }
     }
 
     IEnumerator SlowTime(float time, float cooldownTime)
@@ -341,11 +360,11 @@ public class playerMovement : MonoBehaviour
         {
             if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 1)
             {
-                health -= 1;
+                savedData.hp -= 1;
                 print("regular attack");
             } else if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 2)
             {
-                health -= 2;
+                savedData.hp -= 2;
                 print("stun attack");
             }
         }
