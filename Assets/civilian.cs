@@ -19,6 +19,7 @@ public class civilian : enemy {
 
         if (hostile)
         {
+            agent.speed = 4f;
             float dist = Distance(player.transform.position, agent.transform.position);
             if (dist <= 1.6f)
             {

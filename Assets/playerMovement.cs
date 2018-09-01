@@ -28,13 +28,13 @@ public class playerMovement : MonoBehaviour
     public int attackNum;
 
     //slow motion variables
-    public bool slowTime;
+    public static bool slowTime;
     bool slowmocd;
     Vector3 gravForce = Vector3.down * 500;
     UnityEngine.UI.Image slowmobar;
 
     ConstantForce fakeGrav;
-    public bool paused = false;
+    public static bool paused = false;
 
     //money variables
     int money = 0;
@@ -44,8 +44,8 @@ public class playerMovement : MonoBehaviour
 
     void Start()
     {
-        savedData.maxhp = 50;
-        savedData.hp = 50;
+        gameControl.control.maxhp = 50;
+        gameControl.control.hp = 50;
 
         rb = GetComponent<Rigidbody>();
         canMove = true;
@@ -360,11 +360,11 @@ public class playerMovement : MonoBehaviour
         {
             if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 1)
             {
-                savedData.hp -= 1;
+                gameControl.control.hp -= 1;
                 print("regular attack");
             } else if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 2)
             {
-                savedData.hp -= 2;
+                gameControl.control.hp -= 2;
                 print("stun attack");
             }
         }

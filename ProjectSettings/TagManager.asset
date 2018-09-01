@@ -13,6 +13,7 @@ TagManager:
   - coin
   - talks
   - bullet
+  - saveslot
   layers:
   - Default
   - TransparentFX
