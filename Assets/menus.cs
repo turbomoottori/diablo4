@@ -69,7 +69,7 @@ public class menus : MonoBehaviour {
                 gen.SetActive(true);
                 gameControl.control.volume = volumeVal;
                 gameControl.control.SaveOptions();
-            } else if(saves!=null && saves.activeInHierarchy)
+            } else if(saves != null && saves.activeInHierarchy)
             {
                 //close save menu
                 saves.SetActive(false);
@@ -80,17 +80,18 @@ public class menus : MonoBehaviour {
                 //exit pause
                 p.SetActive(false);
                 playerMovement.paused = false;
-            }
-
-
-            //check which timescale to use
-            if (playerMovement.slowTime) {
-                Time.timeScale = 0.5f;
-                Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            } else {
-                Time.timeScale = 1;
-                Time.fixedDeltaTime = 0.02f;
-            }
+                //check which timescale to use
+                if (playerMovement.slowTime)
+                {
+                    Time.timeScale = 0.5f;
+                    Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    Time.fixedDeltaTime = 0.02f;
+                }
+            } 
         }
         else if (!playerMovement.paused)
         {
@@ -150,12 +151,13 @@ public class menus : MonoBehaviour {
     public void Click()
     {
         string btnName = EventSystem.current.currentSelectedGameObject.name;
+
+        //CONTINUE
         if (btnName == "Continue")
         {
-            //continue game
-            p.SetActive(false);
-            playerMovement.paused = false;
+            TogglePause();
         }
+        //OPTIONS
         else if (btnName == "Options")
         {
             //create options menu if it doesn't exist
@@ -175,6 +177,7 @@ public class menus : MonoBehaviour {
             //hide previous menu
             gen.SetActive(false);
         }
+        //SAVE AND EXIT
         else if (btnName == "Save & Exit")
         {
             //opens save menu
@@ -191,10 +194,13 @@ public class menus : MonoBehaviour {
                 saves.SetActive(true);
             }
         }
+        //BACK
         else if (btnName == "Back")
         {
             TogglePause();
-        } else if(btnName == saveText + "1")
+        }
+        //SAVE FILES
+        else if(btnName == saveText + "1")
         {
             //save file 1
             if(File.Exists(Application.persistentDataPath + "/save1.dat"))
