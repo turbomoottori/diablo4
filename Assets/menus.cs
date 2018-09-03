@@ -8,7 +8,7 @@ using System.IO;
 
 public class menus : MonoBehaviour {
 
-    GameObject player, speech, speechBox;
+    GameObject player, speechBox, speech;
     Text txt;
     Image healthbar;
     float moveBox = 176f;
@@ -16,35 +16,39 @@ public class menus : MonoBehaviour {
     public bool txtActive = false;
 
     bool pauseMenuActive, talks = false;
-
     int temphp, tempmaxhp, volumeVal;
 
-    GameObject p, gen, opt, saves;
+    GameObject p, gen, opt, saves, savePrompt;
     string saveText = "Save File ";
 
-    // Use this for initialization
+    Transform canv;
+    int lastPressed = 0;
+
     void Start () {
         player = GameObject.Find("Player");
-        speech = GameObject.Find("SpeechText");
-        speechBox = GameObject.Find("SpeechBox");
+        canv = GameObject.Find("Canvas").transform;
+        healthbar = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv).GetComponent<Image>();
+        speechBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
+        speech = speechBox.transform.GetChild(0).GetChild(0).gameObject;
         txt = speech.GetComponent<Text>();
-        healthbar = GameObject.Find("Health").GetComponent<Image>();
-
         page = 0;
         maxPages = 1;
 
         speechBox.SetActive(false);
         volumeVal = gameControl.control.volume;
+
+        print(savePrompt);
     }
 
     private void Update()
     {
+        //
         if (txtActive && Input.GetKeyDown(KeyCode.E))
             ScrollText();
 
         //PAUSE
         if (Input.GetKeyDown(KeyCode.Escape) && !talks)
-            TogglePause();
+            TogglePause(false);
 
         // HEALTH
         temphp = gameControl.control.hp;
@@ -58,27 +62,50 @@ public class menus : MonoBehaviour {
     }
 
     //PAUSE
-    void TogglePause()
+    void TogglePause(bool talkPause)
     {
+        //unpauses game
         if (playerMovement.paused)
         {
-            if (opt != null && opt.activeInHierarchy)
+            //checks if player was on pause menu or talking
+            if (!talkPause)
             {
-                //close options menu
-                opt.SetActive(false);
-                gen.SetActive(true);
-                gameControl.control.volume = volumeVal;
-                gameControl.control.SaveOptions();
-            } else if(saves != null && saves.activeInHierarchy)
-            {
-                //close save menu
-                saves.SetActive(false);
-                gen.SetActive(true);
+                if (opt != null && opt.activeInHierarchy)
+                {
+                    //close options menu
+                    opt.SetActive(false);
+                    gen.SetActive(true);
+                    gameControl.control.volume = volumeVal;
+                    gameControl.control.SaveOptions();
+                }
+                else if (saves != null && saves.activeInHierarchy)
+                {
+                    //close save menu
+                    saves.SetActive(false);
+                    gen.SetActive(true);
+                    if (savePrompt != null)
+                        savePrompt.SetActive(false);
+                }
+                else
+                {
+                    //exit pause
+                    p.SetActive(false);
+                    playerMovement.paused = false;
+                    //check which timescale to use
+                    if (playerMovement.slowTime)
+                    {
+                        Time.timeScale = 0.5f;
+                        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                    }
+                    else
+                    {
+                        Time.timeScale = 1;
+                        Time.fixedDeltaTime = 0.02f;
+                    }
+                }
             }
             else
             {
-                //exit pause
-                p.SetActive(false);
                 playerMovement.paused = false;
                 //check which timescale to use
                 if (playerMovement.slowTime)
@@ -91,50 +118,64 @@ public class menus : MonoBehaviour {
                     Time.timeScale = 1;
                     Time.fixedDeltaTime = 0.02f;
                 }
-            } 
+            }
         }
+        //pauses game
         else if (!playerMovement.paused)
         {
-            playerMovement.paused = true;
-            //pause game
-            if (p == null)
+            //checks if player is on pause menu or talking
+            if (!talkPause)
             {
-                //creates pause menu
-                p = Instantiate(Resources.Load("menucont") as GameObject);
-                p.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                playerMovement.paused = true;
+                //pause game
+                if (p == null)
+                {
+                    //creates pause menu
+                    p = Instantiate(Resources.Load("ui/menucont") as GameObject);
+                    p.transform.SetParent(canv, false);
 
-                gen = Instantiate(Resources.Load("pause") as GameObject);
-                gen.transform.SetParent(p.transform, false);
+                    gen = Instantiate(Resources.Load("ui/pause") as GameObject);
+                    gen.transform.SetParent(p.transform, false);
 
-                NewButton("Continue", gen);
-                NewButton("Options", gen);
-                NewButton("Save & Exit", gen);
-            }
-            else if (p != null)
+                    NewButton("Continue", gen);
+                    NewButton("Options", gen);
+                    NewButton("Save & Exit", gen);
+                }
+                else if (p != null)
+                {
+                    //activates pause menu
+                    p.SetActive(true);
+                    gen.SetActive(true);
+                }
+
+                //pauses time
+                Time.timeScale = 0;
+            } else
             {
-                //activates pause menu
-                p.SetActive(true);
-                gen.SetActive(true);
+                playerMovement.paused = true;
+                Time.timeScale = 0;
             }
-
-            //pauses time
-            Time.timeScale = 0;
         }
     }
 
+    //creates new button
     void NewButton(string name, GameObject group)
     {
         GameObject btn;
-        btn = Instantiate(Resources.Load("button") as GameObject, group.transform);
+        if (name == "Back")
+            btn = Instantiate(Resources.Load("ui/backButton") as GameObject, group.transform);
+        else 
+            btn = Instantiate(Resources.Load("ui/button") as GameObject, group.transform);
         btn.gameObject.transform.GetChild(0).GetComponent<Text>().text = name;
         btn.name = name;
         btn.GetComponent<Button>().onClick.AddListener(Click);
     }
 
+    //creates new slider
     void NewSlider(string name, int minValue, int maxValue, int value, GameObject group)
     {
         GameObject sl;
-        sl = Instantiate(Resources.Load("slider") as GameObject, group.transform);
+        sl = Instantiate(Resources.Load("ui/slider") as GameObject, group.transform);
         sl.gameObject.name = name;
         Text txt, val;
         txt = sl.transform.Find("Name").GetComponent<Text>();
@@ -155,7 +196,8 @@ public class menus : MonoBehaviour {
         //CONTINUE
         if (btnName == "Continue")
         {
-            TogglePause();
+            TogglePause(false);
+            lastPressed = 0;
         }
         //OPTIONS
         else if (btnName == "Options")
@@ -163,7 +205,7 @@ public class menus : MonoBehaviour {
             //create options menu if it doesn't exist
             if (opt == null)
             {
-                opt = Instantiate(Resources.Load("pause") as GameObject);
+                opt = Instantiate(Resources.Load("ui/pause") as GameObject);
                 opt.transform.SetParent(p.transform, false);
 
                 NewSlider("Volume", 0, 100, volumeVal, opt);
@@ -176,6 +218,7 @@ public class menus : MonoBehaviour {
 
             //hide previous menu
             gen.SetActive(false);
+            lastPressed = 0;
         }
         //SAVE AND EXIT
         else if (btnName == "Save & Exit")
@@ -183,7 +226,7 @@ public class menus : MonoBehaviour {
             //opens save menu
             if (saves == null)
             {
-                saves = Instantiate(Resources.Load("pause") as GameObject, p.transform, false);
+                saves = Instantiate(Resources.Load("ui/pause") as GameObject, p.transform, false);
                 NewButton(saveText + "1", saves);
                 NewButton(saveText + "2", saves);
                 NewButton(saveText + "3", saves);
@@ -193,47 +236,120 @@ public class menus : MonoBehaviour {
             {
                 saves.SetActive(true);
             }
+
+            CheckSaves();
+            lastPressed = 0;
         }
         //BACK
         else if (btnName == "Back")
         {
-            TogglePause();
+            TogglePause(false);
+            lastPressed = 0;
         }
         //SAVE FILES
         else if(btnName == saveText + "1")
         {
             //save file 1
-            if(File.Exists(Application.persistentDataPath + "/save1.dat"))
+
+            //first click
+            if (lastPressed != 1)
             {
-                print("1 on jo");
+                //if file already exists, show prompt--
+                if (File.Exists(Application.persistentDataPath + "/save1.dat"))
+                {
+                    //creates prompt is it doesn't exist yet
+                    if (savePrompt == null)
+                        savePrompt = Instantiate(Resources.Load("ui/caution") as GameObject, saves.transform);
+                    else
+                        savePrompt.SetActive(true);
+                }
+                //--otherwise just save
+                else
+                {
+                    gameControl.control.SaveGame(1);
+                    print("exit game");
+                }
+                lastPressed = 1;
             }
+            //second click
             else
             {
                 gameControl.control.SaveGame(1);
+                print("exit game");
+
             }
         } else if (btnName == saveText + "2")
         {
             //save file 2
-            if (File.Exists(Application.persistentDataPath + "/save2.dat"))
+
+            //first click
+            if (lastPressed != 2)
             {
-                print("2 on jo");
+                //if file already exists, show prompt--
+                if (File.Exists(Application.persistentDataPath + "/save2.dat"))
+                {
+                    //creates prompt is it doesn't exist yet
+                    if (savePrompt == null)
+                        savePrompt = Instantiate(Resources.Load("ui/caution") as GameObject, saves.transform);
+                    else
+                        savePrompt.SetActive(true);
+                }
+                //--otherwise just save
+                else
+                {
+                    gameControl.control.SaveGame(2);
+                    print("exit game");
+                }
+                lastPressed = 2;
             }
+            //second click
             else
             {
                 gameControl.control.SaveGame(2);
+                print("exit game");
             }
         } else if (btnName == saveText + "3")
         {
             //save file 3
-            if (File.Exists(Application.persistentDataPath + "/save3.dat"))
+
+            //first click
+            if (lastPressed != 3)
             {
-                print("3 on jo");
+                //if file already exists, show prompt--
+                if (File.Exists(Application.persistentDataPath + "/save3.dat"))
+                {
+                    //creates prompt is it doesn't exist yet
+                    if (savePrompt == null)
+                        savePrompt = Instantiate(Resources.Load("ui/caution") as GameObject, saves.transform);
+                    else
+                        savePrompt.SetActive(true);
+                }
+                //--otherwise just save
+                else
+                {
+                    gameControl.control.SaveGame(3);
+                    print("exit game");
+                }
+                lastPressed = 3;
             }
+            //second click
             else
             {
                 gameControl.control.SaveGame(3);
+                print("exit game");
             }
         }
+    }
+
+    //changes button color if save file already exists
+    public void CheckSaves()
+    {
+        if (File.Exists(Application.persistentDataPath + "/save1.dat"))
+            saves.transform.Find(saveText + "1").GetComponent<Image>().color = Color.gray;
+        if (File.Exists(Application.persistentDataPath + "/save2.dat"))
+            saves.transform.Find(saveText + "2").GetComponent<Image>().color = Color.gray;
+        if (File.Exists(Application.persistentDataPath + "/save3.dat"))
+            saves.transform.Find(saveText + "3").GetComponent<Image>().color = Color.gray;
     }
 
     public void SliderChange()
@@ -254,6 +370,7 @@ public class menus : MonoBehaviour {
         maxPages = pages;
     }
 
+    //speech box stuff
     public void ScrollText()
     {
         RectTransform box = speech.GetComponent<RectTransform>();
@@ -266,11 +383,11 @@ public class menus : MonoBehaviour {
             txtActive = false;
             page = 0;
             talks = false;
-            TogglePause();
+            TogglePause(true);
         } else if (page == 0) {
             speechBox.SetActive(true);
             talks = true;
-            TogglePause();
+            TogglePause(true);
             page += 1;
         } else
         {

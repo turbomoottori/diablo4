@@ -16,7 +16,7 @@ public class npcSpeech : MonoBehaviour {
         player = GameObject.Find("Player");
         globals = GameObject.Find("Globals");
 
-        e = Instantiate(Resources.Load("interact", typeof(GameObject))) as GameObject;
+        e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
         
     }
