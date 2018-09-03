@@ -57,7 +57,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1126585216359096}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 277.38, y: 1, z: 159.02}
+  m_LocalPosition: {x: 246.98, y: 6.89, z: 115.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4706183938130122}
@@ -207,6 +207,7 @@ MonoBehaviour:
   maxHP: 50
   minMoney: 1
   maxMoney: 10
+  attackNum: 0
 --- !u!136 &136678021330627062
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -229,7 +230,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5000001
-  m_Speed: 3.5
+  m_Speed: 2
   m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 999

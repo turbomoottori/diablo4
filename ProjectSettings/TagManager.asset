@@ -12,6 +12,8 @@ TagManager:
   - roof
   - coin
   - talks
+  - bullet
+  - saveslot
   layers:
   - Default
   - TransparentFX

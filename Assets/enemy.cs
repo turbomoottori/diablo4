@@ -69,9 +69,12 @@ public class enemy : MonoBehaviour {
         timer += Time.deltaTime;
         if (timer >= changeTimer && !hostile)
         {
-            Vector3 newPos = RandomDestination(transform.position, destRadius, -1);
-            agent.SetDestination(newPos);
-            timer = 0;
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                Vector3 newPos = RandomDestination(transform.position, destRadius, -1);
+                agent.SetDestination(newPos);
+                timer = 0;
+            }
         }
 
         //ATTACK PLAYER
@@ -83,7 +86,8 @@ public class enemy : MonoBehaviour {
             }
 
             //follows player
-            agent.SetDestination(player.transform.position);
+            if(agent.isOnNavMesh)
+                agent.SetDestination(player.transform.position);
         }
 
         //SHOW HP BAR
