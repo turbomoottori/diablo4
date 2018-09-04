@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 0
-  maxRange: 0
+  maxRange: 10
 --- !u!135 &135420925518193352
 SphereCollider:
   m_ObjectHideFlags: 1

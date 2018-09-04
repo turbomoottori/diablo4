@@ -27,6 +27,7 @@ public class playerMovement : MonoBehaviour
     float swordSpinTime = 0.5f;
     bool swordActive;
     public int attackNum;
+    float gunRange;
 
     //slow motion variables
     public static bool slowTime;
@@ -56,7 +57,7 @@ public class playerMovement : MonoBehaviour
         canMove = true;
         slowTime = false;
         fakeGrav = GetComponent<ConstantForce>();
-        slowmobar = Instantiate(Resources.Load("ui/slowmo") as GameObject, canv).GetComponent<Image>();
+        slowmobar = Instantiate(Resources.Load("ui/slowmo") as GameObject, canv).transform.GetChild(0).GetChild(0).transform.GetComponent<Image>();
         sword = Resources.Load<GameObject>("sword");
     }
 
@@ -182,6 +183,7 @@ public class playerMovement : MonoBehaviour
             } else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 1)
             {
                 activeWeapon = 1;
+                BasicGun();
                 print("weapon 2 selected");
             }
 
@@ -197,6 +199,7 @@ public class playerMovement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused)
             {
+                print("sldgdkj");
                 StartCoroutine(SlowTime(3f, 6f));
             }
         }
@@ -209,12 +212,17 @@ public class playerMovement : MonoBehaviour
         Cooldown
     }
 
+    void BasicGun()
+    {
+        gunRange = 20f;
+    }
+
     void BasicAttack()
     {
         if(activeWeapon==0 && !swordActive)
             StartCoroutine(Attack(Vector3.up, 90f, swordTime));
         if (activeWeapon == 1)
-            Shoot(40f);
+            Shoot(gunRange);
     }
 
     void SpecialAttack()
@@ -230,12 +238,8 @@ public class playerMovement : MonoBehaviour
         Vector3 bPos = transform.position + transform.forward;
         GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
         b.transform.position = bPos;
-        b.GetComponent<Rigidbody>().AddForce(transform.forward * 1000);
-        float range = 0f;
-        while (range < maxRange)
-        {
-            range += Time.deltaTime;
-        }
+        b.GetComponent<Rigidbody>().AddForce(transform.forward * 1500);
+        b.GetComponent<bullet>().maxRange = maxRange;
     }
 
     IEnumerator SlowTime(float time, float cooldownTime)

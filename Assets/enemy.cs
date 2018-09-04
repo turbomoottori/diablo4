@@ -274,4 +274,13 @@ public class enemy : MonoBehaviour {
                 StartCoroutine(AttackStun(other.gameObject.transform.parent.position));
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "bullet")
+        {
+            print("sattuu saatana");
+            Destroy(collision.gameObject);
+        }
+    }
 }

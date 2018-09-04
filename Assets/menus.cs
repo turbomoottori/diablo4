@@ -36,13 +36,10 @@ public class menus : MonoBehaviour {
 
         speechBox.SetActive(false);
         volumeVal = gameControl.control.volume;
-
-        print(savePrompt);
     }
 
     private void Update()
     {
-        //
         if (txtActive && Input.GetKeyDown(KeyCode.E))
             ScrollText();
 

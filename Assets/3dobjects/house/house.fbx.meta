@@ -6,9 +6,11 @@ ModelImporter:
     100000: //RootNode
     100002: Cube.025
     100004: Cube.026
+    100006: Cube.033
     400000: //RootNode
     400002: Cube.025
     400004: Cube.026
+    400006: Cube.033
     2100000: tikas
     2100002: metal
     2100004: wood
@@ -20,11 +22,14 @@ ModelImporter:
     2300000: //RootNode
     2300002: Cube.025
     2300004: Cube.026
+    2300006: Cube.033
     3300000: //RootNode
     3300002: Cube.025
     3300004: Cube.026
+    3300006: Cube.033
     4300000: Cube.025
     4300002: Cube.026
+    4300004: Cube.033
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:

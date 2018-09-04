@@ -11,7 +11,6 @@ public class npcSpeech : MonoBehaviour {
     float dist;
     public bool wantsToTalk = true;
 
-    // Use this for initialization
     void Start () {
         player = GameObject.Find("Player");
         globals = GameObject.Find("Globals");
@@ -21,7 +20,6 @@ public class npcSpeech : MonoBehaviour {
         
     }
 	
-	// Update is called once per frame
 	void Update () {
         dist = Distance(player.transform.position, transform.position);
         e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
