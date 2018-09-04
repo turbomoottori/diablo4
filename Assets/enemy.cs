@@ -33,10 +33,10 @@ public class enemy : MonoBehaviour {
     protected virtual void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         timer = maxTimer;
-        hpb = Instantiate(Resources.Load("enemyhealth", typeof(GameObject))) as GameObject;
-        hpb.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        //hpb = Instantiate(Resources.Load("enemyhealth", typeof(GameObject))) as GameObject;
+        //hpb.transform.SetParent(GameObject.Find("Canvas").transform, false);
         money = Resources.Load<GameObject>("coin");
-        hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>(); 
+        //hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>(); 
 	}
 
     protected virtual void Start()
@@ -92,7 +92,7 @@ public class enemy : MonoBehaviour {
 
         //SHOW HP BAR
         hpTimer += Time.deltaTime;
-        if (hpTimer >= 2f)
+        if (hpTimer >= 2f && hpb != null)
             HideHP();
 
         //raycast to ground
@@ -119,8 +119,11 @@ public class enemy : MonoBehaviour {
             StartCoroutine(Dead(0.5f));
 
         //enemy health bar
-        hpb.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-        hp.fillAmount = (float)enemyHealth / (float)maxHP;
+        if (hpb != null)
+        {
+            hpb.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+            hp.fillAmount = (float)enemyHealth / (float)maxHP;
+        }
     }
 
     void HideHP()
@@ -131,7 +134,15 @@ public class enemy : MonoBehaviour {
     void ShowHP()
     {
         hpTimer = 0;
-        hpb.SetActive(true);
+        if (hpb == null)
+        {
+            hpb = Instantiate(Resources.Load("ui/enemyhealth") as GameObject, GameObject.Find("Canvas").transform);
+            hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>();
+        } else
+        {
+            hpb.SetActive(true);
+        }
+        //hpb.SetActive(true);
     }
 
     public static Vector3 RandomDestination(Vector3 origin, float distance, int layermask) {

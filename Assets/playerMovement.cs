@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class playerMovement : MonoBehaviour
     public static bool slowTime;
     bool slowmocd;
     Vector3 gravForce = Vector3.down * 500;
-    UnityEngine.UI.Image slowmobar;
+    Image slowmobar;
 
     ConstantForce fakeGrav;
     public static bool paused = false;
@@ -39,23 +40,24 @@ public class playerMovement : MonoBehaviour
     //money variables
     int money = 0;
     int moneyValue = 10;
-    UnityEngine.UI.Text moneyui;
+    Text moneyui;
     bool uiActive = false;
+
+    Transform canv;
 
     void Start()
     {
         gameControl.control.maxhp = 50;
         gameControl.control.hp = 50;
 
+        canv = GameObject.Find("Canvas").transform;
+
         rb = GetComponent<Rigidbody>();
         canMove = true;
         slowTime = false;
         fakeGrav = GetComponent<ConstantForce>();
-        slowmobar = GameObject.Find("SlowMoBar").GetComponent<UnityEngine.UI.Image>();  
-        moneyui = GameObject.Find("MoneyText").GetComponent<UnityEngine.UI.Text>();
+        slowmobar = Instantiate(Resources.Load("ui/slowmo") as GameObject, canv).GetComponent<Image>();
         sword = Resources.Load<GameObject>("sword");
-        moneyui.text = money.ToString();
-        moneyui.gameObject.SetActive(false);
     }
 
     void Update()
@@ -333,13 +335,23 @@ public class playerMovement : MonoBehaviour
     }
 
     //SHOW AND UPDATE MONEY UI
-
+    
     IEnumerator AddMoney(int tempMoney, float time)
     {
         if (uiActive)
             yield break;
         uiActive = true;
-        moneyui.gameObject.SetActive(true);
+
+        //creates money ui if it doesn't exist yet
+        if (moneyui == null)
+        {
+            moneyui = Instantiate(Resources.Load("ui/money") as GameObject, canv).GetComponent<Text>();
+            moneyui.text = money.ToString();
+        } else
+        {
+            moneyui.gameObject.SetActive(true);
+        }
+
         float t = 0f;
         while (t < time)
         {
