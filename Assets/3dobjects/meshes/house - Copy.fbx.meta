@@ -1,35 +1,17 @@
 fileFormatVersion: 2
-guid: 462cdc493bdaa93428f3552700ffd73f
+guid: b4d624ba25b5a384fb2e78e59dc9c6c3
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Cube.025
-    100004: Cube.026
-    100006: Cube.033
     400000: //RootNode
-    400002: Cube.025
-    400004: Cube.026
-    400006: Cube.033
-    2100000: tikas
-    2100002: metal
-    2100004: wood
-    2100006: Material.003
-    2100008: roof
-    2100010: GLASS
-    2100012: Material.002
-    2100014: collision
+    2100000: Material
+    2100002: Material.003
+    2100004: Material.002
+    2100006: GLASS
     2300000: //RootNode
-    2300002: Cube.025
-    2300004: Cube.026
-    2300006: Cube.033
     3300000: //RootNode
-    3300002: Cube.025
-    3300004: Cube.026
-    3300006: Cube.033
     4300000: Cube.025
-    4300002: Cube.026
-    4300004: Cube.033
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:

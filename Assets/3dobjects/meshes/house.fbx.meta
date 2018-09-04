@@ -4,14 +4,35 @@ ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Collider
+    100004: House1
+    100006: houseCollider
     400000: //RootNode
+    400002: Collider
+    400004: House1
+    400006: houseCollider
     2100000: Material
     2100002: Material.003
     2100004: Material.002
     2100006: GLASS
+    2100008: tikas
+    2100010: metal
+    2100012: wood
+    2100014: roof
+    2100016: collider
     2300000: //RootNode
+    2300002: Collider
+    2300004: House1
+    2300006: houseCollider
     3300000: //RootNode
+    3300002: Collider
+    3300004: House1
+    3300006: houseCollider
     4300000: Cube.025
+    4300002: Cube.410
+    4300004: Collider
+    4300006: House1
+    4300008: houseCollider
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
