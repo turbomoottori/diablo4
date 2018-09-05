@@ -29,6 +29,26 @@ public class gameControl : MonoBehaviour
 
         //loads options automatically
         LoadOptions();
+
+        //adds sword to inventory
+        FirstSword();
+    }
+
+    //creates first sword
+    void FirstSword()
+    {
+        if (!hasSword)
+        {
+            hasSword = true;
+            Weapon firstSword = new Weapon();
+            firstSword.name = "First sword"; // change later
+            firstSword.damage = 3;
+            firstSword.value = 0;
+            firstSword.weight = 1;
+            //GameObject.Find("Globals").GetComponent<menus>().invItems.Add(firstSword);
+            menus.equipOne = "First Sword";
+            menus.equipTwo = "Empty";
+        }
     }
 
     public void SaveGame(int saveFile)

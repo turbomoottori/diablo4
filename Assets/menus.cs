@@ -8,14 +8,14 @@ using System.IO;
 
 public class menus : MonoBehaviour {
 
-    GameObject player, speechBox, speech;
+    GameObject player, speechBox, speech, inv, itemCont;
     Text txt;
     Image healthbar;
     float moveBox = 176f;
     int page, maxPages;
     public bool txtActive = false;
 
-    bool pauseMenuActive, talks = false;
+    bool talks = false;
     int temphp, tempmaxhp, volumeVal;
 
     GameObject p, gen, opt, saves, savePrompt;
@@ -23,6 +23,11 @@ public class menus : MonoBehaviour {
 
     Transform canv;
     int lastPressed = 0;
+
+    List<GameObject> items, storedItems;
+    public List<Item> invItems;
+    public static string equipOne, equipTwo;
+    
 
     void Start () {
         player = GameObject.Find("Player");
@@ -46,6 +51,9 @@ public class menus : MonoBehaviour {
         //PAUSE
         if (Input.GetKeyDown(KeyCode.Escape) && !talks)
             TogglePause(false);
+
+        if (Input.GetKeyDown(KeyCode.I) && !talks && !playerMovement.paused)
+            Inventory();
 
         // HEALTH
         temphp = gameControl.control.hp;
@@ -360,6 +368,75 @@ public class menus : MonoBehaviour {
 
     }
 
+    public void Inventory()
+    {
+        if (inv == null)
+        {
+            inv = Instantiate(Resources.Load("ui/inventory/inventory") as GameObject, canv, false);
+            itemCont = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, inv.transform.Find("items").transform, false);
+            if (invItems != null)
+            {
+                foreach (Item item in invItems)
+                {
+                    AddItem(item.name, item.weight);
+                }
+            }
+            AddEquipped(equipOne);
+            AddEquipped(equipTwo);
+        } else
+        {
+            inv.SetActive(true);
+        }
+
+        foreach(Item itemInInventory in invItems)
+        {
+            if (!invItems.Contains(itemInInventory))
+            {
+                invItems.Add(itemInInventory);
+            }
+        }
+
+        invItems.RemoveAll(Item => Item == null);
+    }
+
+    void AddItem(string name, int wt)
+    {
+        GameObject item = Instantiate(Resources.Load("ui/inventory/item") as GameObject, inv.transform, false);
+        item.transform.Find("name").GetComponent<Text>().text = name;
+        item.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
+        items.Add(item);
+    }
+
+    void AddEquipped(string name)
+    {
+        GameObject equip = Instantiate(Resources.Load("ui/inventory/equipped") as GameObject, inv.transform.Find("active").transform, false);
+        equip.transform.Find("title").GetComponent<Text>().text = name;
+        //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
+    }
+
+    public void InventoryClick(bool leftClick)
+    {
+        if (leftClick)
+        {
+            //assign weapon 1
+        } else
+        {
+            //assign weapon 2
+        }
+    }
+
+    void RemoveItem(string name)
+    {
+        foreach(GameObject item in items)
+        {
+            if (item.name == name)
+            {
+                items.Remove(item);
+                storedItems.Add(item);
+            }
+        }
+    }
+
     //change text to whatever npc is saying
     public void ChangeText(string NPCtext, int pages)
     {
@@ -395,4 +472,22 @@ public class menus : MonoBehaviour {
             page += 1;
         }
     }
+}
+
+public class Item
+{
+    public string name;
+    public int value, weight;
+}
+
+public class Weapon : Item
+{
+    public int damage;
+    public float speed;
+}
+
+public class Gun : Weapon
+{
+    public int bullets;
+    public float range;
 }
