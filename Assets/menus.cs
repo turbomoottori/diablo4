@@ -13,9 +13,10 @@ public class menus : MonoBehaviour {
     Image healthbar;
     float moveBox = 176f;
     int page, maxPages;
-    public bool txtActive = false;
+    public static bool txtActive = false;
 
     bool talks = false;
+    public static bool pauseOpen, invOpen = false;
     int temphp, tempmaxhp, volumeVal;
 
     GameObject p, gen, opt, saves, savePrompt;
@@ -24,10 +25,11 @@ public class menus : MonoBehaviour {
     Transform canv;
     int lastPressed = 0;
 
-    List<GameObject> items, storedItems;
-    public List<Item> invItems;
+    //inventory 
+    public List<GameObject> items = new List<GameObject>();
+    public List<GameObject> storedItems = new List<GameObject>();
+    public static List<Item> invItems = new List<Item>();
     public static string equipOne, equipTwo;
-    
 
     void Start () {
         player = GameObject.Find("Player");
@@ -45,14 +47,23 @@ public class menus : MonoBehaviour {
 
     private void Update()
     {
+        //TALKING
         if (txtActive && Input.GetKeyDown(KeyCode.E))
             ScrollText();
 
-        //PAUSE
-        if (Input.GetKeyDown(KeyCode.Escape) && !talks)
-            TogglePause(false);
+        //PRESSING ESC
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!talks && !invOpen)
+                TogglePause();
+            else if (!pauseOpen && !talks && invOpen)
+                Inventory();
+            else if (!pauseOpen && !invOpen && talks)
+                ScrollText();
+        }
 
-        if (Input.GetKeyDown(KeyCode.I) && !talks && !playerMovement.paused)
+        //OPEN INVENTORY
+        if (Input.GetKeyDown(KeyCode.I) && !talks && !pauseOpen)
             Inventory();
 
         // HEALTH
@@ -60,6 +71,7 @@ public class menus : MonoBehaviour {
         tempmaxhp = gameControl.control.maxhp;
         healthbar.fillAmount = (float)temphp / (float)tempmaxhp;
 
+        //DIE
         if (gameControl.control.hp <= 0)
         {
             print("kuolee");
@@ -67,51 +79,35 @@ public class menus : MonoBehaviour {
     }
 
     //PAUSE
-    void TogglePause(bool talkPause)
+    void TogglePause()
     {
-        //unpauses game
         if (playerMovement.paused)
         {
-            //checks if player was on pause menu or talking
-            if (!talkPause)
+            //unpause
+            pauseOpen = false;
+
+            if (opt != null && opt.activeInHierarchy)
             {
-                if (opt != null && opt.activeInHierarchy)
-                {
-                    //close options menu
-                    opt.SetActive(false);
-                    gen.SetActive(true);
-                    gameControl.control.volume = volumeVal;
-                    gameControl.control.SaveOptions();
-                }
-                else if (saves != null && saves.activeInHierarchy)
-                {
-                    //close save menu
-                    saves.SetActive(false);
-                    gen.SetActive(true);
-                    if (savePrompt != null)
-                        savePrompt.SetActive(false);
-                }
-                else
-                {
-                    //exit pause
-                    p.SetActive(false);
-                    playerMovement.paused = false;
-                    //check which timescale to use
-                    if (playerMovement.slowTime)
-                    {
-                        Time.timeScale = 0.5f;
-                        Time.fixedDeltaTime = 0.02f * Time.timeScale;
-                    }
-                    else
-                    {
-                        Time.timeScale = 1;
-                        Time.fixedDeltaTime = 0.02f;
-                    }
-                }
+                //close options menu
+                opt.SetActive(false);
+                gen.SetActive(true);
+                gameControl.control.volume = volumeVal;
+                gameControl.control.SaveOptions();
+            }
+            else if (saves != null && saves.activeInHierarchy)
+            {
+                //close save menu
+                saves.SetActive(false);
+                gen.SetActive(true);
+                if (savePrompt != null)
+                    savePrompt.SetActive(false);
             }
             else
             {
+                //exit pause
+                p.SetActive(false);
                 playerMovement.paused = false;
+
                 //check which timescale to use
                 if (playerMovement.slowTime)
                 {
@@ -124,42 +120,61 @@ public class menus : MonoBehaviour {
                     Time.fixedDeltaTime = 0.02f;
                 }
             }
-        }
-        //pauses game
-        else if (!playerMovement.paused)
+        } else if (!playerMovement.paused)
         {
-            //checks if player is on pause menu or talking
-            if (!talkPause)
+            playerMovement.paused = true;
+            pauseOpen = true;
+            //pause game
+            if (p == null)
             {
-                playerMovement.paused = true;
-                //pause game
-                if (p == null)
-                {
-                    //creates pause menu
-                    p = Instantiate(Resources.Load("ui/menucont") as GameObject);
-                    p.transform.SetParent(canv, false);
+                //creates pause menu
+                p = Instantiate(Resources.Load("ui/menucont") as GameObject);
+                p.transform.SetParent(canv, false);
 
-                    gen = Instantiate(Resources.Load("ui/pause") as GameObject);
-                    gen.transform.SetParent(p.transform, false);
+                gen = Instantiate(Resources.Load("ui/pause") as GameObject);
+                gen.transform.SetParent(p.transform, false);
 
-                    NewButton("Continue", gen);
-                    NewButton("Options", gen);
-                    NewButton("Save & Exit", gen);
-                }
-                else if (p != null)
-                {
-                    //activates pause menu
-                    p.SetActive(true);
-                    gen.SetActive(true);
-                }
-
-                //pauses time
-                Time.timeScale = 0;
-            } else
-            {
-                playerMovement.paused = true;
-                Time.timeScale = 0;
+                NewButton("Continue", gen);
+                NewButton("Options", gen);
+                NewButton("Save & Exit", gen);
             }
+            else if (p != null)
+            {
+                //activates pause menu
+                p.SetActive(true);
+                gen.SetActive(true);
+            }
+
+            //pauses time
+            Time.timeScale = 0;
+        }
+    }
+
+    //pause without displaying menus
+    void PauseNoMenu()
+    {
+        if (playerMovement.paused)
+        {
+            //unpause
+            playerMovement.paused = false;
+
+            //check which timescale to use
+            if (playerMovement.slowTime)
+            {
+                Time.timeScale = 0.5f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                Time.fixedDeltaTime = 0.02f;
+            }
+
+        } else if (!playerMovement.paused)
+        {
+            //pause
+            playerMovement.paused = true;
+            Time.timeScale = 0;
         }
     }
 
@@ -201,7 +216,7 @@ public class menus : MonoBehaviour {
         //CONTINUE
         if (btnName == "Continue")
         {
-            TogglePause(false);
+            TogglePause();
             lastPressed = 0;
         }
         //OPTIONS
@@ -248,7 +263,7 @@ public class menus : MonoBehaviour {
         //BACK
         else if (btnName == "Back")
         {
-            TogglePause(false);
+            TogglePause();
             lastPressed = 0;
         }
         //SAVE FILES
@@ -368,60 +383,126 @@ public class menus : MonoBehaviour {
 
     }
 
+    //toggle inventory
     public void Inventory()
     {
-        if (inv == null)
+        if (!invOpen)
         {
-            inv = Instantiate(Resources.Load("ui/inventory/inventory") as GameObject, canv, false);
-            itemCont = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, inv.transform.Find("items").transform, false);
-            if (invItems != null)
+            invOpen = true;
+            PauseNoMenu();
+
+            //create inventory menu if it doesn't exist
+            if (inv == null)
             {
-                foreach (Item item in invItems)
+                inv = Instantiate(Resources.Load("ui/inventory/inventory") as GameObject, canv, false);
+                itemCont = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, inv.transform.Find("items").transform, false);
+
+                //show every item in inventory
+                if (invItems != null)
                 {
-                    AddItem(item.name, item.weight);
+                    foreach (Item item in invItems)
+                    {
+                        AddItem(item.name, item.weight);
+                    }
+                }
+
+                //display equipped items
+                AddEquipped(equipOne);
+                AddEquipped(equipTwo);
+            }
+            else
+            {
+                inv.SetActive(true);
+            }
+
+            //check if new items have appeared in inventory and display them too
+            foreach (Item itemInInventory in invItems)
+            {
+                if (!invItems.Contains(itemInInventory))
+                {
+                    invItems.Add(itemInInventory);
                 }
             }
-            AddEquipped(equipOne);
-            AddEquipped(equipTwo);
-        } else
-        {
-            inv.SetActive(true);
-        }
 
-        foreach(Item itemInInventory in invItems)
+            //check if item is removed and remove it from the list
+            invItems.RemoveAll(Item => Item == null);
+        } else if(invOpen)
         {
-            if (!invItems.Contains(itemInInventory))
-            {
-                invItems.Add(itemInInventory);
-            }
+            invOpen = false;
+            inv.SetActive(false);
+            PauseNoMenu();
         }
-
-        invItems.RemoveAll(Item => Item == null);
     }
 
+    //display items in inventory
     void AddItem(string name, int wt)
     {
-        GameObject item = Instantiate(Resources.Load("ui/inventory/item") as GameObject, inv.transform, false);
-        item.transform.Find("name").GetComponent<Text>().text = name;
-        item.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
-        items.Add(item);
+        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, itemCont.transform, false);
+        i.transform.Find("name").GetComponent<Text>().text = name;
+        i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
+        items.Add(i);
+        i.name = name;
     }
 
+    //display equipped items
     void AddEquipped(string name)
     {
         GameObject equip = Instantiate(Resources.Load("ui/inventory/equipped") as GameObject, inv.transform.Find("active").transform, false);
         equip.transform.Find("title").GetComponent<Text>().text = name;
+        equip.name = name;
         //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
     }
 
-    public void InventoryClick(bool leftClick)
+    //change equipped weapon
+    void ChangeEquipped(string name, int slot)
     {
+        if (slot == 1)
+        {
+            inv.transform.Find("active").transform.Find(equipOne).transform.Find("title").GetComponent<Text>().text = name;
+            equipOne = name;
+        } else if (slot == 2)
+        {
+            inv.transform.Find("active").transform.Find(equipTwo).transform.Find("title").GetComponent<Text>().text = name;
+            equipTwo = name;
+        }
+    }
+
+    public void InventoryClick(bool leftClick, string name)
+    {
+        //assigning weapon 1
         if (leftClick)
         {
-            //assign weapon 1
-        } else
+            foreach (Item item in invItems)
+            {
+                if(item is Weapon && item.name == name)
+                {
+                    if (name == equipOne)
+                    {
+                        print("already equipped");
+                    } else
+                    {
+                        ChangeEquipped(name, 1);
+                    }
+                } else { return; }
+            }
+        }
+        //assigning weapon 2
+        else
         {
-            //assign weapon 2
+            foreach (Item item in invItems)
+            {
+                if (item is Weapon && item.name == name)
+                {
+                    if (name == equipTwo)
+                    {
+                        print("already equipped");
+                    }
+                    else
+                    {
+                        ChangeEquipped(name, 2);
+                    }
+                } else { return; }
+            }
         }
     }
 
@@ -457,11 +538,11 @@ public class menus : MonoBehaviour {
             txtActive = false;
             page = 0;
             talks = false;
-            TogglePause(true);
+            PauseNoMenu();
         } else if (page == 0) {
             speechBox.SetActive(true);
             talks = true;
-            TogglePause(true);
+            PauseNoMenu();
             page += 1;
         } else
         {

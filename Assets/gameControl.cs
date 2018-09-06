@@ -16,6 +16,7 @@ public class gameControl : MonoBehaviour
 
     void Awake()
     {
+        hasSword = false;
         //prevents doubles
         if (control == null)
         {
@@ -40,12 +41,10 @@ public class gameControl : MonoBehaviour
         if (!hasSword)
         {
             hasSword = true;
-            Weapon firstSword = new Weapon();
-            firstSword.name = "First sword"; // change later
-            firstSword.damage = 3;
-            firstSword.value = 0;
-            firstSword.weight = 1;
-            //GameObject.Find("Globals").GetComponent<menus>().invItems.Add(firstSword);
+            Weapon firstSword = new Weapon() { name = "First Sword", damage = 3, speed = 5, value = 0, weight = 1 }; 
+            Item test = new Item() { name = "test", value = 0, weight = 1 }; //delete later
+            menus.invItems.Add(firstSword);
+            menus.invItems.Add(test);
             menus.equipOne = "First Sword";
             menus.equipTwo = "Empty";
         }

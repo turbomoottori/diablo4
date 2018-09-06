@@ -28,10 +28,10 @@ public class npcSpeech : MonoBehaviour {
         if (wantsToTalk && dist < 2f)
         {
             e.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.E) && globals.GetComponent<menus>().txtActive == false)
+            if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen)
             {
                 globals.GetComponent<menus>().ChangeText(speaks, pages);
-                globals.GetComponent<menus>().txtActive = true;
+                menus.txtActive = true;
             }
         } else
         {

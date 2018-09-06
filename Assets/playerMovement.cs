@@ -242,6 +242,7 @@ public class playerMovement : MonoBehaviour
         b.GetComponent<bullet>().maxRange = maxRange;
     }
 
+    //slows time
     IEnumerator SlowTime(float time, float cooldownTime)
     {
         //set slow motion
@@ -287,7 +288,7 @@ public class playerMovement : MonoBehaviour
         yield return null;
     }
 
-    //spawns, animates and destroys sword placeholder
+    //basic attack
     IEnumerator Attack(Vector3 axis, float angle, float time)
     {
         if (swordActive)
@@ -314,6 +315,7 @@ public class playerMovement : MonoBehaviour
         yield return null;
     }
 
+    //spin attack
     IEnumerator AttackTwo(Vector3 axis, float time)
     {
         if (swordActive)

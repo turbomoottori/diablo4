@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class buttonScript : MonoBehaviour {
+public class buttonScript : MonoBehaviour, IPointerClickHandler {
 
     GameObject m;
 
@@ -16,10 +17,10 @@ public class buttonScript : MonoBehaviour {
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            m.GetComponent<menus>().InventoryClick(true);
+            m.GetComponent<menus>().InventoryClick(true, gameObject.name);
         } else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            m.GetComponent<menus>().InventoryClick(false);
+            m.GetComponent<menus>().InventoryClick(false, gameObject.name);
         }
     }
 }
