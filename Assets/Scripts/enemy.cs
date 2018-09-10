@@ -178,7 +178,7 @@ public class enemy : MonoBehaviour {
     }
 
     //attacked with basic attack
-    public IEnumerator Attacked(Vector3 playerPos)
+    public IEnumerator Attacked(Vector3 playerPos, int w)
     {
         hostile = true;
         Vector3 dir = transform.position - playerPos;
@@ -192,10 +192,18 @@ public class enemy : MonoBehaviour {
         if (isGrounded)
         {
             rb.AddForce(dir, ForceMode.Impulse);
-            enemyHealth -= 5;
+
+            if (w == 1)
+                enemyHealth -= weapons.damage1;
+            else
+                enemyHealth -= weapons.damage2;
+
         } else {
             rb.AddForce(dir * 3, ForceMode.Impulse);
-            enemyHealth -= 10;
+            if (w == 1)
+                enemyHealth -= (weapons.damage1 + 3);
+            else
+                enemyHealth -= (weapons.damage2 + 3);
         }
 
         if (isAttacked)
@@ -209,7 +217,7 @@ public class enemy : MonoBehaviour {
     }
 
     //attacked with stun attack
-    public IEnumerator AttackStun(Vector3 playerPos)
+    public IEnumerator AttackStun(Vector3 playerPos, int w)
     {
         if (isAttacked)
             yield break;
@@ -222,7 +230,12 @@ public class enemy : MonoBehaviour {
         agent.enabled = false;
         rb.isKinematic = false;
         ShowHP();
-        enemyHealth -= 10;
+
+        if (w == 1)
+            enemyHealth -= weapons.damage1;
+        else
+            enemyHealth -= weapons.damage2;
+
         rb.AddForce(dir * 1.5f, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
         yield return new WaitUntil(() => isGrounded == true);
@@ -233,6 +246,14 @@ public class enemy : MonoBehaviour {
         rb.isKinematic = true;
         agent.enabled = true;
         isAttacked = false;
+    }
+
+    public IEnumerator Shot(int dmg)
+    {
+        ShowHP();
+        enemyHealth -= dmg;
+        hostile = true;
+        yield return null;
     }
 
     //dying
@@ -268,10 +289,10 @@ public class enemy : MonoBehaviour {
     {
         if (other.gameObject.tag == "sword")
         {
-            if (player.GetComponent<playerMovement>().attackNum == 1)
-               StartCoroutine(Attacked(other.gameObject.transform.parent.position));
-            else if (player.GetComponent<playerMovement>().attackNum == 2)
-                StartCoroutine(AttackStun(other.gameObject.transform.parent.position));
+            if (playerMovement.attackNum == 1)
+                StartCoroutine(Attacked(other.gameObject.transform.parent.position, playerMovement.activeWeapon));
+            else if (playerMovement.attackNum == 2)
+                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, playerMovement.activeWeapon));
         }
     }
 
@@ -279,7 +300,7 @@ public class enemy : MonoBehaviour {
     {
         if (collision.gameObject.tag == "bullet")
         {
-            print("sattuu saatana");
+            StartCoroutine(Shot(collision.gameObject.GetComponent<bullet>().dmg));
             Destroy(collision.gameObject);
         }
     }

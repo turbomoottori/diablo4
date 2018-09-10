@@ -6,7 +6,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class gameControl : MonoBehaviour
 {
-
     public static gameControl control;
 
     public int hp, maxhp, money;
@@ -41,11 +40,18 @@ public class gameControl : MonoBehaviour
         if (!hasSword)
         {
             hasSword = true;
-            Weapon firstSword = new Weapon() { name = "First Sword", damage = 3, speed = 5, value = 0, weight = 1 }; 
+            Weapon firstSword = new Weapon() { name = "First Sword", damage = 3, speed = 0.2f, value = 0, weight = 1 }; 
             Item test = new Item() { name = "test", value = 0, weight = 1 }; //delete later
+            Gun testGun = new Gun() { bullets = 1, damage = 2, name = "GUN", range = 20f, speed = 10f, value = 0, weight = 1 };
             menus.invItems.Add(firstSword);
             menus.invItems.Add(test);
+            menus.invItems.Add(testGun);
+
             menus.equipOne = "First Sword";
+            weapons.damage1 = firstSword.damage;
+            weapons.speed1 = firstSword.speed;
+            weapons.weaponTypeOne = 1;
+
             menus.equipTwo = "Empty";
         }
     }
@@ -74,6 +80,11 @@ public class gameControl : MonoBehaviour
             data.knowsDoubleJump = knowsDoubleJump;
             data.knowsDash = knowsDash;
             data.hasSword = hasSword;
+            data.equip1 = menus.equipOne;
+            data.equip2 = menus.equipTwo;
+            data.invItems = menus.invItems;
+            data.items = menus.items;
+            data.storedItems = menus.storedItems;
 
             //serializes and closes file
             bf.Serialize(file, data);
@@ -99,6 +110,11 @@ public class gameControl : MonoBehaviour
             knowsDoubleJump = data.knowsDoubleJump;
             knowsDash = data.knowsDash;
             hasSword = data.hasSword;
+            menus.equipOne = data.equip1;
+            menus.equipTwo = data.equip2;
+            menus.invItems = data.invItems;
+            menus.items = data.items;
+            menus.storedItems = data.storedItems;
         }
     }
 
@@ -135,6 +151,9 @@ class PlayerData
 {
     public int hp, maxhp, money;
     public bool knowsDoubleJump, knowsDash, hasSword;
+    public string equip1, equip2;
+    public List<Item> invItems;
+    public List<GameObject> items, storedItems;
 }
 
 [System.Serializable]

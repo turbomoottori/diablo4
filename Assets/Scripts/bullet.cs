@@ -6,6 +6,7 @@ public class bullet : MonoBehaviour {
 
     public float range, maxRange;
     GameObject player;
+    public int dmg;
 
 	// Use this for initialization
 	void Start () {

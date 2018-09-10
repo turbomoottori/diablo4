@@ -9,7 +9,7 @@ public class playerMovement : MonoBehaviour
     public float speed, rotationSpeed, jumpForce, dashForce;
     public bool runs, dashes;
     bool canJump, canDoubleJump, canMove;
-    int activeWeapon;
+    public static int activeWeapon = 1;
 
     private Rigidbody rb;
     Vector3 refVelocity;
@@ -26,8 +26,7 @@ public class playerMovement : MonoBehaviour
     float swordTime = 0.2f;
     float swordSpinTime = 0.5f;
     bool swordActive;
-    public int attackNum;
-    float gunRange;
+    public static int attackNum;
 
     //slow motion variables
     public static bool slowTime;
@@ -176,14 +175,13 @@ public class playerMovement : MonoBehaviour
             }
 
             //CHANGE ACTIVE WEAPON
-            if(Input.GetAxis("Mouse ScrollWheel") > 0f && activeWeapon != 0)
-            {
-                activeWeapon = 0;
-                print("weapon 1 selected");
-            } else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 1)
+            if(Input.GetAxis("Mouse ScrollWheel") > 0f && activeWeapon != 1)
             {
                 activeWeapon = 1;
-                BasicGun();
+                print("weapon 1 selected");
+            } else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 2)
+            {
+                activeWeapon = 2;
                 print("weapon 2 selected");
             }
 
@@ -212,25 +210,81 @@ public class playerMovement : MonoBehaviour
         Cooldown
     }
 
-    void BasicGun()
-    {
-        gunRange = 20f;
-    }
-
     void BasicAttack()
     {
-        if(activeWeapon==0 && !swordActive)
-            StartCoroutine(Attack(Vector3.up, 90f, swordTime));
         if (activeWeapon == 1)
-            Shoot(gunRange);
+        {
+            if (weapons.weaponTypeOne == 1)
+            {
+                //equip one is sword
+                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed1));
+            } else if (weapons.weaponTypeOne == 2)
+            {
+                //equip one is gun
+                Shoot(weapons.range1);
+            }
+            else if (weapons.weaponTypeOne == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
+        else if(activeWeapon == 2)
+        {
+            if (weapons.weaponTypeTwo == 1)
+            {
+                //equip two is sword
+                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed2));
+            }
+            else if (weapons.weaponTypeTwo == 2)
+            {
+                //equip two is gun
+                Shoot(weapons.range2);
+            }
+            else if (weapons.weaponTypeTwo == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
     }
 
     void SpecialAttack()
     {
-        if (activeWeapon == 0 && !swordActive)
-            StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
         if (activeWeapon == 1)
-            print("gun special attack");
+        {
+            if (weapons.weaponTypeOne == 1)
+            {
+                //equip one is sword
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+            }
+            else if (weapons.weaponTypeOne == 2)
+            {
+                //equip one is gun
+                print("gun special");
+            } else if (weapons.weaponTypeOne == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
+        else if (activeWeapon == 2)
+        {
+            if (weapons.weaponTypeTwo == 1)
+            {
+                //equip two is sword
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+            }
+            else if (weapons.weaponTypeTwo == 2)
+            {
+                //equip two is gun
+                print("gun special");
+            } else if (weapons.weaponTypeTwo == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
     }
 
     void Shoot(float maxRange)
@@ -240,6 +294,10 @@ public class playerMovement : MonoBehaviour
         b.transform.position = bPos;
         b.GetComponent<Rigidbody>().AddForce(transform.forward * 1500);
         b.GetComponent<bullet>().maxRange = maxRange;
+        if (activeWeapon == 1)
+            b.GetComponent<bullet>().dmg = weapons.damage1;
+        else
+            b.GetComponent<bullet>().dmg = weapons.damage2;
     }
 
     //slows time

@@ -26,8 +26,8 @@ public class menus : MonoBehaviour {
     int lastPressed = 0;
 
     //inventory 
-    public List<GameObject> items = new List<GameObject>();
-    public List<GameObject> storedItems = new List<GameObject>();
+    public static List<GameObject> items = new List<GameObject>();
+    public static List<GameObject> storedItems = new List<GameObject>();
     public static List<Item> invItems = new List<Item>();
     public static string equipOne, equipTwo;
 
@@ -453,20 +453,6 @@ public class menus : MonoBehaviour {
         //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
     }
 
-    //change equipped weapon
-    void ChangeEquipped(string name, int slot)
-    {
-        if (slot == 1)
-        {
-            inv.transform.Find("active").transform.Find(equipOne).transform.Find("title").GetComponent<Text>().text = name;
-            equipOne = name;
-        } else if (slot == 2)
-        {
-            inv.transform.Find("active").transform.Find(equipTwo).transform.Find("title").GetComponent<Text>().text = name;
-            equipTwo = name;
-        }
-    }
-
     public void InventoryClick(bool leftClick, string name)
     {
         //assigning weapon 1
@@ -474,16 +460,39 @@ public class menus : MonoBehaviour {
         {
             foreach (Item item in invItems)
             {
-                if(item is Weapon && item.name == name)
+                if (item.name == name && item is Weapon)
                 {
-                    if (name == equipOne)
+                    if (name == equipOne || name == equipTwo)
                     {
                         print("already equipped");
-                    } else
-                    {
-                        ChangeEquipped(name, 1);
                     }
-                } else { return; }
+                    else
+                    {
+                        if (item is Gun)
+                        {
+                            weapons.weaponTypeOne = 2;
+                            //recast as gun
+                            Gun g = item as Gun;
+                            weapons.damage1 = g.damage;
+                            weapons.speed1 = g.speed;
+                            weapons.bullets1 = g.bullets;
+                            weapons.range1 = g.range;
+                            print("is gun");
+                        }
+                        else
+                        {
+                            weapons.weaponTypeOne = 1;
+                            //recast as weapon
+                            Weapon w = item as Weapon;
+                            weapons.damage1 = w.damage;
+                            weapons.speed1 = w.speed;
+                            print("is not a gun");
+                        }
+
+                        inv.transform.Find("active").transform.Find(equipOne).transform.Find("title").GetComponent<Text>().text = name;
+                        equipOne = name;
+                    }
+                }
             }
         }
         //assigning weapon 2
@@ -491,17 +500,38 @@ public class menus : MonoBehaviour {
         {
             foreach (Item item in invItems)
             {
-                if (item is Weapon && item.name == name)
+                if (item.name == name && item is Weapon)
                 {
-                    if (name == equipTwo)
+                    if (name == equipTwo || name == equipOne)
                     {
                         print("already equipped");
-                    }
-                    else
+                    } else
                     {
-                        ChangeEquipped(name, 2);
+                        if (item is Gun)
+                        {
+                            weapons.weaponTypeTwo = 2;
+                            //recast as gun
+                            Gun g = item as Gun;
+                            weapons.damage2 = g.damage;
+                            weapons.speed2 = g.speed;
+                            weapons.bullets2 = g.bullets;
+                            weapons.range2 = g.range;
+                            print("is gun");
+                        }
+                        else
+                        {
+                            weapons.weaponTypeTwo = 1;
+                            //recast as weapon
+                            Weapon w = item as Weapon;
+                            weapons.damage2 = w.damage;
+                            weapons.speed2 = w.speed;
+                            print("is not a gun");
+                        }
+
+                        inv.transform.Find("active").transform.Find(equipTwo).transform.Find("title").GetComponent<Text>().text = name;
+                        equipTwo = name;
                     }
-                } else { return; }
+                }
             }
         }
     }
@@ -555,20 +585,3 @@ public class menus : MonoBehaviour {
     }
 }
 
-public class Item
-{
-    public string name;
-    public int value, weight;
-}
-
-public class Weapon : Item
-{
-    public int damage;
-    public float speed;
-}
-
-public class Gun : Weapon
-{
-    public int bullets;
-    public float range;
-}

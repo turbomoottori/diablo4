@@ -1158,6 +1158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 758222057}
   - component: {fileID: 758222056}
+  - component: {fileID: 758222059}
   - component: {fileID: 758222058}
   m_Layer: 0
   m_Name: Globals
@@ -1177,7 +1178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9ad66d88a6f1924f91c84d9d453fb74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  txtActive: 0
 --- !u!4 &758222057
 Transform:
   m_ObjectHideFlags: 0
@@ -1209,6 +1209,17 @@ MonoBehaviour:
   knowsDash: 0
   hasSword: 0
   volume: 0
+--- !u!114 &758222059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 758222055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f4cfca28f05414bb0c3f0f5eddd97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &818254546
 Prefab:
   m_ObjectHideFlags: 0
@@ -2563,7 +2574,6 @@ MonoBehaviour:
   dashes: 0
   dashState: 0
   maxDash: 0.5
-  attackNum: 0
 --- !u!75 &1575445894
 ConstantForce:
   m_ObjectHideFlags: 0
