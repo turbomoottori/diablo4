@@ -1,0 +1,458 @@
+﻿
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class playerMovement : MonoBehaviour
+{
+    public float speed, rotationSpeed, jumpForce, dashForce;
+    public bool runs, dashes;
+    bool canJump, canDoubleJump, canMove;
+    public static int activeWeapon = 1;
+
+    private Rigidbody rb;
+    Vector3 refVelocity;
+    RaycastHit hit;
+
+    //dash variables
+    public DashState dashState;
+    float dashTimer;
+    public float maxDash = 20f;
+    Vector3 savedVelocity;
+
+    //attack variables
+    GameObject sword;
+    float swordTime = 0.2f;
+    float swordSpinTime = 0.5f;
+    bool swordActive;
+    public static int attackNum;
+
+    //slow motion variables
+    public static bool slowTime;
+    bool slowmocd;
+    Vector3 gravForce = Vector3.down * 500;
+    Image slowmobar;
+
+    ConstantForce fakeGrav;
+    public static bool paused = false;
+
+    //money variables
+    int money = 0;
+    int moneyValue = 10;
+    Text moneyui;
+    bool uiActive = false;
+
+    Transform canv;
+
+    void Start()
+    {
+        gameControl.control.maxhp = 50;
+        gameControl.control.hp = 50;
+
+        canv = GameObject.Find("Canvas").transform;
+
+        rb = GetComponent<Rigidbody>();
+        canMove = true;
+        slowTime = false;
+        fakeGrav = GetComponent<ConstantForce>();
+        slowmobar = Instantiate(Resources.Load("ui/slowmo") as GameObject, canv).transform.GetChild(0).GetChild(0).transform.GetComponent<Image>();
+        sword = Resources.Load<GameObject>("sword");
+    }
+
+    void Update()
+    {
+        if (!paused)
+        {
+            //MOVEMENT
+            if (canMove)
+            {
+                float moveHorizontal = Input.GetAxis("Horizontal");
+                float moveVertical = Input.GetAxis("Vertical");
+                Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
+                movement.Normalize();
+                Vector3 pos = transform.position;
+                Vector3 targ = transform.position + movement;
+
+                //check if the player runs or walks
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    pos += (targ - pos) * Time.deltaTime * (speed * 1.5f);
+                    runs = true;
+                }
+                else
+                {
+                    pos += (targ - pos) * Time.deltaTime * speed;
+                    runs = false;
+                }
+                transform.position = pos;
+            }
+
+            //LOOKAT MOVEMENT DIRECTION
+
+            /*if (movement != Vector3.zero) {
+                Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            }*/
+
+            //LOOKAT MOUSE POSITION
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Plane hPlane = new Plane(Vector3.up, transform.position);
+            float direction = 0;
+            if (hPlane.Raycast(ray, out direction))
+            {
+                transform.LookAt(ray.GetPoint(direction));
+            }
+
+            //JUMP AND DOUBLE JUMP
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                canJump = (Physics.Raycast(transform.position, Vector3.down, 1.5f));
+
+                if (canJump)
+                {
+                    canJump = false;
+                    canDoubleJump = true;
+                    rb.velocity = new Vector3(0, jumpForce, 0);
+                }
+                else if (canDoubleJump)
+                {
+                    canDoubleJump = false;
+                    rb.velocity = new Vector3(0, jumpForce, 0);
+                }
+            }
+
+            //DASHING
+
+            switch (dashState)
+            {
+                case DashState.Ready:
+                    var isDashKeyDown = Input.GetKeyDown(KeyCode.Alpha2);
+                    if (isDashKeyDown)
+                    {
+                        if (slowTime)
+                            fakeGrav.relativeForce = Vector3.zero;
+                        savedVelocity = rb.velocity;
+                        rb.velocity = transform.forward * dashForce;
+                        dashState = DashState.Dashing;
+                    }
+                    break;
+                case DashState.Dashing:
+                    canMove = false;
+                    dashes = true;
+                    dashTimer += Time.deltaTime * 3;
+                    if (dashTimer >= maxDash)
+                    {
+                        dashTimer = maxDash;
+                        rb.velocity = savedVelocity;
+                        dashState = DashState.Cooldown;
+                    }
+                    GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemy");
+                    for (int i = 0; i < enemies.Length; i++)
+                    {
+                        if (Vector3.Distance(transform.position, enemies[i].transform.position) <= 5f)
+                        {
+                            StartCoroutine(enemies[i].GetComponent<enemy>().Thrown(transform.position));
+                        }
+                    }
+                    break;
+                case DashState.Cooldown:
+                    canMove = true;
+                    dashes = false;
+                    if (slowTime)
+                        fakeGrav.relativeForce = gravForce;
+                    else
+                        fakeGrav.relativeForce = Vector3.zero;
+                    dashTimer -= Time.deltaTime;
+                    if (dashTimer <= 0)
+                    {
+                        dashTimer = 0;
+                        dashState = DashState.Ready;
+                    }
+                    break;
+            }
+
+            //CHANGE ACTIVE WEAPON
+            if(Input.GetAxis("Mouse ScrollWheel") > 0f && activeWeapon != 1)
+            {
+                activeWeapon = 1;
+                print("weapon 1 selected");
+            } else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 2)
+            {
+                activeWeapon = 2;
+                print("weapon 2 selected");
+            }
+
+            //ATTACKING
+
+            if (Input.GetButtonDown("Fire1"))
+                BasicAttack();
+
+            if (Input.GetButtonDown("Fire2"))
+                SpecialAttack();
+
+            //SLOW TIME
+
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused)
+            {
+                print("sldgdkj");
+                StartCoroutine(SlowTime(3f, 6f));
+            }
+        }
+    }
+
+    public enum DashState
+    {
+        Ready,
+        Dashing,
+        Cooldown
+    }
+
+    void BasicAttack()
+    {
+        if (activeWeapon == 1)
+        {
+            if (weapons.weaponTypeOne == 1)
+            {
+                //equip one is sword
+                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed1));
+            } else if (weapons.weaponTypeOne == 2)
+            {
+                //equip one is gun
+                Shoot(weapons.range1);
+            }
+            else if (weapons.weaponTypeOne == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
+        else if(activeWeapon == 2)
+        {
+            if (weapons.weaponTypeTwo == 1)
+            {
+                //equip two is sword
+                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed2));
+            }
+            else if (weapons.weaponTypeTwo == 2)
+            {
+                //equip two is gun
+                Shoot(weapons.range2);
+            }
+            else if (weapons.weaponTypeTwo == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
+    }
+
+    void SpecialAttack()
+    {
+        if (activeWeapon == 1)
+        {
+            if (weapons.weaponTypeOne == 1)
+            {
+                //equip one is sword
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+            }
+            else if (weapons.weaponTypeOne == 2)
+            {
+                //equip one is gun
+                print("gun special");
+            } else if (weapons.weaponTypeOne == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
+        else if (activeWeapon == 2)
+        {
+            if (weapons.weaponTypeTwo == 1)
+            {
+                //equip two is sword
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
+            }
+            else if (weapons.weaponTypeTwo == 2)
+            {
+                //equip two is gun
+                print("gun special");
+            } else if (weapons.weaponTypeTwo == 0)
+            {
+                //no equip
+                print("no weapon");
+            }
+        }
+    }
+
+    void Shoot(float maxRange)
+    {
+        Vector3 bPos = transform.position + transform.forward;
+        GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
+        b.transform.position = bPos;
+        b.GetComponent<Rigidbody>().AddForce(transform.forward * 1500);
+        b.GetComponent<bullet>().maxRange = maxRange;
+        if (activeWeapon == 1)
+            b.GetComponent<bullet>().dmg = weapons.damage1;
+        else
+            b.GetComponent<bullet>().dmg = weapons.damage2;
+    }
+
+    //slows time
+    IEnumerator SlowTime(float time, float cooldownTime)
+    {
+        //set slow motion
+        slowTime = true;
+        slowmocd = true;
+        Time.timeScale = 0.5f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        speed *= 2;
+        fakeGrav.relativeForce = gravForce;
+        jumpForce *= 2;
+        swordTime /= 2;
+        swordSpinTime /= 2;
+
+        //duration 
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            slowmobar.fillAmount = 1 - t / time;
+            yield return null;
+        }
+        slowTime = false;
+
+        //set normal speed
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.02f;
+        speed /= 2;
+        fakeGrav.relativeForce = Vector3.zero;
+        jumpForce /= 2;
+        swordTime *= 2;
+        swordSpinTime *= 2;
+
+        //cooldown
+        t = 0f;
+        while (t < cooldownTime)
+        {
+            t += Time.deltaTime;
+            slowmobar.fillAmount = t / cooldownTime;
+            yield return null;
+        }
+
+        slowmocd = false;
+        yield return null;
+    }
+
+    //basic attack
+    IEnumerator Attack(Vector3 axis, float angle, float time)
+    {
+        if (swordActive)
+            yield break;
+        swordActive = true;
+        attackNum = 1;
+        GameObject sw;
+        sw = Instantiate(sword, transform.position, transform.rotation);
+        sw.transform.parent = transform;
+        sw.transform.Rotate(0, -45, 0, Space.Self);
+        Quaternion from = sw.transform.rotation;
+        Quaternion to = sw.transform.rotation;
+        to *= Quaternion.Euler(axis * angle);
+        float t = 0f;
+        while (t < time)
+        {
+            sw.transform.rotation = Quaternion.Slerp(from, to, t / time);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        sw.transform.rotation = to;
+        Destroy(sw);
+        swordActive = false;
+        yield return null;
+    }
+
+    //spin attack
+    IEnumerator AttackTwo(Vector3 axis, float time)
+    {
+        if (swordActive)
+            yield break;
+        swordActive = true;
+        attackNum = 2;
+        GameObject sw;
+        sw = Instantiate(sword, transform.position, transform.rotation);
+        sw.transform.parent = transform;
+        float from = transform.eulerAngles.y;
+        float to = from + 360f;
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            float yRot = Mathf.Lerp(from, to, t / time) % 360f;
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRot, transform.eulerAngles.z);
+            yield return null;
+        }
+        Destroy(sw);
+        swordActive = false;
+        yield return null;
+    }
+
+    //SHOW AND UPDATE MONEY UI
+    
+    IEnumerator AddMoney(int tempMoney, float time)
+    {
+        if (uiActive)
+            yield break;
+        uiActive = true;
+
+        //creates money ui if it doesn't exist yet
+        if (moneyui == null)
+        {
+            moneyui = Instantiate(Resources.Load("ui/money") as GameObject, canv).GetComponent<Text>();
+            moneyui.text = money.ToString();
+        } else
+        {
+            moneyui.gameObject.SetActive(true);
+        }
+
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            moneyui.text = tempMoney.ToString() + " + " + (money - tempMoney).ToString();
+            yield return null;
+        }
+        moneyui.text = money.ToString();
+        yield return new WaitForSeconds(2f);
+        moneyui.gameObject.SetActive(false);
+        uiActive = false;
+        yield return null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "enemysword")
+        {
+            if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 1)
+            {
+                gameControl.control.hp -= 1;
+                print("regular attack");
+            } else if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 2)
+            {
+                gameControl.control.hp -= 2;
+                print("stun attack");
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "coin")
+        {
+            StartCoroutine(AddMoney(money, 3f));
+            money += moneyValue;
+            Destroy(collision.gameObject);
+        }
+    }
+}
