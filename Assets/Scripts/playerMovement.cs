@@ -9,7 +9,6 @@ public class playerMovement : MonoBehaviour
     public float speed, rotationSpeed, jumpForce, dashForce;
     public bool runs, dashes;
     bool canJump, canDoubleJump, canMove;
-    public static int activeWeapon = 1;
 
     private Rigidbody rb;
     Vector3 refVelocity;
@@ -20,13 +19,6 @@ public class playerMovement : MonoBehaviour
     float dashTimer;
     public float maxDash = 20f;
     Vector3 savedVelocity;
-
-    //attack variables
-    GameObject sword;
-    float swordTime = 0.2f;
-    float swordSpinTime = 0.5f;
-    bool swordActive;
-    public static int attackNum;
 
     //slow motion variables
     public static bool slowTime;
@@ -57,7 +49,6 @@ public class playerMovement : MonoBehaviour
         slowTime = false;
         fakeGrav = GetComponent<ConstantForce>();
         slowmobar = Instantiate(Resources.Load("ui/slowmo") as GameObject, canv).transform.GetChild(0).GetChild(0).transform.GetComponent<Image>();
-        sword = Resources.Load<GameObject>("sword");
     }
 
     void Update()
@@ -174,25 +165,6 @@ public class playerMovement : MonoBehaviour
                     break;
             }
 
-            //CHANGE ACTIVE WEAPON
-            if(Input.GetAxis("Mouse ScrollWheel") > 0f && activeWeapon != 1)
-            {
-                activeWeapon = 1;
-                print("weapon 1 selected");
-            } else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 2)
-            {
-                activeWeapon = 2;
-                print("weapon 2 selected");
-            }
-
-            //ATTACKING
-
-            if (Input.GetButtonDown("Fire1"))
-                BasicAttack();
-
-            if (Input.GetButtonDown("Fire2"))
-                SpecialAttack();
-
             //SLOW TIME
 
             if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused)
@@ -210,96 +182,6 @@ public class playerMovement : MonoBehaviour
         Cooldown
     }
 
-    void BasicAttack()
-    {
-        if (activeWeapon == 1)
-        {
-            if (weapons.weaponTypeOne == 1)
-            {
-                //equip one is sword
-                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed1));
-            } else if (weapons.weaponTypeOne == 2)
-            {
-                //equip one is gun
-                Shoot(weapons.range1);
-            }
-            else if (weapons.weaponTypeOne == 0)
-            {
-                //no equip
-                print("no weapon");
-            }
-        }
-        else if(activeWeapon == 2)
-        {
-            if (weapons.weaponTypeTwo == 1)
-            {
-                //equip two is sword
-                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed2));
-            }
-            else if (weapons.weaponTypeTwo == 2)
-            {
-                //equip two is gun
-                Shoot(weapons.range2);
-            }
-            else if (weapons.weaponTypeTwo == 0)
-            {
-                //no equip
-                print("no weapon");
-            }
-        }
-    }
-
-    void SpecialAttack()
-    {
-        if (activeWeapon == 1)
-        {
-            if (weapons.weaponTypeOne == 1)
-            {
-                //equip one is sword
-                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
-            }
-            else if (weapons.weaponTypeOne == 2)
-            {
-                //equip one is gun
-                print("gun special");
-            } else if (weapons.weaponTypeOne == 0)
-            {
-                //no equip
-                print("no weapon");
-            }
-        }
-        else if (activeWeapon == 2)
-        {
-            if (weapons.weaponTypeTwo == 1)
-            {
-                //equip two is sword
-                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
-            }
-            else if (weapons.weaponTypeTwo == 2)
-            {
-                //equip two is gun
-                print("gun special");
-            } else if (weapons.weaponTypeTwo == 0)
-            {
-                //no equip
-                print("no weapon");
-            }
-        }
-    }
-
-    void Shoot(float maxRange)
-    {
-        Vector3 bPos = transform.position + transform.forward;
-        GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
-        b.transform.position = bPos;
-        b.GetComponent<Rigidbody>().AddForce(transform.forward * 1500);
-        b.GetComponent<bullet>().maxRange = maxRange;
-        if (activeWeapon == 1)
-            b.GetComponent<bullet>().dmg = weapons.damage1;
-        else
-            b.GetComponent<bullet>().dmg = weapons.damage2;
-    }
-
     //slows time
     IEnumerator SlowTime(float time, float cooldownTime)
     {
@@ -311,8 +193,8 @@ public class playerMovement : MonoBehaviour
         speed *= 2;
         fakeGrav.relativeForce = gravForce;
         jumpForce *= 2;
-        swordTime /= 2;
-        swordSpinTime /= 2;
+        attack.swordTime /= 2;
+        attack.swordSpinTime /= 2;
 
         //duration 
         float t = 0f;
@@ -330,8 +212,8 @@ public class playerMovement : MonoBehaviour
         speed /= 2;
         fakeGrav.relativeForce = Vector3.zero;
         jumpForce /= 2;
-        swordTime *= 2;
-        swordSpinTime *= 2;
+        attack.swordTime *= 2;
+        attack.swordSpinTime *= 2;
 
         //cooldown
         t = 0f;
@@ -343,58 +225,6 @@ public class playerMovement : MonoBehaviour
         }
 
         slowmocd = false;
-        yield return null;
-    }
-
-    //basic attack
-    IEnumerator Attack(Vector3 axis, float angle, float time)
-    {
-        if (swordActive)
-            yield break;
-        swordActive = true;
-        attackNum = 1;
-        GameObject sw;
-        sw = Instantiate(sword, transform.position, transform.rotation);
-        sw.transform.parent = transform;
-        sw.transform.Rotate(0, -45, 0, Space.Self);
-        Quaternion from = sw.transform.rotation;
-        Quaternion to = sw.transform.rotation;
-        to *= Quaternion.Euler(axis * angle);
-        float t = 0f;
-        while (t < time)
-        {
-            sw.transform.rotation = Quaternion.Slerp(from, to, t / time);
-            t += Time.deltaTime;
-            yield return null;
-        }
-        sw.transform.rotation = to;
-        Destroy(sw);
-        swordActive = false;
-        yield return null;
-    }
-
-    //spin attack
-    IEnumerator AttackTwo(Vector3 axis, float time)
-    {
-        if (swordActive)
-            yield break;
-        swordActive = true;
-        attackNum = 2;
-        GameObject sw;
-        sw = Instantiate(sword, transform.position, transform.rotation);
-        sw.transform.parent = transform;
-        float from = transform.eulerAngles.y;
-        float to = from + 360f;
-        float t = 0f;
-        while (t < time)
-        {
-            t += Time.deltaTime;
-            float yRot = Mathf.Lerp(from, to, t / time) % 360f;
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRot, transform.eulerAngles.z);
-            yield return null;
-        }
-        Destroy(sw);
-        swordActive = false;
         yield return null;
     }
 

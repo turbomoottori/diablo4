@@ -470,18 +470,21 @@ public class menus : MonoBehaviour {
                     {
                         if (item is Gun)
                         {
-                            weapons.weaponTypeOne = 2;
+                            weapons.weaponType1 = 2;
                             //recast as gun
                             Gun g = item as Gun;
                             weapons.damage1 = g.damage;
                             weapons.speed1 = g.speed;
                             weapons.bullets1 = g.bullets;
                             weapons.range1 = g.range;
+                            weapons.type1 = g.type;
+                            weapons.special1 = g.special;
+                            weapons.rlspeed1 = g.rlspeed;
                             print("is gun");
                         }
                         else
                         {
-                            weapons.weaponTypeOne = 1;
+                            weapons.weaponType1 = 1;
                             //recast as weapon
                             Weapon w = item as Weapon;
                             weapons.damage1 = w.damage;
@@ -509,18 +512,21 @@ public class menus : MonoBehaviour {
                     {
                         if (item is Gun)
                         {
-                            weapons.weaponTypeTwo = 2;
+                            weapons.weaponType2 = 2;
                             //recast as gun
                             Gun g = item as Gun;
                             weapons.damage2 = g.damage;
                             weapons.speed2 = g.speed;
                             weapons.bullets2 = g.bullets;
                             weapons.range2 = g.range;
+                            weapons.type2 = g.type;
+                            weapons.special2 = g.special;
+                            weapons.rlspeed2 = g.rlspeed;
                             print("is gun");
                         }
                         else
                         {
-                            weapons.weaponTypeTwo = 1;
+                            weapons.weaponType2 = 1;
                             //recast as weapon
                             Weapon w = item as Weapon;
                             weapons.damage2 = w.damage;

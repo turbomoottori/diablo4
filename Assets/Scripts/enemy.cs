@@ -289,10 +289,10 @@ public class enemy : MonoBehaviour {
     {
         if (other.gameObject.tag == "sword")
         {
-            if (playerMovement.attackNum == 1)
-                StartCoroutine(Attacked(other.gameObject.transform.parent.position, playerMovement.activeWeapon));
-            else if (playerMovement.attackNum == 2)
-                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, playerMovement.activeWeapon));
+            if (attack.attackNum == 1)
+                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon));
+            else if (attack.attackNum == 2)
+                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon));
         }
     }
 
