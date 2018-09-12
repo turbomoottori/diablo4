@@ -103,6 +103,7 @@ public class attack : MonoBehaviour {
                         maxRange = weapons.range2;
                         speed = weapons.speed2;
                     }
+                    
 
                     Vector3 bPos = transform.position + transform.forward;
                     GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
@@ -119,9 +120,70 @@ public class attack : MonoBehaviour {
                     shoot = Shoot.Cooldown;
                     break;
 
+                //rapid fire
                 case Shoot.Rapid:
+                    if(activeWeapon==1)
+                    {
+                        if (bulletCount < weapons.bullets1 && !attacking)
+                        {
+                            attacking = true;
+                            InvokeRepeating("RapidFire", 0.01f, 1/weapons.speed1);
+                        }
+                        else if(bulletCount >= weapons.bullets1)
+                        {
+                            shoot = Shoot.Cooldown;
+                            CancelInvoke("RapidFire");
+                        }
+                    }
+                    else
+                    {
+                        if (bulletCount < weapons.bullets2 && !attacking)
+                        {
+                            attacking = true;
+                            InvokeRepeating("RapidFire", 0.01f, 1/weapons.speed2);
+                        }
+                        else if (bulletCount >= weapons.bullets2)
+                        {
+                            shoot = Shoot.Cooldown;
+                            CancelInvoke("RapidFire");
+                        }
+                    }
+                    break;
+
+                case Shoot.Shotgun:
                     attacking = true;
-                    //RAPID FIRE HERE
+
+
+                    if (activeWeapon == 1)
+                    {
+                        maxRange = weapons.range1;
+                        speed = weapons.speed1;
+                    }
+                    else
+                    {
+                        maxRange = weapons.range2;
+                        speed = weapons.speed2;
+                    }
+                    
+                    bPos = transform.position + transform.forward;
+                    Quaternion[] bRot=new Quaternion[] { transform.rotation, transform.rotation *= Quaternion.Euler(Vector3.up * 45), transform.rotation *= Quaternion.Euler(Vector3.up * -45) };
+                    for(int i = 0; i < bRot.Length; i++)
+                    {
+                        b = Instantiate(Resources.Load<GameObject>("bullet"));
+                        b.transform.position = bPos;
+                        b.transform.rotation = bRot[i];
+                        b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                        b.GetComponent<bullet>().maxRange = maxRange;
+
+                        if (activeWeapon == 1)
+                            b.GetComponent<bullet>().dmg = weapons.damage1;
+                        else
+                            b.GetComponent<bullet>().dmg = weapons.damage2;
+                    }
+                    
+
+                    bulletCount += 1;
+                    shoot = Shoot.Cooldown;
                     break;
 
                 //reloading
@@ -202,7 +264,6 @@ public class attack : MonoBehaviour {
                     if (weapons.type1 == "shotgun")
                         shoot = Shoot.Shotgun;
                 }
-                //Shoot(weapons.range1);
             }
             else if (weapons.weaponType1 == 0)
             {
@@ -279,20 +340,34 @@ public class attack : MonoBehaviour {
         }
     }
 
-    /*void Shoot(float maxRange)
+    void RapidFire()
     {
-        attacking = true;
-        Vector3 bPos = transform.position + transform.forward;
-        GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
-        b.transform.position = bPos;
-        b.GetComponent<Rigidbody>().AddForce(transform.forward * 1500);
-        b.GetComponent<bullet>().maxRange = maxRange;
-        if (activeWeapon == 1)
+        float range, speed;
+
+        if (activeWeapon==1)
+        {
+            range = weapons.range1;
+            speed = weapons.speed1;
+            Vector3 bPos = transform.position + transform.forward;
+            GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
+            b.transform.position = bPos;
+            b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+            b.GetComponent<bullet>().maxRange = range;
             b.GetComponent<bullet>().dmg = weapons.damage1;
+        }
         else
+        {
+            range = weapons.range2;
+            speed = weapons.speed2;
+            Vector3 bPos = transform.position + transform.forward;
+            GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
+            b.transform.position = bPos;
+            b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+            b.GetComponent<bullet>().maxRange = range;
             b.GetComponent<bullet>().dmg = weapons.damage2;
-        attacking = false;
-    }*/
+        }
+        bulletCount += 1;
+    }
 
     //basic attack
     IEnumerator Attack(Vector3 axis, float angle, float time)
