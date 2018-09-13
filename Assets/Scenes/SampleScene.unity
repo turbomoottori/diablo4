@@ -1357,6 +1357,107 @@ OffMeshLink:
   m_BiDirectional: 1
   m_Activated: 1
   m_AutoUpdatePositions: 0
+--- !u!1001 &900889729
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 275.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 158.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_RootOrder
+      value: 37
+      objectReference: {fileID: 0}
+    - target: {fileID: 1854599146704390, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+      propertyPath: m_Name
+      value: Collectible
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: collectibleName
+      value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: value
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: weight
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: itemType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: damage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: bullets
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: speed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: reloadSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: range
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: type
+      value: shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+        type: 2}
+      propertyPath: special
+      value: multi
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &947020828
 GameObject:
   m_ObjectHideFlags: 0
@@ -2604,6 +2705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3553f27f9b75b7478e912604b2b37fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shoot: 0
 --- !u!1 &1577232833
 GameObject:
   m_ObjectHideFlags: 0

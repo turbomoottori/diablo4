@@ -8,7 +8,7 @@ using System.IO;
 
 public class menus : MonoBehaviour {
 
-    GameObject player, speechBox, speech, inv, itemCont;
+    GameObject player, speechBox, speech, inv, itemCont, stInv, stInInventory, stStored;
     Text txt;
     Image healthbar;
     float moveBox = 176f;
@@ -16,11 +16,14 @@ public class menus : MonoBehaviour {
     public static bool txtActive = false;
 
     bool talks = false;
-    public static bool pauseOpen, invOpen = false;
+    public static bool pauseOpen, invOpen, stInvOpen = false;
     int temphp, tempmaxhp, volumeVal;
 
     GameObject p, gen, opt, saves, savePrompt;
     string saveText = "Save File ";
+    public static GameObject collected;
+    public static float showCollectibleTime;
+    public static bool showC;
 
     Transform canv;
     int lastPressed = 0;
@@ -29,6 +32,7 @@ public class menus : MonoBehaviour {
     public static List<GameObject> items = new List<GameObject>();
     public static List<GameObject> storedItems = new List<GameObject>();
     public static List<Item> invItems = new List<Item>();
+    public static List<Item> itemsStored = new List<Item>();
     public static string equipOne, equipTwo;
 
     void Start () {
@@ -54,12 +58,14 @@ public class menus : MonoBehaviour {
         //PRESSING ESC
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!talks && !invOpen)
+            if (!talks && !invOpen && !stInvOpen)
                 TogglePause();
-            else if (!pauseOpen && !talks && invOpen)
+            else if (!pauseOpen && !talks && invOpen && !stInvOpen)
                 Inventory();
-            else if (!pauseOpen && !invOpen && talks)
+            else if (!pauseOpen && !invOpen && talks && !stInvOpen)
                 ScrollText();
+            else if (!pauseOpen && !invOpen && !talks && stInvOpen)
+                StoredItems();
         }
 
         //OPEN INVENTORY
@@ -75,6 +81,13 @@ public class menus : MonoBehaviour {
         if (gameControl.control.hp <= 0)
         {
             print("kuolee");
+        }
+
+        showCollectibleTime += Time.deltaTime;
+        if (showCollectibleTime >= 4 && showC)
+        {
+            showC = false;
+            HideCollected();
         }
     }
 
@@ -544,14 +557,89 @@ public class menus : MonoBehaviour {
 
     void RemoveItem(string name)
     {
-        foreach(GameObject item in items)
+        foreach(GameObject itemBlock in items)
+        {
+            if (itemBlock.name == name)
+            {
+                items.Remove(itemBlock);
+                storedItems.Add(itemBlock);
+            }
+        }
+        foreach (Item item in invItems)
         {
             if (item.name == name)
             {
-                items.Remove(item);
-                storedItems.Add(item);
+                invItems.Remove(item);
+                itemsStored.Add(item);
             }
         }
+    }
+
+    public void StoredItems()
+    {
+        if (!stInvOpen)
+        {
+            //open this inventory
+            stInvOpen = true;
+            if (stInv == null)
+            {
+                stInv = Instantiate(Resources.Load("ui/inventory/storeInv") as GameObject, canv, false);
+                stInInventory = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, stInv.transform.Find("items"), false);
+                stStored = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, stInv.transform.Find("stored"), false);
+
+                //show every item in inventory
+                if (invItems != null)
+                {
+                    foreach (Item item in invItems)
+                    {
+                        AddItem(item.name, item.weight);
+                    }
+                }
+
+                //show every item in inventory
+                if (itemsStored != null)
+                {
+                    foreach (Item stitem in itemsStored)
+                    {
+                        AddItem(stitem.name, stitem.weight);
+                    }
+                }
+            }
+            else
+            {
+                stInv.SetActive(true);
+            }
+
+            //check if new items have appeared in inventory and display them too
+            foreach (Item itemInInventory in invItems)
+            {
+                if (!invItems.Contains(itemInInventory))
+                {
+                    invItems.Add(itemInInventory);
+                }
+            }
+            
+            foreach (Item itemStored in itemsStored)
+            {
+                if (!invItems.Contains(itemStored))
+                {
+                    invItems.Add(itemStored);
+                }
+            }
+
+            //check if item is removed and remove it from the list
+            invItems.RemoveAll(Item => Item == null);
+            storedItems.RemoveAll(Item => Item == null);
+        }
+        else
+        {
+            //close this inventory
+            stInvOpen = false;
+            stInv.SetActive(false);
+        }
+
+        //toggles timescale
+        PauseNoMenu();
     }
 
     //change text to whatever npc is saying
@@ -588,6 +676,30 @@ public class menus : MonoBehaviour {
             box.offsetMin = Vector2.zero;
             page += 1;
         }
+    }
+
+    //show image and name of collected item
+    public static void ShowCollected(string collectedName)
+    {
+        showC = true;
+        showCollectibleTime = 0;
+
+        if (collected == null)
+        {
+            collected = Instantiate(Resources.Load("ui/collected") as GameObject, GameObject.Find("Canvas").transform, false);
+            //collected.transform.Find("itemImage").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + collectedName);
+            collected.transform.Find("collectedName").GetComponent<Text>().text = collectedName;
+        } else
+        {
+            collected.SetActive(true);
+            //collected.transform.Find("itemImage").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + collectedName);
+            collected.transform.Find("collectedName").GetComponent<Text>().text = collectedName;
+        }
+    }
+
+    public void HideCollected()
+    {
+        collected.SetActive(false);
     }
 }
 

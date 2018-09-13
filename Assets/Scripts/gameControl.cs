@@ -42,7 +42,7 @@ public class gameControl : MonoBehaviour
             hasSword = true;
             Weapon firstSword = new Weapon() { name = "First Sword", damage = 3, speed = 0.2f, value = 0, weight = 1 }; 
             Item test = new Item() { name = "test", value = 0, weight = 1 }; //delete later
-            Gun testGun = new Gun() { bullets = 5, damage = 2, name = "GUN", range = 20f, speed = 10f, value = 0, weight = 1, type="shotgun", rlspeed=0.5f };
+            Gun testGun = new Gun() { bullets = 5, damage = 2, name = "GUN", range = 20f, speed = 10f, value = 0, weight = 1, type="rapid", rlspeed=0.5f, special="big"};
             menus.invItems.Add(firstSword);
             menus.invItems.Add(test);
             menus.invItems.Add(testGun);

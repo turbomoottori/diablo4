@@ -12,7 +12,11 @@ public class attack : MonoBehaviour {
     public static int activeWeapon = 1;
     public Shoot shoot;
     int bulletCount = 0;
-    float shootcd;
+    float shootcd, specialTimer;
+
+    int damage, bullets;
+    float speed, rlSpeed, range;
+    string type, special;
 
     void Start () {
         sword = Resources.Load<GameObject>("sword");
@@ -29,12 +33,15 @@ public class attack : MonoBehaviour {
 
                 if (weapons.weaponType1 != 2)
                 {
+                    //weapon 1 is sword
+                    WeaponChange(1, false);
                     shoot = Shoot.Off;
                 }
                 else
                 {
+                    //weapon 1 is gun
                     shoot = Shoot.Cooldown;
-                    shootcd = weapons.rlspeed1;
+                    WeaponChange(1, true);
                 }
                     
 
@@ -46,12 +53,15 @@ public class attack : MonoBehaviour {
 
                 if (weapons.weaponType2 != 2)
                 {
+                    //weapon 2 is sword
+                    WeaponChange(2, false);
                     shoot = Shoot.Off;
                 }
                 else
                 {
+                    //weapon 2 is gun
                     shoot = Shoot.Cooldown;
-                    shootcd = weapons.rlspeed2;
+                    WeaponChange(2, true);
                 }
 
                 print("weapon 2 selected");
@@ -78,9 +88,9 @@ public class attack : MonoBehaviour {
                 case Shoot.Ready:
 
                     if (activeWeapon == 1)
-                        shootcd = weapons.rlspeed1;
+                        WeaponChange(1, true);
                     else
-                        shootcd = weapons.rlspeed2;
+                        WeaponChange(2, true);
 
                     if (Input.GetKeyDown(KeyCode.R) && bulletCount != 0)
                         shoot = Shoot.Reload;
@@ -90,31 +100,13 @@ public class attack : MonoBehaviour {
                 //normal shooting
                 case Shoot.Shooting:
                     attacking = true;
-                    float maxRange;
-                    float speed;
-
-                    if (activeWeapon == 1)
-                    {
-                        maxRange = weapons.range1;
-                        speed = weapons.speed1;
-                    }
-                    else
-                    {
-                        maxRange = weapons.range2;
-                        speed = weapons.speed2;
-                    }
                     
-
                     Vector3 bPos = transform.position + transform.forward;
                     GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
                     b.transform.position = bPos;
                     b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-                    b.GetComponent<bullet>().maxRange = maxRange;
-
-                    if (activeWeapon == 1)
-                        b.GetComponent<bullet>().dmg = weapons.damage1;
-                    else
-                        b.GetComponent<bullet>().dmg = weapons.damage2;
+                    b.GetComponent<bullet>().maxRange = range;
+                    b.GetComponent<bullet>().dmg = damage;
 
                     bulletCount += 1;
                     shoot = Shoot.Cooldown;
@@ -122,89 +114,170 @@ public class attack : MonoBehaviour {
 
                 //rapid fire
                 case Shoot.Rapid:
-                    if(activeWeapon==1)
+
+                    if (bulletCount < bullets && !attacking)
                     {
-                        if (bulletCount < weapons.bullets1 && !attacking)
-                        {
-                            attacking = true;
-                            InvokeRepeating("RapidFire", 0.01f, 1/weapons.speed1);
-                        }
-                        else if(bulletCount >= weapons.bullets1)
-                        {
-                            shoot = Shoot.Cooldown;
-                            CancelInvoke("RapidFire");
-                        }
+                        attacking = true;
+                        InvokeRepeating("RapidFire", 0.01f, 1 / speed);
                     }
-                    else
+                    else if (bulletCount >= bullets)
                     {
-                        if (bulletCount < weapons.bullets2 && !attacking)
-                        {
-                            attacking = true;
-                            InvokeRepeating("RapidFire", 0.01f, 1/weapons.speed2);
-                        }
-                        else if (bulletCount >= weapons.bullets2)
-                        {
-                            shoot = Shoot.Cooldown;
-                            CancelInvoke("RapidFire");
-                        }
+                        shoot = Shoot.Cooldown;
+                        CancelInvoke("RapidFire");
                     }
+                    
                     break;
 
+                //shotgun
                 case Shoot.Shotgun:
                     attacking = true;
 
-
-                    if (activeWeapon == 1)
-                    {
-                        maxRange = weapons.range1;
-                        speed = weapons.speed1;
-                    }
-                    else
-                    {
-                        maxRange = weapons.range2;
-                        speed = weapons.speed2;
-                    }
-                    
                     bPos = transform.position + transform.forward;
-                    Quaternion[] bRot=new Quaternion[] { transform.rotation, transform.rotation *= Quaternion.Euler(Vector3.up * 45), transform.rotation *= Quaternion.Euler(Vector3.up * -45) };
-                    for(int i = 0; i < bRot.Length; i++)
+                    Quaternion bRot = transform.rotation;
+
+                    //position for each bullet
+                    Vector3[] posB = new Vector3[] {
+                        bPos,
+                        bPos + transform.right * 0.5f,
+                        bPos + transform.right * -0.5f,
+                        bPos + transform.right * 1f,
+                        bPos + transform.right * -1f };
+
+                    //rotation for each bullet
+                    Quaternion[] rotB= new Quaternion[] {
+                        bRot,
+                        bRot *= Quaternion.Euler(Vector3.up * 45),
+                        bRot *= Quaternion.Euler(Vector3.up * -45),
+                        bRot *= Quaternion.Euler(Vector3.up * -60),
+                        bRot *= Quaternion.Euler(Vector3.up * 60) };
+
+                    for(int i = 0; i < rotB.Length; i++)
                     {
                         b = Instantiate(Resources.Load<GameObject>("bullet"));
-                        b.transform.position = bPos;
-                        b.transform.rotation = bRot[i];
+                        b.transform.position = posB[i];
+                        b.transform.rotation = rotB[i];
                         b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-                        b.GetComponent<bullet>().maxRange = maxRange;
-
-                        if (activeWeapon == 1)
-                            b.GetComponent<bullet>().dmg = weapons.damage1;
-                        else
-                            b.GetComponent<bullet>().dmg = weapons.damage2;
+                        b.GetComponent<bullet>().maxRange = range;
+                        b.GetComponent<bullet>().dmg = damage;
                     }
                     
-
                     bulletCount += 1;
                     shoot = Shoot.Cooldown;
+                    break;
+
+                //special gun attacks
+                case Shoot.Special:
+                    //"big bullet", 4 times damage, long cooldown
+                    if (special == "big")
+                    {
+                        attacking = true;
+                        bPos = transform.position + transform.forward;
+                        b = Instantiate(Resources.Load<GameObject>("bullet"));
+                        b.transform.position = bPos;
+                        b.transform.localScale *= 2;
+                        b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                        b.GetComponent<bullet>().maxRange = range;
+                        b.GetComponent<bullet>().dmg = damage * 4;
+
+                        bulletCount += bullets;
+                        shootcd *= 2f;
+                        shoot = Shoot.Cooldown;
+                    }
+                    //unlimited ammo for 3 seconds, long cooldown
+                    if (special == "unlimited")
+                    {
+                        specialTimer += Time.deltaTime;
+
+                        if (Input.GetButton("Fire2"))
+                            RapidFire();
+
+                        if (specialTimer >= 3f)
+                        {
+                            specialTimer = 0;
+                            shootcd *= 6;
+                            shoot = Shoot.Cooldown;
+                        }
+                    }
+                    //shoots shotgun ammo 3 times
+                    if (special == "multi")
+                    {
+                        attacking = true;
+                        bPos = transform.position + transform.forward;
+                        bRot = transform.rotation;
+                        Vector3 bPos2 = transform.position + transform.forward + transform.up;
+                        Vector3 bPos3 = transform.position + transform.forward + (transform.up * 2);
+
+                        //position for each bullet
+                        posB = new Vector3[] {
+                                bPos,
+                                bPos + transform.right * 0.5f,
+                                bPos + transform.right * -0.5f,
+                                bPos + transform.right * 1f,
+                                bPos + transform.right * -1f };
+
+                        Vector3[] posB2 = new Vector3[] {
+                                bPos2,
+                                bPos2 + transform.right * 0.5f,
+                                bPos2 + transform.right * -0.5f,
+                                bPos2 + transform.right * 1f,
+                                bPos2 + transform.right * -1f };
+
+                        Vector3[] posB3 = new Vector3[] {
+                                bPos3,
+                                bPos3 + transform.right * 0.5f,
+                                bPos3 + transform.right * -0.5f,
+                                bPos3 + transform.right * 1f,
+                                bPos3 + transform.right * -1f };
+
+                        //rotation for each bullet
+                        rotB = new Quaternion[] {
+                                bRot,
+                                bRot *= Quaternion.Euler(Vector3.up * 45),
+                                bRot *= Quaternion.Euler(Vector3.up * -45),
+                                bRot *= Quaternion.Euler(Vector3.up * -60),
+                                bRot *= Quaternion.Euler(Vector3.up * 60) };
+
+                        for (int i = 0; i < rotB.Length; i++)
+                        {
+                            b = Instantiate(Resources.Load<GameObject>("bullet"));
+                            b.transform.position = posB[i];
+                            b.transform.rotation = rotB[i];
+                            b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                            b.GetComponent<bullet>().maxRange = range;
+                            b.GetComponent<bullet>().dmg = damage;
+
+                            GameObject b2 = Instantiate(Resources.Load<GameObject>("bullet"));
+                            b2.transform.position = posB2[i];
+                            b2.transform.rotation = rotB[i];
+                            b2.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                            b2.GetComponent<bullet>().maxRange = range;
+                            b2.GetComponent<bullet>().dmg = damage;
+
+                            GameObject b3 = Instantiate(Resources.Load<GameObject>("bullet"));
+                            b3.transform.position = posB3[i];
+                            b3.transform.rotation = rotB[i];
+                            b3.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                            b3.GetComponent<bullet>().maxRange = range;
+                            b3.GetComponent<bullet>().dmg = damage;
+                        }
+
+                        bulletCount += bullets;
+                        shootcd *= 3f;
+                        shoot = Shoot.Cooldown;
+                    }
+
                     break;
 
                 //reloading
                 case Shoot.Cooldown:
                     attacking = false;
-                    if (activeWeapon == 1 && bulletCount >= weapons.bullets1)
+
+                    if (bulletCount >= bullets)
                     {
                         shootcd -= Time.deltaTime;
                         if (shootcd <= 0)
                         {
-                            shootcd = weapons.rlspeed1;
-                            bulletCount = 0;
-                            shoot = Shoot.Ready;
-                        }
-                    }
-                    else if(activeWeapon == 2 && bulletCount >= weapons.bullets2)
-                    {
-                        shootcd -= Time.deltaTime;
-                        if (shootcd <= 0)
-                        {
-                            shootcd = weapons.rlspeed2;
+                            shootcd = rlSpeed;
                             bulletCount = 0;
                             shoot = Shoot.Ready;
                         }
@@ -213,32 +286,52 @@ public class attack : MonoBehaviour {
                     {
                         shoot = Shoot.Ready;
                     }
-
                     break;
 
                 //manual reload
                 case Shoot.Reload:
-                    if (activeWeapon == 1)
+                    shootcd -= Time.deltaTime;
+                    if (shootcd <= 0)
                     {
-                        shootcd -= Time.deltaTime;
-                        if (shootcd <= 0)
-                        {
-                            shootcd = weapons.rlspeed1;
-                            bulletCount = 0;
-                            shoot = Shoot.Ready;
-                        }
+                        shootcd = rlSpeed;
+                        bulletCount = 0;
+                        shoot = Shoot.Ready;
                     }
-                    else
-                    {
-                        shootcd -= Time.deltaTime;
-                        if (shootcd <= 0)
-                        {
-                            shootcd = weapons.rlspeed2;
-                            bulletCount = 0;
-                            shoot = Shoot.Ready;
-                        }
-                    }
+                    
                     break;
+            }
+        }
+    }
+
+    void WeaponChange(int active, bool isGun)
+    {
+        //change weapon variables
+        if (active == 1)
+        {
+            damage = weapons.damage1;
+            speed = weapons.speed1;
+            if (isGun)
+            {
+                bullets = weapons.bullets1;
+                rlSpeed = weapons.rlspeed1;
+                range = weapons.range1;
+                shootcd = weapons.rlspeed1;
+                type = weapons.type1;
+                special = weapons.special1;
+            }
+        }
+        else
+        {
+            damage = weapons.damage2;
+            speed = weapons.speed2;
+            if (isGun)
+            {
+                bullets = weapons.bullets2;
+                rlSpeed = weapons.rlspeed2;
+                range = weapons.range2;
+                shootcd = weapons.rlspeed2;
+                type = weapons.type2;
+                special = weapons.special2;
             }
         }
     }
@@ -309,10 +402,10 @@ public class attack : MonoBehaviour {
                 //equip one is sword
                 StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
             }
-            else if (weapons.weaponType1 == 2)
+            else if (weapons.weaponType1 == 2 && shoot == Shoot.Ready)
             {
                 //equip one is gun
-                print("gun special");
+                shoot = Shoot.Special;
             }
             else if (weapons.weaponType1 == 0)
             {
@@ -327,10 +420,10 @@ public class attack : MonoBehaviour {
                 //equip two is sword
                 StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
             }
-            else if (weapons.weaponType2 == 2)
+            else if (weapons.weaponType2 == 2 && shoot == Shoot.Ready)
             {
                 //equip two is gun
-                print("gun special");
+                shoot = Shoot.Special;
             }
             else if (weapons.weaponType2 == 0)
             {
@@ -342,30 +435,13 @@ public class attack : MonoBehaviour {
 
     void RapidFire()
     {
-        float range, speed;
-
-        if (activeWeapon==1)
-        {
-            range = weapons.range1;
-            speed = weapons.speed1;
-            Vector3 bPos = transform.position + transform.forward;
-            GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
-            b.transform.position = bPos;
-            b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-            b.GetComponent<bullet>().maxRange = range;
-            b.GetComponent<bullet>().dmg = weapons.damage1;
-        }
-        else
-        {
-            range = weapons.range2;
-            speed = weapons.speed2;
-            Vector3 bPos = transform.position + transform.forward;
-            GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
-            b.transform.position = bPos;
-            b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-            b.GetComponent<bullet>().maxRange = range;
-            b.GetComponent<bullet>().dmg = weapons.damage2;
-        }
+        attacking = true;
+        Vector3 bPos = transform.position + transform.forward;
+        GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
+        b.transform.position = bPos;
+        b.GetComponent<Rigidbody>().AddForce(transform.forward * 300 * speed);
+        b.GetComponent<bullet>().maxRange = range;
+        b.GetComponent<bullet>().dmg = damage;
         bulletCount += 1;
     }
 

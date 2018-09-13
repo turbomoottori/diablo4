@@ -10,6 +10,9 @@ public class weapons : MonoBehaviour {
     public static float speed1, speed2;
     public static int bullets1, bullets2;
     public static float range1, range2, rlspeed1, rlspeed2;
+
+    //weapon type can be "normal", "rapid" or "shotgun"
+    //weapon's special can be "big", "unlimited" or "multi"
     public static string type1, type2, special1, special2;
 
     //0 is no weapon, 1 is sword, 2 is gun
