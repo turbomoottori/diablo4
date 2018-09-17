@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Linq;
 
 public class menus : MonoBehaviour {
 
@@ -29,8 +30,6 @@ public class menus : MonoBehaviour {
     int lastPressed = 0;
 
     //inventory 
-    public static List<GameObject> items = new List<GameObject>();
-    public static List<GameObject> storedItems = new List<GameObject>();
     public static List<Item> invItems = new List<Item>();
     public static List<Item> itemsStored = new List<Item>();
     public static string equipOne, equipTwo;
@@ -83,11 +82,17 @@ public class menus : MonoBehaviour {
             print("kuolee");
         }
 
+        //SHOW COLLECTED ITEM
         showCollectibleTime += Time.deltaTime;
         if (showCollectibleTime >= 4 && showC)
         {
             showC = false;
             HideCollected();
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            StoredItems();
         }
     }
 
@@ -415,7 +420,7 @@ public class menus : MonoBehaviour {
                 {
                     foreach (Item item in invItems)
                     {
-                        AddItem(item.name, item.weight);
+                        AddItem(item.name, item.weight, itemCont, 1);
                     }
                 }
 
@@ -448,13 +453,14 @@ public class menus : MonoBehaviour {
     }
 
     //display items in inventory
-    void AddItem(string name, int wt)
+    void AddItem(string name, int wt, GameObject listBox, int type)
     {
-        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, itemCont.transform, false);
+        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, listBox.transform, false);
         i.transform.Find("name").GetComponent<Text>().text = name;
         i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
-        items.Add(i);
         i.name = name;
+        //items.Add(i);
+        i.GetComponent<buttonScript>().itemType = type;
     }
 
     //display equipped items
@@ -555,24 +561,31 @@ public class menus : MonoBehaviour {
         }
     }
 
-    void RemoveItem(string name)
+    public void TakeOrDeposit(string name, bool take)
     {
-        foreach(GameObject itemBlock in items)
+        if (!take)
         {
-            if (itemBlock.name == name)
+            for(int i = 0; i < invItems.Count; i++)
             {
-                items.Remove(itemBlock);
-                storedItems.Add(itemBlock);
+                if (invItems[i].name == name)
+                {
+                    itemsStored.Add(invItems[i]);
+                    invItems.Remove(invItems[i]);
+                }
             }
         }
-        foreach (Item item in invItems)
+        else
         {
-            if (item.name == name)
+            for (int i = 0; i < itemsStored.Count; i++)
             {
-                invItems.Remove(item);
-                itemsStored.Add(item);
+                if (invItems[i].name == name)
+                {
+                    invItems.Add(invItems[i]);
+                    itemsStored.Remove(invItems[i]);
+                }
             }
         }
+        UpdateStorageInventory();
     }
 
     public void StoredItems()
@@ -592,7 +605,7 @@ public class menus : MonoBehaviour {
                 {
                     foreach (Item item in invItems)
                     {
-                        AddItem(item.name, item.weight);
+                        AddItem(item.name, item.weight, stInInventory, 2);
                     }
                 }
 
@@ -601,7 +614,7 @@ public class menus : MonoBehaviour {
                 {
                     foreach (Item stitem in itemsStored)
                     {
-                        AddItem(stitem.name, stitem.weight);
+                        AddItem(stitem.name, stitem.weight, stStored, 3);
                     }
                 }
             }
@@ -610,26 +623,7 @@ public class menus : MonoBehaviour {
                 stInv.SetActive(true);
             }
 
-            //check if new items have appeared in inventory and display them too
-            foreach (Item itemInInventory in invItems)
-            {
-                if (!invItems.Contains(itemInInventory))
-                {
-                    invItems.Add(itemInInventory);
-                }
-            }
-            
-            foreach (Item itemStored in itemsStored)
-            {
-                if (!invItems.Contains(itemStored))
-                {
-                    invItems.Add(itemStored);
-                }
-            }
-
-            //check if item is removed and remove it from the list
-            invItems.RemoveAll(Item => Item == null);
-            storedItems.RemoveAll(Item => Item == null);
+            UpdateStorageInventory();
         }
         else
         {
@@ -640,6 +634,34 @@ public class menus : MonoBehaviour {
 
         //toggles timescale
         PauseNoMenu();
+    }
+
+    void UpdateStorageInventory()
+    {
+        print(invItems.Count);
+        //check if new items have appeared in inventory and display them too
+        foreach (Item itemInInventory in invItems)
+        {
+            if (!invItems.Contains(itemInInventory))
+            {
+                invItems.Add(itemInInventory);
+            }
+
+            Transform[] displayed = stInInventory.transform.GetComponentsInChildren<Transform>();
+
+        }
+
+        foreach (Item itemStored in itemsStored)
+        {
+            if (!itemsStored.Contains(itemStored))
+            {
+                itemsStored.Add(itemStored);
+            }
+        }
+
+        //check if item is removed and remove it from the list
+        invItems.RemoveAll(Item => Item == null);
+        itemsStored.RemoveAll(Item => Item == null);
     }
 
     //change text to whatever npc is saying

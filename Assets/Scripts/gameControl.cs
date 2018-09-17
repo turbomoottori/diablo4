@@ -83,8 +83,7 @@ public class gameControl : MonoBehaviour
             data.equip1 = menus.equipOne;
             data.equip2 = menus.equipTwo;
             data.invItems = menus.invItems;
-            data.items = menus.items;
-            data.storedItems = menus.storedItems;
+            data.itemsStored = menus.itemsStored;
 
             //serializes and closes file
             bf.Serialize(file, data);
@@ -113,8 +112,7 @@ public class gameControl : MonoBehaviour
             menus.equipOne = data.equip1;
             menus.equipTwo = data.equip2;
             menus.invItems = data.invItems;
-            menus.items = data.items;
-            menus.storedItems = data.storedItems;
+            menus.itemsStored = data.itemsStored;
         }
     }
 
@@ -152,8 +150,7 @@ class PlayerData
     public int hp, maxhp, money;
     public bool knowsDoubleJump, knowsDash, hasSword;
     public string equip1, equip2;
-    public List<Item> invItems;
-    public List<GameObject> items, storedItems;
+    public List<Item> invItems, itemsStored;
 }
 
 [System.Serializable]
