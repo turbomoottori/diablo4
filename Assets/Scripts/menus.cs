@@ -5,15 +5,16 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Linq;
 
 public class menus : MonoBehaviour {
 
-    GameObject player, speechBox, speech, inv, itemCont, stInv, stInInventory, stStored;
+    GameObject speechBox, speech;
     Text txt;
     Image healthbar;
     float moveBox = 176f;
     int page, maxPages;
-    public static bool txtActive = false;
+    public static bool txtActive, chestClose = false;
 
     bool talks = false;
     public static bool pauseOpen, invOpen, stInvOpen = false;
@@ -29,19 +30,19 @@ public class menus : MonoBehaviour {
     int lastPressed = 0;
 
     //inventory 
-    public static List<GameObject> items = new List<GameObject>();
-    public static List<GameObject> storedItems = new List<GameObject>();
+    GameObject inv, itemCont, stInv, stInInventory, stStored;
     public static List<Item> invItems = new List<Item>();
     public static List<Item> itemsStored = new List<Item>();
     public static string equipOne, equipTwo;
 
     void Start () {
-        player = GameObject.Find("Player");
         canv = GameObject.Find("Canvas").transform;
         healthbar = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv).GetComponent<Image>();
         speechBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
         speech = speechBox.transform.GetChild(0).GetChild(0).gameObject;
         txt = speech.GetComponent<Text>();
+
+        //temp values for speech bubbles
         page = 0;
         maxPages = 1;
 
@@ -51,9 +52,16 @@ public class menus : MonoBehaviour {
 
     private void Update()
     {
-        //TALKING
-        if (txtActive && Input.GetKeyDown(KeyCode.E))
-            ScrollText();
+        //INTERACT
+        if (Input.GetKeyDown(KeyCode.E) && !pauseOpen)
+        {
+            //TALK
+            if (txtActive)
+                ScrollText();
+            //OPEN CHEST
+            else if (chestClose)
+                StoredItems();
+        }
 
         //PRESSING ESC
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -69,7 +77,7 @@ public class menus : MonoBehaviour {
         }
 
         //OPEN INVENTORY
-        if (Input.GetKeyDown(KeyCode.I) && !talks && !pauseOpen)
+        if (Input.GetKeyDown(KeyCode.I) && !talks && !pauseOpen && !stInvOpen)
             Inventory();
 
         // HEALTH
@@ -83,6 +91,7 @@ public class menus : MonoBehaviour {
             print("kuolee");
         }
 
+        //SHOW COLLECTED ITEM   
         showCollectibleTime += Time.deltaTime;
         if (showCollectibleTime >= 4 && showC)
         {
@@ -222,6 +231,7 @@ public class menus : MonoBehaviour {
         theSlider.onValueChanged.AddListener(delegate { SliderChange(); });
     }
 
+    //when clicked on a button
     public void Click()
     {
         string btnName = EventSystem.current.currentSelectedGameObject.name;
@@ -385,6 +395,7 @@ public class menus : MonoBehaviour {
             saves.transform.Find(saveText + "3").GetComponent<Image>().color = Color.gray;
     }
 
+    //changes slider values
     public void SliderChange()
     {
         //checks which slider is changed
@@ -393,7 +404,6 @@ public class menus : MonoBehaviour {
             volumeVal = (int)EventSystem.current.currentSelectedGameObject.GetComponent<Slider>().value;
             EventSystem.current.currentSelectedGameObject.transform.parent.Find("Value").GetComponent<Text>().text = volumeVal.ToString();
         }
-
     }
 
     //toggle inventory
@@ -412,12 +422,8 @@ public class menus : MonoBehaviour {
 
                 //show every item in inventory
                 if (invItems != null)
-                {
                     foreach (Item item in invItems)
-                    {
-                        AddItem(item.name, item.weight);
-                    }
-                }
+                        AddItem(item.name, item.weight, itemCont, buttonScript.buttonType.equip);
 
                 //display equipped items
                 AddEquipped(equipOne);
@@ -428,18 +434,24 @@ public class menus : MonoBehaviour {
                 inv.SetActive(true);
             }
 
-            //check if new items have appeared in inventory and display them too
+            //if there's new items add them too
             foreach (Item itemInInventory in invItems)
+                if (!itemCont.transform.Find(itemInInventory.name))
+                    AddItem(itemInInventory.name, itemInInventory.weight, itemCont, buttonScript.buttonType.equip);
+
+            //destroys the ones that are not on the list anymore
+            foreach (Transform child in itemCont.transform)
             {
-                if (!invItems.Contains(itemInInventory))
-                {
-                    invItems.Add(itemInInventory);
-                }
+                Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                if (temp == null)
+                    Destroy(child.gameObject);
             }
 
-            //check if item is removed and remove it from the list
             invItems.RemoveAll(Item => Item == null);
-        } else if(invOpen)
+
+        }
+        //closes inventory
+        else if(invOpen)
         {
             invOpen = false;
             inv.SetActive(false);
@@ -448,13 +460,13 @@ public class menus : MonoBehaviour {
     }
 
     //display items in inventory
-    void AddItem(string name, int wt)
+    void AddItem(string name, int wt, GameObject place, buttonScript.buttonType type)
     {
-        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, itemCont.transform, false);
+        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, place.transform, false);
         i.transform.Find("name").GetComponent<Text>().text = name;
         i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
-        items.Add(i);
         i.name = name;
+        i.GetComponent<buttonScript>().type = type;
     }
 
     //display equipped items
@@ -466,6 +478,7 @@ public class menus : MonoBehaviour {
         //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
     }
 
+    //equipping weapons
     public void InventoryClick(bool leftClick, string name)
     {
         //assigning weapon 1
@@ -473,10 +486,12 @@ public class menus : MonoBehaviour {
         {
             foreach (Item item in invItems)
             {
+                //equips only if item is a weapons
                 if (item.name == name && item is Weapon)
                 {
                     if (name == equipOne || name == equipTwo)
                     {
+                        //this item is already equipped
                         print("already equipped");
                     }
                     else
@@ -497,6 +512,7 @@ public class menus : MonoBehaviour {
                         }
                         else
                         {
+                            //item is a sword
                             weapons.weaponType1 = 1;
                             //recast as weapon
                             Weapon w = item as Weapon;
@@ -555,31 +571,70 @@ public class menus : MonoBehaviour {
         }
     }
 
-    void RemoveItem(string name)
+    //click function for storage ui
+    public void InventoryClickStorage(string name, bool take)
     {
-        foreach(GameObject itemBlock in items)
+        //taking from storage to inventory
+        if (take)
         {
-            if (itemBlock.name == name)
+            Item tempItem = itemsStored.FirstOrDefault(i => i.name == name);
+            if (tempItem != null)
             {
-                items.Remove(itemBlock);
-                storedItems.Add(itemBlock);
+                itemsStored.Remove(tempItem);
+                invItems.Add(tempItem);
+
+                //deletes from list
+                foreach (Transform child in stStored.transform)
+                {
+                    Item temp = itemsStored.FirstOrDefault(i => i.name == child.name);
+                    if (temp == null)
+                        Destroy(child.gameObject);
+                }
+
+                //adds to another list
+                foreach (Item itemInInventory in invItems)
+                    if (!stInInventory.transform.Find(itemInInventory.name))
+                        AddItem(itemInInventory.name, itemInInventory.weight, stInInventory, buttonScript.buttonType.storable);
             }
         }
-        foreach (Item item in invItems)
+        //taking from inventory to storage
+        else
         {
-            if (item.name == name)
+            if (name == equipOne || name == equipTwo)
             {
-                invItems.Remove(item);
-                itemsStored.Add(item);
+                print("equipped, cannot store");
+            }
+            else
+            {
+                Item tempItem = invItems.FirstOrDefault(i => i.name == name);
+                if (tempItem != null)
+                {
+                    invItems.Remove(tempItem);
+                    itemsStored.Add(tempItem);
+
+                    //deletes from list
+                    foreach (Transform child in stInInventory.transform)
+                    {
+                        Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                        if (temp == null)
+                            Destroy(child.gameObject);
+                    }
+
+                    //adds to another list
+                    foreach (Item itemStored in itemsStored)
+                        if (!stStored.transform.Find(itemStored.name))
+                            AddItem(itemStored.name, itemStored.weight, stStored, buttonScript.buttonType.stored);
+                }
             }
         }
     }
 
+    //opens and closes storage ui 
     public void StoredItems()
     {
+        //opens storage ui
         if (!stInvOpen)
         {
-            //open this inventory
             stInvOpen = true;
             if (stInv == null)
             {
@@ -589,47 +644,57 @@ public class menus : MonoBehaviour {
 
                 //show every item in inventory
                 if (invItems != null)
-                {
                     foreach (Item item in invItems)
-                    {
-                        AddItem(item.name, item.weight);
-                    }
-                }
+                        AddItem(item.name, item.weight, stInInventory, buttonScript.buttonType.storable);
 
-                //show every item in inventory
+                //show every stored item
                 if (itemsStored != null)
-                {
                     foreach (Item stitem in itemsStored)
-                    {
-                        AddItem(stitem.name, stitem.weight);
-                    }
-                }
+                        AddItem(stitem.name, stitem.weight, stStored, buttonScript.buttonType.stored);
             }
             else
             {
                 stInv.SetActive(true);
             }
 
-            //check if new items have appeared in inventory and display them too
-            foreach (Item itemInInventory in invItems)
+            //checks if anything has changed in lists
+            foreach (Transform child in stStored.transform)
             {
-                if (!invItems.Contains(itemInInventory))
-                {
-                    invItems.Add(itemInInventory);
-                }
+                Item temp = itemsStored.FirstOrDefault(i => i.name == child.name);
+                if (temp == null)
+                    Destroy(child.gameObject);
             }
-            
-            foreach (Item itemStored in itemsStored)
+
+            foreach (Item itemInInventory in invItems)
+                if (!stInInventory.transform.Find(itemInInventory.name))
+                    AddItem(itemInInventory.name, itemInInventory.weight, stInInventory, buttonScript.buttonType.storable);
+
+            foreach (Transform child in stInInventory.transform)
             {
-                if (!invItems.Contains(itemStored))
+                Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                if (temp == null)
+                    Destroy(child.gameObject);
+            }
+
+            foreach (Item itemStored in itemsStored)
+                if (!stStored.transform.Find(itemStored.name))
+                    AddItem(itemStored.name, itemStored.weight, stStored, buttonScript.buttonType.stored);
+
+            //changes color of already equipped item
+            foreach (Item item in invItems)
+            {
+                if (item.name == equipOne || item.name == equipTwo)
                 {
-                    invItems.Add(itemStored);
+                    stInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
+                }
+                else
+                {
+                    stInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.white;
                 }
             }
 
             //check if item is removed and remove it from the list
             invItems.RemoveAll(Item => Item == null);
-            storedItems.RemoveAll(Item => Item == null);
         }
         else
         {

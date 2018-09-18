@@ -10,6 +10,7 @@ public class npcSpeech : MonoBehaviour {
     GameObject player, globals, e;
     float dist;
     public bool wantsToTalk = true;
+    public interactType type;
 
     void Start () {
         player = GameObject.Find("Player");
@@ -23,20 +24,41 @@ public class npcSpeech : MonoBehaviour {
 	void Update () {
         dist = Distance(player.transform.position, transform.position);
         e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-
-        //player is close enough to interact
-        if (wantsToTalk && dist < 2f)
+        switch (type)
         {
-            e.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen)
-            {
-                globals.GetComponent<menus>().ChangeText(speaks, pages);
-                menus.txtActive = true;
-            }
-        } else
-        {
-            e.SetActive(false);
+            case interactType.talk:
+                //player is close enough to interact
+                if (wantsToTalk && dist < 2f)
+                {
+                    e.SetActive(true);
+                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen)
+                    {
+                        globals.GetComponent<menus>().ChangeText(speaks, pages);
+                        menus.txtActive = true;
+                    }
+                }
+                else
+                {
+                    e.SetActive(false);
+                }
+                break;
+            case interactType.chest:
+                //player is close enough to interact
+                if (dist < 2f)
+                {
+                    e.SetActive(true);
+                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen)
+                    {
+                        menus.chestClose = true;
+                    }
+                }
+                else
+                {
+                    e.SetActive(false);
+                }
+                break;
         }
+        
 	}
 
     float Distance(Vector3 st, Vector3 en)
@@ -51,5 +73,11 @@ public class npcSpeech : MonoBehaviour {
 
 
         return d;
+    }
+
+    public enum interactType
+    {
+        talk,
+        chest
     }
 }
