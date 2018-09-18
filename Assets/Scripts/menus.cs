@@ -639,6 +639,24 @@ public class menus : MonoBehaviour {
     void UpdateStorageInventory()
     {
         print(invItems.Count);
+        /*
+        for(int i = 0; i < invItems.Count; i++)
+        {
+            if (!invItems.Contains(invItems[i]))
+            {
+                invItems.Add(invItems[i]);
+            }
+
+            Transform[] displayed = stInInventory.transform.GetComponentsInChildren<Transform>();
+            for (int j = 0; j < displayed.Length; j++)
+            {
+                if (!invItems[i].name.Contains(displayed[j].name))
+                {
+                    print("something is deleted");
+                }
+            }
+        }*/
+        
         //check if new items have appeared in inventory and display them too
         foreach (Item itemInInventory in invItems)
         {
@@ -646,9 +664,8 @@ public class menus : MonoBehaviour {
             {
                 invItems.Add(itemInInventory);
             }
-
-            Transform[] displayed = stInInventory.transform.GetComponentsInChildren<Transform>();
-
+            
+            
         }
 
         foreach (Item itemStored in itemsStored)
