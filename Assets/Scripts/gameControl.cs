@@ -9,13 +9,12 @@ public class gameControl : MonoBehaviour
     public static gameControl control;
 
     public int hp, maxhp, money;
-    public bool knowsDoubleJump, knowsDash, hasSword;
+    public bool knowsDoubleJump, knowsDash, knowsSlowTime;
 
     public int volume;
 
     void Awake()
     {
-        hasSword = false;
         //prevents doubles
         if (control == null)
         {
@@ -31,29 +30,7 @@ public class gameControl : MonoBehaviour
         LoadOptions();
 
         //adds sword to inventory
-        FirstSword();
-    }
-
-    //creates first sword
-    void FirstSword()
-    {
-        if (!hasSword)
-        {
-            hasSword = true;
-            Weapon firstSword = new Weapon() { name = "First Sword", damage = 3, speed = 0.2f, value = 0, weight = 1 }; 
-            Item test = new Item() { name = "test", value = 0, weight = 1 }; //delete later
-            Gun testGun = new Gun() { bullets = 5, damage = 2, name = "GUN", range = 20f, speed = 10f, value = 0, weight = 1, type="rapid", rlspeed=0.5f, special="big"};
-            menus.invItems.Add(firstSword);
-            menus.invItems.Add(test);
-            menus.invItems.Add(testGun);
-
-            menus.equipOne = "First Sword";
-            weapons.damage1 = firstSword.damage;
-            weapons.speed1 = firstSword.speed;
-            weapons.weaponType1 = 1;
-
-            menus.equipTwo = "Empty";
-        }
+        //FirstSword();
     }
 
     public void SaveGame(int saveFile)
@@ -79,11 +56,11 @@ public class gameControl : MonoBehaviour
             data.money = money;
             data.knowsDoubleJump = knowsDoubleJump;
             data.knowsDash = knowsDash;
-            data.hasSword = hasSword;
             data.equip1 = menus.equipOne;
             data.equip2 = menus.equipTwo;
             data.invItems = menus.invItems;
             data.itemsStored = menus.itemsStored;
+            data.knowsSlowTime = knowsSlowTime;
 
             //serializes and closes file
             bf.Serialize(file, data);
@@ -108,11 +85,11 @@ public class gameControl : MonoBehaviour
             money = data.money;
             knowsDoubleJump = data.knowsDoubleJump;
             knowsDash = data.knowsDash;
-            hasSword = data.hasSword;
             menus.equipOne = data.equip1;
             menus.equipTwo = data.equip2;
             menus.invItems = data.invItems;
             menus.itemsStored = data.itemsStored;
+            knowsSlowTime = data.knowsSlowTime;
         }
     }
 
@@ -148,7 +125,7 @@ public class gameControl : MonoBehaviour
 class PlayerData
 {
     public int hp, maxhp, money;
-    public bool knowsDoubleJump, knowsDash, hasSword;
+    public bool knowsDoubleJump, knowsDash, knowsSlowTime;
     public string equip1, equip2;
     public List<Item> invItems, itemsStored;
 }

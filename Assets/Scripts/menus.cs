@@ -37,7 +37,7 @@ public class menus : MonoBehaviour {
 
     void Start () {
         canv = GameObject.Find("Canvas").transform;
-        healthbar = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv).GetComponent<Image>();
+        healthbar = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv).transform.GetChild(0).GetChild(0).GetComponent<Image>();
         speechBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
         speech = speechBox.transform.GetChild(0).GetChild(0).gameObject;
         txt = speech.GetComponent<Text>();
@@ -425,9 +425,14 @@ public class menus : MonoBehaviour {
                     foreach (Item item in invItems)
                         AddItem(item.name, item.weight, itemCont, buttonScript.buttonType.equip);
 
+                if (equipOne == null)
+                    equipOne = "Empty";
+                if (equipTwo == null)
+                    equipTwo = "Empty";
+
                 //display equipped items
-                AddEquipped(equipOne);
-                AddEquipped(equipTwo);
+                AddEquipped(equipOne, 1);
+                AddEquipped(equipTwo, 2);
             }
             else
             {
@@ -470,11 +475,11 @@ public class menus : MonoBehaviour {
     }
 
     //display equipped items
-    void AddEquipped(string name)
+    void AddEquipped(string name, int equipNumber)
     {
         GameObject equip = Instantiate(Resources.Load("ui/inventory/equipped") as GameObject, inv.transform.Find("active").transform, false);
         equip.transform.Find("title").GetComponent<Text>().text = name;
-        equip.name = name;
+        equip.name = name + equipNumber.ToString();
         //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
     }
 
@@ -521,7 +526,7 @@ public class menus : MonoBehaviour {
                             print("is not a gun");
                         }
 
-                        inv.transform.Find("active").transform.Find(equipOne).transform.Find("title").GetComponent<Text>().text = name;
+                        inv.transform.Find("active").transform.Find(equipOne + "1").transform.Find("title").GetComponent<Text>().text = name;
                         equipOne = name;
                     }
                 }
@@ -563,11 +568,19 @@ public class menus : MonoBehaviour {
                             print("is not a gun");
                         }
 
-                        inv.transform.Find("active").transform.Find(equipTwo).transform.Find("title").GetComponent<Text>().text = name;
+                        inv.transform.Find("active").transform.Find(equipTwo + "2").transform.Find("title").GetComponent<Text>().text = name;
                         equipTwo = name;
                     }
                 }
             }
+        }
+
+        foreach (Transform child in itemCont.transform)
+        {
+            if (child.name == equipOne || child.name == equipTwo)
+                child.GetComponent<Image>().color = Color.gray;
+            else
+                child.GetComponent<Image>().color = Color.white;
         }
     }
 

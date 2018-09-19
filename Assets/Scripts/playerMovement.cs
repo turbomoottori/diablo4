@@ -39,6 +39,11 @@ public class playerMovement : MonoBehaviour
 
     void Start()
     {
+        if (gameControl.control.knowsDash == false)
+            dashState = DashState.Off;
+        else
+            dashState = DashState.Ready;
+
         gameControl.control.maxhp = 50;
         gameControl.control.hp = 50;
 
@@ -108,7 +113,7 @@ public class playerMovement : MonoBehaviour
                     canDoubleJump = true;
                     rb.velocity = new Vector3(0, jumpForce, 0);
                 }
-                else if (canDoubleJump)
+                else if (canDoubleJump && gameControl.control.knowsDoubleJump)
                 {
                     canDoubleJump = false;
                     rb.velocity = new Vector3(0, jumpForce, 0);
@@ -163,11 +168,13 @@ public class playerMovement : MonoBehaviour
                         dashState = DashState.Ready;
                     }
                     break;
+                case DashState.Off:
+                    break;
             }
 
             //SLOW TIME
 
-            if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused)
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused && gameControl.control.knowsSlowTime)
             {
                 print("sldgdkj");
                 StartCoroutine(SlowTime(3f, 6f));
@@ -179,7 +186,8 @@ public class playerMovement : MonoBehaviour
     {
         Ready,
         Dashing,
-        Cooldown
+        Cooldown,
+        Off
     }
 
     //slows time
