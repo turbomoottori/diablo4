@@ -6,10 +6,6 @@ using UnityEngine;
 public class enemy : MonoBehaviour {
 
     //navmesh variables
-    public float destRadius, maxTimer;
-    float minTimer = 2f;
-    float changeTimer;
-    private float timer;
     private Transform target;
     protected UnityEngine.AI.NavMeshAgent agent;
     protected Rigidbody rb;
@@ -32,11 +28,7 @@ public class enemy : MonoBehaviour {
 
     protected virtual void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        timer = maxTimer;
-        //hpb = Instantiate(Resources.Load("enemyhealth", typeof(GameObject))) as GameObject;
-        //hpb.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        money = Resources.Load<GameObject>("coin");
-        //hp = hpb.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>(); 
+        money = Resources.Load<GameObject>("coin"); 
 	}
 
     protected virtual void Start()
@@ -46,8 +38,6 @@ public class enemy : MonoBehaviour {
         enemyHealth = maxHP;
         hostile = false;
         lastPos = transform.position;
-        changeTimer = Random.Range(minTimer, maxTimer);
-
     }
 
     public float Distance(Vector3 st, Vector3 en)
@@ -65,18 +55,6 @@ public class enemy : MonoBehaviour {
     }
 
     protected virtual void Update () {
-        //timer to change destination
-        timer += Time.deltaTime;
-        if (timer >= changeTimer && !hostile)
-        {
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                Vector3 newPos = RandomDestination(transform.position, destRadius, -1);
-                agent.SetDestination(newPos);
-                timer = 0;
-            }
-        }
-
         //ATTACK PLAYER
         if (hostile)
         {
@@ -142,15 +120,6 @@ public class enemy : MonoBehaviour {
         {
             hpb.SetActive(true);
         }
-        //hpb.SetActive(true);
-    }
-
-    public static Vector3 RandomDestination(Vector3 origin, float distance, int layermask) {
-        Vector3 randomDirection = Random.insideUnitSphere * distance;
-        randomDirection += origin;
-        UnityEngine.AI.NavMeshHit navHit;
-        UnityEngine.AI.NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
-        return navHit.position;
     }
 
     //dashed

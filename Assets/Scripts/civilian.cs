@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class civilian : enemy {
+public class civilian : randomDestination {
 
     GameObject sword;
     bool swordActive = false;
     public int attackNum;
+    public Action action = Action.follow;
 
     protected override void OnEnable()
     {
@@ -19,24 +20,47 @@ public class civilian : enemy {
 
         if (hostile)
         {
-            agent.speed = 4f;
-            float dist = Distance(player.transform.position, agent.transform.position);
-            if (dist <= 1.6f)
+            switch (action)
             {
-                StartCoroutine(Attack(1f));
+                case Action.follow:
+                    agent.speed = 4f;
+                    float dist = Distance(player.transform.position, agent.transform.position);
+
+                    if (dist <= 1.5f)
+                        action = Action.chooseAction;
+
+                    break;
+
+                case Action.chooseAction:
+                    int atkNum = Random.Range(1, 3);
+
+                    if (atkNum == 1)
+                        action = Action.basicAttack;
+                    else
+                        action = Action.specialAttack;
+
+                    break;
+
+                case Action.basicAttack:
+                    StartCoroutine(Attack(1f, 1));
+                    action = Action.follow;
+                    break;
+
+                case Action.specialAttack:
+                    StartCoroutine(Attack(1f, 2));
+                    action = Action.follow;
+                    break;
             }
         }
     }
 
-    IEnumerator Attack(float cooldown)
+    IEnumerator Attack(float cooldown, int atk)
     {
         float time = 0.5f;
         if (swordActive)
             yield break;
         swordActive = true;
-
-        //randomly choose between regular and spin attack
-        int atk = Random.Range(1, 3);
+        agent.speed =2.5f;
         if (atk == 1)
         {
             Vector3 axis = Vector3.up;
@@ -82,5 +106,13 @@ public class civilian : enemy {
             swordActive = false;
             yield return null;
         }
+    }
+
+    public enum Action
+    {
+        follow,
+        chooseAction,
+        basicAttack,
+        specialAttack
     }
 }

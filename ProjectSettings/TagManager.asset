@@ -14,6 +14,7 @@ TagManager:
   - talks
   - bullet
   - saveslot
+  - enemyBullet
   layers:
   - Default
   - TransparentFX

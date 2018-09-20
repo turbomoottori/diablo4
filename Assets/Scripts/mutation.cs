@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class mutation : enemy {
+public class mutation : randomDestination {
 
     float notice = 4f;
     bool attacks;

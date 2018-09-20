@@ -292,5 +292,11 @@ public class playerMovement : MonoBehaviour
             money += moneyValue;
             Destroy(collision.gameObject);
         }
+
+        if (collision.gameObject.tag == "enemyBullet")
+        {
+            gameControl.control.hp -= collision.gameObject.GetComponent<bullet>().dmg;
+            Destroy(collision.gameObject);
+        }
     }
 }

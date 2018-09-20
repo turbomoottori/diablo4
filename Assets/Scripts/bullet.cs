@@ -25,7 +25,7 @@ public class bullet : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag != "player" && collision.gameObject.tag != "enemy" && collision.gameObject.tag != "bullet")
+        if (collision.gameObject.tag != "player" && collision.gameObject.tag != "enemy" && collision.gameObject.tag != gameObject.tag)
         {
             Destroy(this.gameObject);
         }
