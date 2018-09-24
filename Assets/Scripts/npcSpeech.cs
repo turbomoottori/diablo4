@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class npcSpeech : MonoBehaviour {
 
@@ -12,6 +13,10 @@ public class npcSpeech : MonoBehaviour {
     public bool wantsToTalk = true;
     public interactType type;
 
+    public List<Item> items;
+    public List<Weapon> swords;
+    public List<Gun> guns;
+
     void Start () {
         player = GameObject.Find("Player");
         globals = GameObject.Find("Globals");
@@ -19,6 +24,22 @@ public class npcSpeech : MonoBehaviour {
         e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
         
+        foreach(Weapon w in swords)
+            items.Add(w);
+
+        foreach (Gun g in guns)
+            items.Add(g);
+
+        foreach (Item i in menus.invItems)
+            CheckItemDuplicates(i.name);
+    }
+
+    //removes items player already owns
+    void CheckItemDuplicates(string name)
+    {
+        Item temp = items.FirstOrDefault(i => i.name == name);
+        if (temp != null)
+            items.Remove(temp);
     }
 	
 	void Update () {
@@ -31,7 +52,7 @@ public class npcSpeech : MonoBehaviour {
                 if (wantsToTalk && dist < 2f)
                 {
                     e.SetActive(true);
-                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen)
+                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch)
                     {
                         globals.GetComponent<menus>().ChangeText(speaks, pages);
                         menus.txtActive = true;
@@ -47,9 +68,25 @@ public class npcSpeech : MonoBehaviour {
                 if (dist < 2f)
                 {
                     e.SetActive(true);
-                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen)
+                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch)
                     {
                         menus.chestClose = true;
+                    }
+                }
+                else
+                {
+                    e.SetActive(false);
+                }
+                break;
+            case interactType.merchant:
+                //player is close enough to interact
+                if (dist < 2f)
+                {
+                    globals.GetComponent<menus>().ChangeMerchantItems(items);
+                    e.SetActive(true);
+                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch)
+                    {
+                        menus.merchClose = true;
                     }
                 }
                 else
@@ -78,6 +115,7 @@ public class npcSpeech : MonoBehaviour {
     public enum interactType
     {
         talk,
-        chest
+        chest,
+        merchant
     }
 }

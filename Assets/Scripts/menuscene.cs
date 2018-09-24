@@ -154,6 +154,7 @@ public class menuscene : MonoBehaviour {
     {
         gameControl.control.LoadGame(save);
         //check which level to load etc here
+        SceneManager.LoadScene(1); //placeholder
     }
 
     //shows saved games

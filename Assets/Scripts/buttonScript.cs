@@ -32,6 +32,16 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler {
                 if (eventData.button == PointerEventData.InputButton.Left)
                     m.GetComponent<menus>().InventoryClickStorage(gameObject.name, true);
                 break;
+            case buttonType.sell:
+                if (eventData.button == PointerEventData.InputButton.Left)
+                    m.GetComponent<menus>().MerchClick(gameObject.name, false);
+                break;
+            case buttonType.buy:
+                if (eventData.button == PointerEventData.InputButton.Left)
+                    m.GetComponent<menus>().MerchClick(gameObject.name, true);
+                break;
+            case buttonType.expensive:
+                break;
         }
         
     }
@@ -40,6 +50,9 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler {
     {
         equip,
         storable,
-        stored
+        stored,
+        sell,
+        buy,
+        expensive
     }
 }

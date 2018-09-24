@@ -42,8 +42,7 @@ public class attack : MonoBehaviour {
                     //weapon 1 is gun
                     shoot = Shoot.Cooldown;
                     WeaponChange(1, true);
-                }
-                    
+                } 
 
                 print("weapon 1 selected");
             }

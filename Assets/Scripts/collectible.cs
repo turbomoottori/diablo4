@@ -5,7 +5,7 @@ using UnityEngine;
 public class collectible : MonoBehaviour {
 
     public string collectibleName;
-    public int value, weight;
+    public int value, sellValue, weight;
     public Type itemType;
     public int damage, bullets;
     public float speed, reloadSpeed, range;
@@ -23,6 +23,7 @@ public class collectible : MonoBehaviour {
             menus.invItems.Add(new Item() {
                 name = collectibleName,
                 value = value,
+                sellValue = sellValue,
                 weight = weight });
         }
         else if (itemType == Type.Weapon)
@@ -30,6 +31,7 @@ public class collectible : MonoBehaviour {
             menus.invItems.Add(new Weapon() {
                 name = collectibleName,
                 value = value,
+                sellValue = sellValue,
                 weight = weight,
                 damage = damage,
                 speed = speed });
@@ -39,6 +41,7 @@ public class collectible : MonoBehaviour {
             menus.invItems.Add(new Gun() {
                 name = collectibleName,
                 value = value,
+                sellValue = sellValue,
                 weight = weight,
                 damage = damage,
                 speed = speed,

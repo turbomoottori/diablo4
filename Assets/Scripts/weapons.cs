@@ -83,18 +83,21 @@ public class weapons : MonoBehaviour {
     }
 }
 
+[System.Serializable]
 public class Item
 {
     public string name;
-    public int value, weight;
+    public int value, sellValue, weight;
 }
 
+[System.Serializable]
 public class Weapon : Item
 {
     public int damage;
     public float speed;
 }
 
+[System.Serializable]
 public class Gun : Weapon
 {
     public int bullets;

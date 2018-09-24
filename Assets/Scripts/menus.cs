@@ -14,10 +14,10 @@ public class menus : MonoBehaviour {
     Image healthbar;
     float moveBox = 176f;
     int page, maxPages;
-    public static bool txtActive, chestClose = false;
+    public static bool txtActive, chestClose, merchClose = false;
 
     bool talks = false;
-    public static bool pauseOpen, invOpen, stInvOpen = false;
+    public static bool pauseOpen, invOpen, stInvOpen, merch = false;
     int temphp, tempmaxhp, volumeVal;
 
     GameObject p, gen, opt, saves, savePrompt;
@@ -31,8 +31,10 @@ public class menus : MonoBehaviour {
 
     //inventory 
     GameObject inv, itemCont, stInv, stInInventory, stStored;
+    GameObject merchCont, ownedItems, shopItems, money;
     public static List<Item> invItems = new List<Item>();
     public static List<Item> itemsStored = new List<Item>();
+    List<Item> merchItems = new List<Item>();
     public static string equipOne, equipTwo;
 
     void Start () {
@@ -48,6 +50,8 @@ public class menus : MonoBehaviour {
 
         speechBox.SetActive(false);
         volumeVal = gameControl.control.volume;
+
+        print(invItems.Count);
     }
 
     private void Update()
@@ -61,6 +65,9 @@ public class menus : MonoBehaviour {
             //OPEN CHEST
             else if (chestClose)
                 StoredItems();
+            //SHOW MERCH ITEMS
+            else if (merchClose)
+                MerchantUI();
         }
 
         //PRESSING ESC
@@ -68,11 +75,11 @@ public class menus : MonoBehaviour {
         {
             if (!talks && !invOpen && !stInvOpen)
                 TogglePause();
-            else if (!pauseOpen && !talks && invOpen && !stInvOpen)
+            else if (!pauseOpen && !talks && invOpen && !stInvOpen && !merch)
                 Inventory();
-            else if (!pauseOpen && !invOpen && talks && !stInvOpen)
+            else if (!pauseOpen && !invOpen && talks && !stInvOpen && !merch)
                 ScrollText();
-            else if (!pauseOpen && !invOpen && !talks && stInvOpen)
+            else if (!pauseOpen && !invOpen && !talks && stInvOpen && !merch)
                 StoredItems();
         }
 
@@ -452,6 +459,14 @@ public class menus : MonoBehaviour {
                     Destroy(child.gameObject);
             }
 
+            foreach (Transform child in itemCont.transform)
+            {
+                if (child.name == equipOne || child.name == equipTwo)
+                    child.GetComponent<Image>().color = Color.gray;
+                else
+                    child.GetComponent<Image>().color = Color.white;
+            }
+
             invItems.RemoveAll(Item => Item == null);
 
         }
@@ -753,6 +768,178 @@ public class menus : MonoBehaviour {
             box.anchoredPosition = nextPos;
             box.offsetMin = Vector2.zero;
             page += 1;
+        }
+    }
+
+    public void ChangeMerchantItems(List<Item> items)
+    {
+        merchItems = items;
+    }
+
+    //opens and closes storage ui 
+    public void MerchantUI()
+    {
+        //opens storage ui
+        if (!merch)
+        {
+            merch = true;
+            if (merchCont == null)
+            {
+                merchCont = Instantiate(Resources.Load("ui/inventory/merchantUI") as GameObject, canv, false);
+                ownedItems = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, merchCont.transform.Find("items"), false);
+                shopItems = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, merchCont.transform.Find("stored"), false);
+                money = merchCont.transform.Find("playerMoney").gameObject;
+
+                money.GetComponent<Text>().text = gameControl.control.money.ToString();
+
+                //show every item in inventory
+                if (invItems != null)
+                    foreach (Item item in invItems)
+                        AddItem(item.name, item.sellValue, ownedItems, buttonScript.buttonType.sell);
+
+                //show every item on sale
+                if (merchItems != null)
+                    foreach (Item merchitem in merchItems)
+                        AddItem(merchitem.name, merchitem.value, shopItems, buttonScript.buttonType.buy);
+            }
+            else
+            {
+                merchCont.SetActive(true);
+            }
+
+            //checks if anything has changed in lists
+            foreach (Transform child in shopItems.transform)
+            {
+                Item temp = merchItems.FirstOrDefault(i => i.name == child.name);
+                if (temp == null)
+                    Destroy(child.gameObject);
+            }
+
+            foreach (Item itemInInventory in invItems)
+                if (!ownedItems.transform.Find(itemInInventory.name))
+                    AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
+
+            foreach (Transform child in ownedItems.transform)
+            {
+                Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                if (temp == null)
+                    Destroy(child.gameObject);
+            }
+
+            foreach (Item mItem in merchItems)
+                if (!shopItems.transform.Find(mItem.name))
+                    AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
+
+            CheckEquipAndValue();
+
+            //check if item is removed and remove it from the list
+            invItems.RemoveAll(Item => Item == null);
+        }
+        else
+        {
+            //close this inventory
+            merch = false;
+            merchCont.SetActive(false);
+        }
+
+
+        //toggles timescale
+        PauseNoMenu();
+    }
+
+    public void MerchClick(string name, bool buy)
+    {
+        //buying
+        if (buy)
+        {
+            Item tempItem = merchItems.FirstOrDefault(i => i.name == name);
+            if (tempItem != null)
+            {
+                merchItems.Remove(tempItem);
+                invItems.Add(tempItem);
+
+                gameControl.control.money -= tempItem.value;
+
+                //deletes from list
+                foreach (Transform child in shopItems.transform)
+                {
+                    Item temp = merchItems.FirstOrDefault(i => i.name == child.name);
+                    if (temp == null)
+                        Destroy(child.gameObject);
+                }
+
+                //adds to another list
+                foreach (Item itemInInventory in invItems)
+                    if (!ownedItems.transform.Find(itemInInventory.name))
+                        AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
+            }
+        }
+        //selling
+        else
+        {
+            if (name == equipOne || name == equipTwo)
+            {
+                print("equipped, cannot sell");
+            }
+            else
+            {
+                Item tempItem = invItems.FirstOrDefault(i => i.name == name);
+                if (tempItem != null)
+                {
+                    invItems.Remove(tempItem);
+                    merchItems.Add(tempItem);
+
+                    //deletes from list
+                    foreach (Transform child in ownedItems.transform)
+                    {
+                        Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                        if (temp == null)
+                            Destroy(child.gameObject);
+                    }
+
+                    //adds to another list
+                    foreach (Item mItem in merchItems)
+                        if (!shopItems.transform.Find(mItem.name))
+                            AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
+                }
+
+                gameControl.control.money += tempItem.sellValue;
+            }
+        }
+
+        CheckEquipAndValue();
+    }
+
+    //checks if item is equipped or too expensive
+    void CheckEquipAndValue()
+    {
+        money.GetComponent<Text>().text = gameControl.control.money.ToString();
+
+        //changes color of already equipped item
+        foreach (Item item in invItems)
+        {
+            if (item.name == equipOne || item.name == equipTwo)
+            {
+                ownedItems.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
+            }
+            else
+            {
+                ownedItems.transform.Find(item.name).GetComponent<Image>().color = Color.white;
+            }
+        }
+
+        foreach (Item item in merchItems)
+        {
+            if (item.value > gameControl.control.money)
+            {
+                shopItems.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
+                shopItems.transform.Find(item.name).GetComponent<buttonScript>().type = buttonScript.buttonType.expensive;
+            }
+            else
+            {
+                shopItems.transform.Find(item.name).GetComponent<Image>().color = Color.white;
+                shopItems.transform.Find(item.name).GetComponent<buttonScript>().type = buttonScript.buttonType.buy;
+            }
         }
     }
 

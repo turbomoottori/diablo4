@@ -30,12 +30,12 @@ public class playerMovement : MonoBehaviour
     public static bool paused = false;
 
     //money variables
-    int money = 0;
     int moneyValue = 10;
     Text moneyui;
     bool uiActive = false;
 
     Transform canv;
+    Vector3 tempPos;
 
     void Start()
     {
@@ -109,6 +109,7 @@ public class playerMovement : MonoBehaviour
 
                 if (canJump)
                 {
+                    tempPos = transform.position;
                     canJump = false;
                     canDoubleJump = true;
                     rb.velocity = new Vector3(0, jumpForce, 0);
@@ -248,7 +249,7 @@ public class playerMovement : MonoBehaviour
         if (moneyui == null)
         {
             moneyui = Instantiate(Resources.Load("ui/money") as GameObject, canv).GetComponent<Text>();
-            moneyui.text = money.ToString();
+            moneyui.text = gameControl.control.money.ToString();
         } else
         {
             moneyui.gameObject.SetActive(true);
@@ -258,10 +259,10 @@ public class playerMovement : MonoBehaviour
         while (t < time)
         {
             t += Time.deltaTime;
-            moneyui.text = tempMoney.ToString() + " + " + (money - tempMoney).ToString();
+            moneyui.text = tempMoney.ToString() + " + " + (gameControl.control.money - tempMoney).ToString();
             yield return null;
         }
-        moneyui.text = money.ToString();
+        moneyui.text = gameControl.control.money.ToString();
         yield return new WaitForSeconds(2f);
         moneyui.gameObject.SetActive(false);
         uiActive = false;
@@ -288,8 +289,8 @@ public class playerMovement : MonoBehaviour
     {
         if (collision.gameObject.tag == "coin")
         {
-            StartCoroutine(AddMoney(money, 3f));
-            money += moneyValue;
+            StartCoroutine(AddMoney(gameControl.control.money, 3f));
+            gameControl.control.money += moneyValue;
             Destroy(collision.gameObject);
         }
 
