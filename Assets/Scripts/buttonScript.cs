@@ -41,6 +41,8 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler {
                     m.GetComponent<menus>().MerchClick(gameObject.name, true);
                 break;
             case buttonType.expensive:
+                if (eventData.button == PointerEventData.InputButton.Left)
+                    m.GetComponent<menus>().TooExpensive();
                 break;
         }
         

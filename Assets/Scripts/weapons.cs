@@ -7,6 +7,8 @@ public class weapons : MonoBehaviour {
     public static weapons w;
 
     public static int damage1, damage2;
+
+    //for swords, smaller speed (0.2f) is faster and for guns, bigger speed (5f) is faster
     public static float speed1, speed2;
     public static int bullets1, bullets2;
     public static float range1, range2, rlspeed1, rlspeed2;
@@ -33,6 +35,7 @@ public class weapons : MonoBehaviour {
         LoadEquips();
     }
 
+    //checks which items are equipped
     public void LoadEquips()
     {
         foreach(Item i in menus.invItems)

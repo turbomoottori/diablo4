@@ -2190,6 +2190,7 @@ GameObject:
   - component: {fileID: 1148378808}
   - component: {fileID: 1148378807}
   - component: {fileID: 1148378809}
+  - component: {fileID: 1148378810}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -2230,6 +2231,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76f4cfca28f05414bb0c3f0f5eddd97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1148378810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1148378806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc7ce9585f521d4b9c728a591832c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1187530980
@@ -3588,7 +3600,6 @@ MonoBehaviour:
   dashForce: 40
   runs: 0
   dashes: 0
-  dashState: 0
   maxDash: 0.5
 --- !u!75 &1575445894
 ConstantForce:

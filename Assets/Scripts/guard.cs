@@ -66,7 +66,6 @@ public class guard : enemy {
                     else
                         patrolNum = 0;
 
-                    print(patrolNum);
                     timer = 0;
                     action = Action.newPoint;
                 }

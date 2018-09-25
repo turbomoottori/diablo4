@@ -15,7 +15,7 @@ public class playerMovement : MonoBehaviour
     RaycastHit hit;
 
     //dash variables
-    public DashState dashState;
+    public static DashState dashState;
     float dashTimer;
     public float maxDash = 20f;
     Vector3 savedVelocity;
@@ -81,6 +81,7 @@ public class playerMovement : MonoBehaviour
                     pos += (targ - pos) * Time.deltaTime * speed;
                     runs = false;
                 }
+                transform.position = pos;
                 transform.position = pos;
             }
 

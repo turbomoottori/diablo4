@@ -23,15 +23,18 @@ public class npcSpeech : MonoBehaviour {
 
         e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        
-        foreach(Weapon w in swords)
-            items.Add(w);
 
-        foreach (Gun g in guns)
-            items.Add(g);
+        if (type == interactType.merchant)
+        {
+            foreach (Weapon w in swords)
+                items.Add(w);
 
-        foreach (Item i in menus.invItems)
-            CheckItemDuplicates(i.name);
+            foreach (Gun g in guns)
+                items.Add(g);
+
+            foreach (Item i in menus.invItems)
+                CheckItemDuplicates(i.name);
+        }
     }
 
     //removes items player already owns
@@ -52,6 +55,7 @@ public class npcSpeech : MonoBehaviour {
                 if (wantsToTalk && dist < 2f)
                 {
                     e.SetActive(true);
+                    
                     if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch)
                     {
                         globals.GetComponent<menus>().ChangeText(speaks, pages);
@@ -68,6 +72,7 @@ public class npcSpeech : MonoBehaviour {
                 if (dist < 2f)
                 {
                     e.SetActive(true);
+
                     if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch)
                     {
                         menus.chestClose = true;

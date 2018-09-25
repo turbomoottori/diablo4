@@ -440,6 +440,16 @@ public class menus : MonoBehaviour {
                 //display equipped items
                 AddEquipped(equipOne, 1);
                 AddEquipped(equipTwo, 2);
+
+                if (quests.questList != null)
+                {
+                    foreach (Quest quest in quests.questList)
+                    {
+                        AddQuest(quest.questName, quest.questDesc);
+                    }
+
+                    CheckQuests();
+                }
             }
             else
             {
@@ -467,7 +477,10 @@ public class menus : MonoBehaviour {
                     child.GetComponent<Image>().color = Color.white;
             }
 
-            invItems.RemoveAll(Item => Item == null);
+            if (quests.questList != null)
+                CheckQuests();
+
+                invItems.RemoveAll(Item => Item == null);
 
         }
         //closes inventory
@@ -496,6 +509,29 @@ public class menus : MonoBehaviour {
         equip.transform.Find("title").GetComponent<Text>().text = name;
         equip.name = name + equipNumber.ToString();
         //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
+    }
+
+    //adds quests to list
+    void AddQuest(string name, string desc)
+    {
+        GameObject q = Instantiate(Resources.Load("ui/inventory/questblock") as GameObject, inv.transform.Find("quests").transform, false);
+        q.transform.Find("Title").GetComponent<Text>().text = name;
+        q.transform.Find("Title").name = name;
+        q.transform.Find("Desc").GetComponent<Text>().text = desc;
+        q.transform.Find("Desc").name = name + "desc";
+    }
+
+    //checks if quest is finished
+    void CheckQuests()
+    {
+        string completedText = "DONE";
+        foreach(Quest quest in quests.questList)
+        {
+            if (quest.completed)
+            {
+                inv.transform.Find("quests").transform.Find(quest.questName + "desc").GetComponent<Text>().text = completedText;
+            }
+        }
     }
 
     //equipping weapons
@@ -729,6 +765,7 @@ public class menus : MonoBehaviour {
             //close this inventory
             stInvOpen = false;
             stInv.SetActive(false);
+            chestClose = false;
         }
 
         //toggles timescale
@@ -840,6 +877,7 @@ public class menus : MonoBehaviour {
             //close this inventory
             merch = false;
             merchCont.SetActive(false);
+            merchClose = false;
         }
 
 
@@ -941,6 +979,12 @@ public class menus : MonoBehaviour {
                 shopItems.transform.Find(item.name).GetComponent<buttonScript>().type = buttonScript.buttonType.buy;
             }
         }
+    }
+
+    public void TooExpensive()
+    {
+        print("item is too expensive");
+        //sound and/or animation here
     }
 
     //show image and name of collected item

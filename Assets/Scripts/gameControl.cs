@@ -53,6 +53,7 @@ public class gameControl : MonoBehaviour
         data.invItems = menus.invItems;
         data.itemsStored = menus.itemsStored;
         data.knowsSlowTime = knowsSlowTime;
+        data.questList = quests.questList;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -81,6 +82,7 @@ public class gameControl : MonoBehaviour
             menus.invItems = data.invItems;
             menus.itemsStored = data.itemsStored;
             knowsSlowTime = data.knowsSlowTime;
+            quests.questList = data.questList;
         }
     }
 
@@ -119,6 +121,7 @@ class PlayerData
     public bool knowsDoubleJump, knowsDash, knowsSlowTime;
     public string equip1, equip2;
     public List<Item> invItems, itemsStored;
+    public List<Quest> questList;
 }
 
 [System.Serializable]
