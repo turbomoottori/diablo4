@@ -18,6 +18,12 @@ public class civilian : randomDestination {
 	protected override void Update () {
         base.Update();
 
+        //stops movement to talk to player
+        if (gameObject.GetComponent<npcSpeech>() != null && Distance(player.transform.position, transform.position) < 2f && !hostile)
+            agent.isStopped = true;
+        else
+            agent.isStopped = false;
+
         if (hostile)
         {
             switch (action)

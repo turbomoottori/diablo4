@@ -176,6 +176,7 @@ MonoBehaviour:
   pages: 1
   wantsToTalk: 1
   type: 0
+  talks: []
   items: []
   swords: []
   guns: []
@@ -348,6 +349,7 @@ MonoBehaviour:
   pages: 0
   wantsToTalk: 0
   type: 1
+  talks: []
   items: []
   swords: []
   guns: []
@@ -930,6 +932,89 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &453150412 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1126585216359096, guid: 1f1122db634a88842a352731224402de,
+    type: 2}
+  m_PrefabInternal: {fileID: 1270820304}
+--- !u!114 &453150413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 453150412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d25cdfbffe3c664fa4184ee36a3bc3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questToStart:
+    questName: 'asdlkjsdgf '
+    questDesc: 'sdgkjsdfk jsdlfjsldff
+
+      sdfsdgfsd
+
+      f sdfs
+
+      dfsdfsdfsd f'
+    completed: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 20
+    rewardItem:
+      name: 
+      value: 0
+      sellValue: 0
+      weight: 0
+    rewardWeapon:
+      name: 
+      value: 0
+      sellValue: 0
+      weight: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      value: 0
+      sellValue: 0
+      weight: 0
+      damage: 0
+      speed: 0
+      bullets: 0
+      range: 0
+      rlspeed: 0
+      type: 
+      special: 
+--- !u!114 &453150414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 453150412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4e005d2993c3549bde83ba79bf6540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speaks: 'I HAVE A QUEST '
+  pages: 1
+  wantsToTalk: 1
+  type: 3
+  talks:
+  - whoTalks: 0
+    npcTalk: "sldjflsdjf \nsdljsdljsdlfj\nsdjksdljksdfsdf"
+    answers: []
+  - whoTalks: 0
+    npcTalk: "sdfsd\xF6fdjksf\ntttttttt\n6666"
+    answers: []
+  - whoTalks: 1
+    npcTalk: 
+    answers:
+    - yes
+    - no
+  items: []
+  swords: []
+  guns: []
 --- !u!1 &502874118
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,6 +1433,72 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &730987042 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1126585216359096, guid: 1f1122db634a88842a352731224402de,
+    type: 2}
+  m_PrefabInternal: {fileID: 835166416}
+--- !u!114 &730987043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 730987042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea4e005d2993c3549bde83ba79bf6540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speaks: 'I HAVE A QUEST '
+  pages: 1
+  wantsToTalk: 1
+  type: 0
+  talks: []
+  items: []
+  swords: []
+  guns: []
+--- !u!114 &730987044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 730987042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d25cdfbffe3c664fa4184ee36a3bc3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questToStart:
+    questName: quest2
+    questDesc: "sdfij \nsdf \nsldfjsldjf oiweroi \nwerlkij\nffffffff"
+    completed: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 20
+    rewardItem:
+      name: 
+      value: 0
+      sellValue: 0
+      weight: 0
+    rewardWeapon:
+      name: 
+      value: 0
+      sellValue: 0
+      weight: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      value: 0
+      sellValue: 0
+      weight: 0
+      damage: 0
+      speed: 0
+      bullets: 0
+      range: 0
+      rlspeed: 0
+      type: 
+      special: 
 --- !u!1 &758222055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1583,6 +1734,7 @@ MonoBehaviour:
   pages: 0
   wantsToTalk: 0
   type: 2
+  talks: []
   items:
   - name: Book
     value: 40
@@ -1696,6 +1848,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &835166416
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 276.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 140.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_RootOrder
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1126585216359096, guid: 1f1122db634a88842a352731224402de, type: 2}
+      propertyPath: m_Name
+      value: Enemy (6)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1f1122db634a88842a352731224402de, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1001 &854537787
 Prefab:
   m_ObjectHideFlags: 0
@@ -2177,6 +2375,7 @@ MonoBehaviour:
   pages: 2
   wantsToTalk: 1
   type: 0
+  talks: []
   items: []
   swords: []
   guns: []
@@ -2280,6 +2479,7 @@ MonoBehaviour:
   pages: 0
   wantsToTalk: 0
   type: 2
+  talks: []
   items: []
   swords:
   - name: sdgfsdg
@@ -2933,7 +3133,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 279.78
+      value: 276.12
       objectReference: {fileID: 0}
     - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2941,7 +3141,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 140.66
+      value: 155.95
       objectReference: {fileID: 0}
     - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
       propertyPath: m_LocalRotation.x

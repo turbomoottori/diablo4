@@ -5,25 +5,20 @@ using System.Linq;
 
 public class quests : MonoBehaviour {
 
-    public static List<Quest> questList;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public static List<Quest> questList = new List<Quest>();
 
     void QuestCompleted(string qName)
     {
-        Quest temp = questList.FirstOrDefault(i => i.questName == qName);
-        temp.completed = true;
-        switch (temp.reward)
+        Quest q = questList.FirstOrDefault(i => i.questName == qName);
+        q.completed = true;
+        switch (q.reward)
         {
             case Reward.item:
-                menus.invItems.Add(temp.rewardItem);
+                menus.invItems.Add(q.rewardItem);
                 break;
 
             case Reward.ability:
-                switch (temp.rewardAbility)
+                switch (q.rewardAbility)
                 {
                     case Ability.dash:
                         gameControl.control.knowsDash = true;
@@ -39,15 +34,15 @@ public class quests : MonoBehaviour {
                 break;
 
             case Reward.money:
-                gameControl.control.money += temp.rewardMoney;
+                gameControl.control.money += q.rewardMoney;
                 break;
 
             case Reward.weapon:
-                menus.invItems.Add(temp.rewardWeapon);
+                menus.invItems.Add(q.rewardWeapon);
                 break;
 
             case Reward.gun:
-                menus.invItems.Add(temp.rewardGun);
+                menus.invItems.Add(q.rewardGun);
                 break;
         }
     }
@@ -56,7 +51,9 @@ public class quests : MonoBehaviour {
 [System.Serializable]
 public class Quest
 {
-    public string questName, questDesc;
+    public string questName;
+    [TextArea]
+    public string questDesc;
     public bool completed;
     public Reward reward;
     public Ability rewardAbility;
@@ -77,6 +74,7 @@ public enum Reward
 
 public enum Ability
 {
+    none,
     dJump,
     dash,
     slowTime

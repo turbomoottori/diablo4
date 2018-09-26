@@ -9,12 +9,13 @@ using System.Linq;
 
 public class menus : MonoBehaviour {
 
-    GameObject speechBox, speech;
+    GameObject speechBox, speech, playerTalk, playerChoice;
+    GameObject talkBox, talkText, ansCont;
     Text txt;
     Image healthbar;
     float moveBox = 176f;
     int page, maxPages;
-    public static bool txtActive, chestClose, merchClose = false;
+    public static bool txtActive, chestClose, merchClose, talkReady = false;
 
     bool talks = false;
     public static bool pauseOpen, invOpen, stInvOpen, merch = false;
@@ -28,6 +29,9 @@ public class menus : MonoBehaviour {
 
     Transform canv;
     int lastPressed = 0;
+
+    public static Speak[] tempSpeak;
+    int currentPage = 0;
 
     //inventory 
     GameObject inv, itemCont, stInv, stInInventory, stStored;
@@ -52,6 +56,11 @@ public class menus : MonoBehaviour {
         volumeVal = gameControl.control.volume;
 
         print(invItems.Count);
+
+        talkBox = Instantiate(Resources.Load("ui/speechBoxTwo") as GameObject, canv);
+        talkBox.SetActive(false);
+        talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
+        ansCont = Instantiate(Resources.Load("ui/answerCont") as GameObject, talkBox.transform.GetChild(0).transform);
     }
 
     private void Update()
@@ -68,6 +77,8 @@ public class menus : MonoBehaviour {
             //SHOW MERCH ITEMS
             else if (merchClose)
                 MerchantUI();
+            else if (talkReady)
+                Talk();
         }
 
         //PRESSING ESC
@@ -104,6 +115,79 @@ public class menus : MonoBehaviour {
         {
             showC = false;
             HideCollected();
+        }
+    }
+
+    public void Talk()
+    {
+        int talkPages = tempSpeak.Length;
+        /*
+        if (talkBox.transform.GetChild(0).transform != null)
+        {
+            foreach(Transform child in talkBox.transform.GetChild(0).transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }*/
+
+        if (currentPage == 0)
+        {
+            talkBox.SetActive(true);
+            if (tempSpeak[0].whoTalks == whoTalks.npc)
+            {
+                ansCont.SetActive(false);
+                talkText.SetActive(true);
+                //talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
+                talkText.GetComponent<Text>().text = tempSpeak[0].npcTalk;
+            }
+            else
+            {
+                ansCont.SetActive(true);
+                if (ansCont.transform != null)
+                    foreach (Transform child in ansCont.transform)
+                        Destroy(child.gameObject);
+
+                talkText.SetActive(false);
+                for(int i =0; i < tempSpeak[0].answers.Length; i++)
+                {
+                    GameObject ans = Instantiate(Resources.Load("ui/answerButton") as GameObject, ansCont.transform);
+                    ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[0].answers[i];
+                }
+            }
+            talks = true;
+            PauseNoMenu();
+            currentPage += 1;
+        }
+        else if (currentPage >= talkPages)
+        {
+            talkBox.SetActive(false);
+            talkReady = false;
+            currentPage = 0;
+            talks = false;
+            PauseNoMenu();
+        }
+        else
+        {
+            if (tempSpeak[currentPage].whoTalks == whoTalks.npc)
+            {
+                //talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
+                talkText.GetComponent<Text>().text = tempSpeak[currentPage].npcTalk;
+            }
+            else
+            {
+                ansCont.SetActive(true);
+                if (ansCont.transform != null)
+                    foreach (Transform child in ansCont.transform)
+                        Destroy(child.gameObject);
+
+                talkText.SetActive(false);
+                for (int i = 0; i < tempSpeak[currentPage].answers.Length; i++)
+                {
+                    GameObject ans = Instantiate(Resources.Load("ui/answerButton") as GameObject, ansCont.transform);
+                    ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[currentPage].answers[i];
+                }
+            }
+            currentPage += 1;
         }
     }
 
@@ -515,6 +599,7 @@ public class menus : MonoBehaviour {
     void AddQuest(string name, string desc)
     {
         GameObject q = Instantiate(Resources.Load("ui/inventory/questblock") as GameObject, inv.transform.Find("quests").transform, false);
+        q.name = "quest" + name;
         q.transform.Find("Title").GetComponent<Text>().text = name;
         q.transform.Find("Title").name = name;
         q.transform.Find("Desc").GetComponent<Text>().text = desc;
@@ -524,6 +609,11 @@ public class menus : MonoBehaviour {
     //checks if quest is finished
     void CheckQuests()
     {
+        foreach (Quest activeQuest in quests.questList)
+            if (!inv.transform.Find("quests").transform.Find("quest" + activeQuest.questName))
+                AddQuest(activeQuest.questName, activeQuest.questDesc);
+
+
         string completedText = "DONE";
         foreach(Quest quest in quests.questList)
         {

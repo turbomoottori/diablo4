@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224612234407318268}
   - component: {fileID: 222904147687470220}
   - component: {fileID: 114761221631348752}
-  - component: {fileID: 114604804765430330}
+  - component: {fileID: 114025007836980260}
   m_Layer: 5
   m_Name: Desc
   m_TagString: Untagged
@@ -55,8 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224384439439006618}
   - component: {fileID: 222152167305661270}
-  - component: {fileID: 114476874318525338}
-  - component: {fileID: 114500733166831392}
+  - component: {fileID: 114445983676291692}
   m_Layer: 5
   m_Name: questblock
   m_TagString: Untagged
@@ -64,6 +63,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114025007836980260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002879350176002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!114 &114262581931672282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -97,7 +109,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Title
---- !u!114 &114476874318525338
+--- !u!114 &114445983676291692
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,35 +128,9 @@ MonoBehaviour:
   m_ChildAlignment: 2
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
---- !u!114 &114500733166831392
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1533248031595632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
---- !u!114 &114604804765430330
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1002879350176002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_ChildControlHeight: 1
 --- !u!114 &114761221631348752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -207,7 +193,7 @@ RectTransform:
   m_GameObject: {fileID: 1533248031595632}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9999994, y: 0.9999994, z: 0.9999994}
   m_Children:
   - {fileID: 224739281539215968}
   - {fileID: 224612234407318268}
@@ -216,7 +202,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 250, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 460, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224612234407318268
@@ -253,5 +239,5 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 460, y: 35}
+  m_SizeDelta: {x: 460, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
