@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Events;
 
 public class npcSpeech : MonoBehaviour {
 
@@ -161,11 +162,22 @@ public class Speak
     public whoTalks whoTalks;
     [TextArea]
     public string npcTalk;
-    public string[] answers;
+    [Tooltip("Make sure playerAnswers and npcReply are of the same size")]
+    public Answer answer;
 }
 
 public enum whoTalks
 {
     npc,
     player
+}
+
+[System.Serializable]
+public class Answer
+{
+    public string[] playerAnswers;
+    [TextArea]
+    [Tooltip("Response to player choice of equal value")]
+    public string[] npcReply;
+    public UnityEvent[] consequences;
 }

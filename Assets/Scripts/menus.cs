@@ -16,6 +16,7 @@ public class menus : MonoBehaviour {
     float moveBox = 176f;
     int page, maxPages;
     public static bool txtActive, chestClose, merchClose, talkReady = false;
+    public bool choice = false;
 
     bool talks = false;
     public static bool pauseOpen, invOpen, stInvOpen, merch = false;
@@ -77,7 +78,7 @@ public class menus : MonoBehaviour {
             //SHOW MERCH ITEMS
             else if (merchClose)
                 MerchantUI();
-            else if (talkReady)
+            else if (talkReady && !choice)
                 Talk();
         }
 
@@ -121,44 +122,44 @@ public class menus : MonoBehaviour {
     public void Talk()
     {
         int talkPages = tempSpeak.Length;
-        /*
-        if (talkBox.transform.GetChild(0).transform != null)
-        {
-            foreach(Transform child in talkBox.transform.GetChild(0).transform)
-            {
-                Destroy(child.gameObject);
-            }
-        }*/
 
-        if (currentPage == 0)
+        if (currentPage < talkPages)
         {
-            talkBox.SetActive(true);
-            if (tempSpeak[0].whoTalks == whoTalks.npc)
+            if (currentPage == 0)
             {
+                talkBox.SetActive(true);
+                PauseNoMenu();
+                talks = true;
+            }
+
+            if (tempSpeak[currentPage].whoTalks == whoTalks.npc)
+            {
+                choice = false;
                 ansCont.SetActive(false);
                 talkText.SetActive(true);
-                //talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
-                talkText.GetComponent<Text>().text = tempSpeak[0].npcTalk;
+                talkText.GetComponent<Text>().text = tempSpeak[currentPage].npcTalk;
             }
             else
             {
+                choice = true;
                 ansCont.SetActive(true);
                 if (ansCont.transform != null)
                     foreach (Transform child in ansCont.transform)
                         Destroy(child.gameObject);
 
                 talkText.SetActive(false);
-                for(int i =0; i < tempSpeak[0].answers.Length; i++)
+                for (int i = 0; i < tempSpeak[currentPage].answer.playerAnswers.Length; i++)
                 {
                     GameObject ans = Instantiate(Resources.Load("ui/answerButton") as GameObject, ansCont.transform);
-                    ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[0].answers[i];
+                    ans.GetComponent<Button>().onClick.AddListener(PlayerChoice);
+                    ans.name = i.ToString();
+                    ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[currentPage].answer.playerAnswers[i];
                 }
             }
-            talks = true;
-            PauseNoMenu();
             currentPage += 1;
+
         }
-        else if (currentPage >= talkPages)
+        else
         {
             talkBox.SetActive(false);
             talkReady = false;
@@ -166,28 +167,25 @@ public class menus : MonoBehaviour {
             talks = false;
             PauseNoMenu();
         }
-        else
-        {
-            if (tempSpeak[currentPage].whoTalks == whoTalks.npc)
-            {
-                //talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
-                talkText.GetComponent<Text>().text = tempSpeak[currentPage].npcTalk;
-            }
-            else
-            {
-                ansCont.SetActive(true);
-                if (ansCont.transform != null)
-                    foreach (Transform child in ansCont.transform)
-                        Destroy(child.gameObject);
+    }
 
-                talkText.SetActive(false);
-                for (int i = 0; i < tempSpeak[currentPage].answers.Length; i++)
-                {
-                    GameObject ans = Instantiate(Resources.Load("ui/answerButton") as GameObject, ansCont.transform);
-                    ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[currentPage].answers[i];
-                }
+    void PlayerChoice()
+    {
+        string btnName = EventSystem.current.currentSelectedGameObject.name;
+        int pg = currentPage - 1;
+        
+        for(int i = 0; i < tempSpeak[pg].answer.playerAnswers.Length; i++)
+        {
+            if (btnName == i.ToString())
+            {
+                ansCont.SetActive(false);
+                talkText.SetActive(true);
+                talkText.GetComponent<Text>().text = tempSpeak[pg].answer.npcReply[i];
+                choice = false;
+
+                if (tempSpeak[pg].answer.consequences[i] != null)
+                    tempSpeak[pg].answer.consequences[i].Invoke();
             }
-            currentPage += 1;
         }
     }
 
@@ -619,7 +617,7 @@ public class menus : MonoBehaviour {
         {
             if (quest.completed)
             {
-                inv.transform.Find("quests").transform.Find(quest.questName + "desc").GetComponent<Text>().text = completedText;
+                inv.transform.Find("quests").transform.Find("quest" + quest.questName).transform.Find(quest.questName + "desc").GetComponent<Text>().text = completedText;
             }
         }
     }

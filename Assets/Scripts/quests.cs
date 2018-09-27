@@ -7,7 +7,7 @@ public class quests : MonoBehaviour {
 
     public static List<Quest> questList = new List<Quest>();
 
-    void QuestCompleted(string qName)
+    public static void QuestCompleted(string qName)
     {
         Quest q = questList.FirstOrDefault(i => i.questName == qName);
         q.completed = true;
@@ -54,6 +54,7 @@ public class Quest
     public string questName;
     [TextArea]
     public string questDesc;
+    public Requirements requirements;
     public bool completed;
     public Reward reward;
     public Ability rewardAbility;
@@ -78,4 +79,12 @@ public enum Ability
     dJump,
     dash,
     slowTime
+}
+
+[System.Serializable]
+public class Requirements
+{
+    public string itemToGet;
+    public int money;
+    public bool[] marks;
 }

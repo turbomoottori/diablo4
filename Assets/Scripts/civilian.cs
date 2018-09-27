@@ -60,6 +60,11 @@ public class civilian : randomDestination {
         }
     }
 
+    public void TurnHostile()
+    {
+        hostile = true;
+    }
+
     IEnumerator Attack(float cooldown, int atk)
     {
         float time = 0.5f;
