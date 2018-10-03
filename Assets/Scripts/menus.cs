@@ -36,8 +36,11 @@ public class menus : MonoBehaviour {
     int currentPage = 0;
 
     //inventory 
+<<<<<<< HEAD
     GameObject inv, itemCont, stInv, stInInventory, stStored;
     GameObject merchCont, ownedItems, shopItems, money;
+=======
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     public static List<Item> invItems = new List<Item>();
     public static List<Item> itemsStored = new List<Item>();
     List<Item> merchItems = new List<Item>();
@@ -113,12 +116,21 @@ public class menus : MonoBehaviour {
             print("kuolee");
         }
 
+<<<<<<< HEAD
         //SHOW COLLECTED ITEM   
+=======
+        //SHOW COLLECTED ITEM
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
         showCollectibleTime += Time.deltaTime;
         if (showCollectibleTime >= 4 && showC)
         {
             showC = false;
             HideCollected();
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            StoredItems();
         }
     }
 
@@ -541,7 +553,11 @@ public class menus : MonoBehaviour {
                 {
                     foreach (Quest quest in quests.questList)
                     {
+<<<<<<< HEAD
                         AddQuest(quest.questName, quest.questDesc);
+=======
+                        AddItem(item.name, item.weight, itemCont, 1);
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
                     }
 
                     CheckQuests();
@@ -589,6 +605,7 @@ public class menus : MonoBehaviour {
     }
 
     //display items in inventory
+<<<<<<< HEAD
     void AddItem(string name, int wt, GameObject place, buttonScript.buttonType type)
     {
         GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, place.transform, false);
@@ -596,6 +613,16 @@ public class menus : MonoBehaviour {
         i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
         i.name = name;
         i.GetComponent<buttonScript>().type = type;
+=======
+    void AddItem(string name, int wt, GameObject listBox, int type)
+    {
+        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, listBox.transform, false);
+        i.transform.Find("name").GetComponent<Text>().text = name;
+        i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
+        i.name = name;
+        //items.Add(i);
+        i.GetComponent<buttonScript>().itemType = type;
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     }
 
     //display equipped items
@@ -767,6 +794,7 @@ public class menus : MonoBehaviour {
         }
     }
 
+<<<<<<< HEAD
     //click function for storage ui
     public void InventoryClickStorage(string name, bool take)
     {
@@ -810,6 +838,33 @@ public class menus : MonoBehaviour {
 
         CheckDuplicates(stInInventory, invItems);
         CheckDuplicates(stStored, itemsStored);
+=======
+    public void TakeOrDeposit(string name, bool take)
+    {
+        if (!take)
+        {
+            for(int i = 0; i < invItems.Count; i++)
+            {
+                if (invItems[i].name == name)
+                {
+                    itemsStored.Add(invItems[i]);
+                    invItems.Remove(invItems[i]);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < itemsStored.Count; i++)
+            {
+                if (invItems[i].name == name)
+                {
+                    invItems.Add(invItems[i]);
+                    itemsStored.Remove(invItems[i]);
+                }
+            }
+        }
+        UpdateStorageInventory();
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     }
 
     //opens and closes storage ui 
@@ -830,18 +885,33 @@ public class menus : MonoBehaviour {
                 //show every item in inventory
                 if (invItems != null)
                     foreach (Item item in invItems)
+<<<<<<< HEAD
                         AddItem(item.name, item.weight, stInInventory, buttonScript.buttonType.storable);
+=======
+                    {
+                        AddItem(item.name, item.weight, stInInventory, 2);
+                    }
+                }
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
 
                 //show every stored item
                 if (itemsStored != null)
                     foreach (Item stitem in itemsStored)
+<<<<<<< HEAD
                         AddItem(stitem.name, stitem.weight, stStored, buttonScript.buttonType.stored);
+=======
+                    {
+                        AddItem(stitem.name, stitem.weight, stStored, 3);
+                    }
+                }
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
             }
             else
             {
                 stInv.SetActive(true);
             }
 
+<<<<<<< HEAD
             foreach (Item itemInInventory in invItems)
                 if (!stInInventory.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.weight, stInInventory, buttonScript.buttonType.storable);
@@ -868,6 +938,9 @@ public class menus : MonoBehaviour {
 
             //check if item is removed and remove it from the list
             invItems.RemoveAll(Item => Item == null);
+=======
+            UpdateStorageInventory();
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
         }
         else
         {
@@ -882,7 +955,40 @@ public class menus : MonoBehaviour {
         PauseNoMenu();
     }
 
+<<<<<<< HEAD
     public void ChangeMerchantItems(List<Item> items)
+=======
+    void UpdateStorageInventory()
+    {
+        print(invItems.Count);
+        //check if new items have appeared in inventory and display them too
+        foreach (Item itemInInventory in invItems)
+        {
+            if (!invItems.Contains(itemInInventory))
+            {
+                invItems.Add(itemInInventory);
+            }
+
+            Transform[] displayed = stInInventory.transform.GetComponentsInChildren<Transform>();
+
+        }
+
+        foreach (Item itemStored in itemsStored)
+        {
+            if (!itemsStored.Contains(itemStored))
+            {
+                itemsStored.Add(itemStored);
+            }
+        }
+
+        //check if item is removed and remove it from the list
+        invItems.RemoveAll(Item => Item == null);
+        itemsStored.RemoveAll(Item => Item == null);
+    }
+
+    //change text to whatever npc is saying
+    public void ChangeText(string NPCtext, int pages)
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     {
         merchItems = items;
     }

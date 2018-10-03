@@ -7,7 +7,11 @@ using UnityEngine.EventSystems;
 public class buttonScript : MonoBehaviour, IPointerClickHandler {
 
     GameObject m;
+<<<<<<< HEAD
     public buttonType type;
+=======
+    public int itemType;
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
 
     private void Start()
     {
@@ -16,6 +20,7 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler {
 
     public void OnPointerClick(PointerEventData eventData)
     {
+<<<<<<< HEAD
         switch (type)
         {
             case buttonType.equip:
@@ -44,6 +49,32 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler {
                 if (eventData.button == PointerEventData.InputButton.Left)
                     m.GetComponent<menus>().TooExpensive();
                 break;
+=======
+        if (itemType == 1)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                m.GetComponent<menus>().InventoryClick(true, gameObject.name);
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                m.GetComponent<menus>().InventoryClick(false, gameObject.name);
+            }
+        }
+        else if (itemType == 2)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                m.GetComponent<menus>().TakeOrDeposit(gameObject.name, false);
+            }
+        }
+        else if (itemType == 3)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                m.GetComponent<menus>().TakeOrDeposit(gameObject.name, true);
+            }
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
         }
         
     }

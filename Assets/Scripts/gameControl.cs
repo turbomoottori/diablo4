@@ -44,6 +44,7 @@ public class gameControl : MonoBehaviour
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file;
 
+<<<<<<< HEAD
         //creates new save file
         file = File.Create(Application.persistentDataPath + "/save" + saveFile + ".dat");
         PlayerData data = new PlayerData();
@@ -66,6 +67,36 @@ public class gameControl : MonoBehaviour
         //serializes and closes file
         bf.Serialize(file, data);
         file.Close();
+=======
+        //checks if save file already exists
+        if (File.Exists(Application.persistentDataPath + "/save" + saveFile + ".dat"))
+        {
+            //overwrite prompt
+            print("overwrite prompt");
+        }
+        else
+        {
+            //creates new save file
+            file = File.Create(Application.persistentDataPath + "/save" + saveFile + ".dat");
+            PlayerData data = new PlayerData();
+
+            //stores all relevant data
+            data.hp = hp;
+            data.maxhp = maxhp;
+            data.money = money;
+            data.knowsDoubleJump = knowsDoubleJump;
+            data.knowsDash = knowsDash;
+            data.hasSword = hasSword;
+            data.equip1 = menus.equipOne;
+            data.equip2 = menus.equipTwo;
+            data.invItems = menus.invItems;
+            data.itemsStored = menus.itemsStored;
+
+            //serializes and closes file
+            bf.Serialize(file, data);
+            file.Close();
+        }
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     }
 
     public void LoadGame(int saveFile)
@@ -89,10 +120,13 @@ public class gameControl : MonoBehaviour
             menus.equipTwo = data.equip2;
             menus.invItems = data.invItems;
             menus.itemsStored = data.itemsStored;
+<<<<<<< HEAD
             knowsSlowTime = data.knowsSlowTime;
             quests.questList = data.questList;
             merchs = data.merchs;
             collectibles = data.collectibles;
+=======
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
         }
     }
 
@@ -131,6 +165,7 @@ class PlayerData
     public bool knowsDoubleJump, knowsDash, knowsSlowTime;
     public string equip1, equip2;
     public List<Item> invItems, itemsStored;
+<<<<<<< HEAD
     public List<Quest> questList;
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
@@ -141,6 +176,8 @@ public class MerchantData
 {
     public string merchantName;
     public List<Item> merchantItems;
+=======
+>>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
 }
 
 [System.Serializable]
