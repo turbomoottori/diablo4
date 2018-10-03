@@ -7,7 +7,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Linq;
 
-public class menus : MonoBehaviour {
+public class menus : MonoBehaviour
+{
 
     GameObject speechBox, speech, playerTalk, playerChoice;
     GameObject talkBox, talkText, ansCont;
@@ -36,17 +37,15 @@ public class menus : MonoBehaviour {
     int currentPage = 0;
 
     //inventory 
-<<<<<<< HEAD
     GameObject inv, itemCont, stInv, stInInventory, stStored;
     GameObject merchCont, ownedItems, shopItems, money;
-=======
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     public static List<Item> invItems = new List<Item>();
     public static List<Item> itemsStored = new List<Item>();
     List<Item> merchItems = new List<Item>();
     public static string equipOne, equipTwo;
 
-    void Start () {
+    void Start()
+    {
         canv = GameObject.Find("Canvas").transform;
         healthbar = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv).transform.GetChild(0).GetChild(0).GetComponent<Image>();
         speechBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
@@ -116,21 +115,12 @@ public class menus : MonoBehaviour {
             print("kuolee");
         }
 
-<<<<<<< HEAD
         //SHOW COLLECTED ITEM   
-=======
-        //SHOW COLLECTED ITEM
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
         showCollectibleTime += Time.deltaTime;
         if (showCollectibleTime >= 4 && showC)
         {
             showC = false;
             HideCollected();
-        }
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            StoredItems();
         }
     }
 
@@ -194,8 +184,8 @@ public class menus : MonoBehaviour {
     {
         string btnName = EventSystem.current.currentSelectedGameObject.name;
         int pg = currentPage - 1;
-        
-        for(int i = 0; i < tempSpeak[pg].answer.playerAnswers.Length; i++)
+
+        for (int i = 0; i < tempSpeak[pg].answer.playerAnswers.Length; i++)
         {
             if (btnName == i.ToString())
             {
@@ -253,7 +243,8 @@ public class menus : MonoBehaviour {
                     Time.fixedDeltaTime = 0.02f;
                 }
             }
-        } else if (!playerMovement.paused)
+        }
+        else if (!playerMovement.paused)
         {
             playerMovement.paused = true;
             pauseOpen = true;
@@ -305,7 +296,8 @@ public class menus : MonoBehaviour {
                 Time.fixedDeltaTime = 0.02f;
             }
 
-        } else if (!playerMovement.paused)
+        }
+        else if (!playerMovement.paused)
         {
             //pause
             playerMovement.paused = true;
@@ -319,7 +311,7 @@ public class menus : MonoBehaviour {
         GameObject btn;
         if (name == "Back")
             btn = Instantiate(Resources.Load("ui/backButton") as GameObject, group.transform);
-        else 
+        else
             btn = Instantiate(Resources.Load("ui/button") as GameObject, group.transform);
         btn.gameObject.transform.GetChild(0).GetComponent<Text>().text = name;
         btn.name = name;
@@ -388,7 +380,7 @@ public class menus : MonoBehaviour {
                 NewButton(saveText + "3", saves);
                 NewButton("Back", saves);
             }
-            else if(saves != null)
+            else if (saves != null)
             {
                 saves.SetActive(true);
             }
@@ -403,7 +395,7 @@ public class menus : MonoBehaviour {
             lastPressed = 0;
         }
         //SAVE FILES
-        else if(btnName == saveText + "1")
+        else if (btnName == saveText + "1")
         {
             //save file 1
 
@@ -434,7 +426,8 @@ public class menus : MonoBehaviour {
                 print("exit game");
 
             }
-        } else if (btnName == saveText + "2")
+        }
+        else if (btnName == saveText + "2")
         {
             //save file 2
 
@@ -464,7 +457,8 @@ public class menus : MonoBehaviour {
                 gameControl.control.SaveGame(2);
                 print("exit game");
             }
-        } else if (btnName == saveText + "3")
+        }
+        else if (btnName == saveText + "3")
         {
             //save file 3
 
@@ -553,11 +547,7 @@ public class menus : MonoBehaviour {
                 {
                     foreach (Quest quest in quests.questList)
                     {
-<<<<<<< HEAD
                         AddQuest(quest.questName, quest.questDesc);
-=======
-                        AddItem(item.name, item.weight, itemCont, 1);
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
                     }
 
                     CheckQuests();
@@ -591,11 +581,11 @@ public class menus : MonoBehaviour {
             if (quests.questList != null)
                 CheckQuests();
 
-                invItems.RemoveAll(Item => Item == null);
+            invItems.RemoveAll(Item => Item == null);
 
         }
         //closes inventory
-        else if(invOpen)
+        else if (invOpen)
         {
             invOpen = false;
             anyOpen = false;
@@ -605,7 +595,6 @@ public class menus : MonoBehaviour {
     }
 
     //display items in inventory
-<<<<<<< HEAD
     void AddItem(string name, int wt, GameObject place, buttonScript.buttonType type)
     {
         GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, place.transform, false);
@@ -613,16 +602,6 @@ public class menus : MonoBehaviour {
         i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
         i.name = name;
         i.GetComponent<buttonScript>().type = type;
-=======
-    void AddItem(string name, int wt, GameObject listBox, int type)
-    {
-        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, listBox.transform, false);
-        i.transform.Find("name").GetComponent<Text>().text = name;
-        i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
-        i.name = name;
-        //items.Add(i);
-        i.GetComponent<buttonScript>().itemType = type;
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     }
 
     //display equipped items
@@ -671,7 +650,7 @@ public class menus : MonoBehaviour {
             if (temp == null)
                 Destroy(child.gameObject);
 
-            
+
         }
     }
 
@@ -684,7 +663,7 @@ public class menus : MonoBehaviour {
 
 
         string completedText = "DONE";
-        foreach(Quest quest in quests.questList)
+        foreach (Quest quest in quests.questList)
         {
             if (quest.completed)
             {
@@ -752,7 +731,8 @@ public class menus : MonoBehaviour {
                     if (name == equipTwo || name == equipOne)
                     {
                         print("already equipped");
-                    } else
+                    }
+                    else
                     {
                         if (item is Gun)
                         {
@@ -794,7 +774,6 @@ public class menus : MonoBehaviour {
         }
     }
 
-<<<<<<< HEAD
     //click function for storage ui
     public void InventoryClickStorage(string name, bool take)
     {
@@ -806,7 +785,7 @@ public class menus : MonoBehaviour {
             {
                 itemsStored.Remove(tempItem);
                 invItems.Add(tempItem);
-                
+
                 //adds to another list
                 foreach (Item itemInInventory in invItems)
                     if (!stInInventory.transform.Find(itemInInventory.name))
@@ -838,33 +817,6 @@ public class menus : MonoBehaviour {
 
         CheckDuplicates(stInInventory, invItems);
         CheckDuplicates(stStored, itemsStored);
-=======
-    public void TakeOrDeposit(string name, bool take)
-    {
-        if (!take)
-        {
-            for(int i = 0; i < invItems.Count; i++)
-            {
-                if (invItems[i].name == name)
-                {
-                    itemsStored.Add(invItems[i]);
-                    invItems.Remove(invItems[i]);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < itemsStored.Count; i++)
-            {
-                if (invItems[i].name == name)
-                {
-                    invItems.Add(invItems[i]);
-                    itemsStored.Remove(invItems[i]);
-                }
-            }
-        }
-        UpdateStorageInventory();
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     }
 
     //opens and closes storage ui 
@@ -885,33 +837,18 @@ public class menus : MonoBehaviour {
                 //show every item in inventory
                 if (invItems != null)
                     foreach (Item item in invItems)
-<<<<<<< HEAD
                         AddItem(item.name, item.weight, stInInventory, buttonScript.buttonType.storable);
-=======
-                    {
-                        AddItem(item.name, item.weight, stInInventory, 2);
-                    }
-                }
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
 
                 //show every stored item
                 if (itemsStored != null)
                     foreach (Item stitem in itemsStored)
-<<<<<<< HEAD
                         AddItem(stitem.name, stitem.weight, stStored, buttonScript.buttonType.stored);
-=======
-                    {
-                        AddItem(stitem.name, stitem.weight, stStored, 3);
-                    }
-                }
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
             }
             else
             {
                 stInv.SetActive(true);
             }
 
-<<<<<<< HEAD
             foreach (Item itemInInventory in invItems)
                 if (!stInInventory.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.weight, stInInventory, buttonScript.buttonType.storable);
@@ -938,9 +875,6 @@ public class menus : MonoBehaviour {
 
             //check if item is removed and remove it from the list
             invItems.RemoveAll(Item => Item == null);
-=======
-            UpdateStorageInventory();
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
         }
         else
         {
@@ -955,40 +889,7 @@ public class menus : MonoBehaviour {
         PauseNoMenu();
     }
 
-<<<<<<< HEAD
     public void ChangeMerchantItems(List<Item> items)
-=======
-    void UpdateStorageInventory()
-    {
-        print(invItems.Count);
-        //check if new items have appeared in inventory and display them too
-        foreach (Item itemInInventory in invItems)
-        {
-            if (!invItems.Contains(itemInInventory))
-            {
-                invItems.Add(itemInInventory);
-            }
-
-            Transform[] displayed = stInInventory.transform.GetComponentsInChildren<Transform>();
-
-        }
-
-        foreach (Item itemStored in itemsStored)
-        {
-            if (!itemsStored.Contains(itemStored))
-            {
-                itemsStored.Add(itemStored);
-            }
-        }
-
-        //check if item is removed and remove it from the list
-        invItems.RemoveAll(Item => Item == null);
-        itemsStored.RemoveAll(Item => Item == null);
-    }
-
-    //change text to whatever npc is saying
-    public void ChangeText(string NPCtext, int pages)
->>>>>>> 51ccfac11b0168bb9bb43fd8f3c61ae93e077624
     {
         merchItems = items;
     }
@@ -1184,7 +1085,8 @@ public class menus : MonoBehaviour {
             collected = Instantiate(Resources.Load("ui/collected") as GameObject, GameObject.Find("Canvas").transform, false);
             //collected.transform.Find("itemImage").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + collectedName);
             collected.transform.Find("collectedName").GetComponent<Text>().text = collectedName;
-        } else
+        }
+        else
         {
             collected.SetActive(true);
             //collected.transform.Find("itemImage").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + collectedName);
