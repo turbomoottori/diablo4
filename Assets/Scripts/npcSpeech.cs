@@ -6,19 +6,18 @@ using UnityEngine.Events;
 
 public class npcSpeech : MonoBehaviour {
 
-    [TextArea]
-    public string speaks;
-    public int pages;
     GameObject player, globals, e;
-    float dist;
     public bool wantsToTalk = true;
-    public interactType type;
+    bool isClose = false;
+    public bool cycleTexts;
+    public int dialogueNumber = 1;
+    int maxDialogue;
+    bool prevent = false;
 
     public Speak[] talks;
-
-    public List<Item> items;
-    public List<Weapon> swords;
-    public List<Gun> guns;
+    public Speak[] secondDialogue;
+    public Speak[] thirdDialogue;
+    public Speak[] fourthDialogue;
 
     void Start () {
         player = GameObject.Find("Player");
@@ -26,133 +25,84 @@ public class npcSpeech : MonoBehaviour {
 
         e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        e.SetActive(false);
 
-        if (type == interactType.merchant)
-        {
-            foreach (Weapon w in swords)
-                items.Add(w);
+        if (secondDialogue.Length == 0)
+            maxDialogue = 1;
+        else if (thirdDialogue.Length == 0)
+            maxDialogue = 2;
+        else if (fourthDialogue.Length == 0)
+            maxDialogue = 3;
+        else
+            maxDialogue = 4;
 
-            foreach (Gun g in guns)
-                items.Add(g);
-
-            foreach (Item i in menus.invItems)
-                CheckItemDuplicates(i.name);
-        }
-    }
-
-    //removes items player already owns
-    void CheckItemDuplicates(string name)
-    {
-        Item temp = items.FirstOrDefault(i => i.name == name);
-        if (temp != null)
-            items.Remove(temp);
+        print(maxDialogue);
     }
 	
 	void Update () {
         e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-        dist = Distance(player.transform.position, transform.position);
 
-        switch (type)
+        if (wantsToTalk && isClose)
         {
-            case interactType.talk:
-                //player is close enough to interact
-                if (wantsToTalk && dist < 2f)
+
+            if (Input.GetKeyDown(KeyCode.E) && !menus.anyOpen)
+            {
+                if (gameObject.GetComponent<fetchQuest>() != null && !prevent)
                 {
-                    e.SetActive(true);
-
-                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch && !menus.talkReady)
+                    if (quests.CheckIfCompleted(gameObject.GetComponent<fetchQuest>().questToStart.questName))
                     {
-                        globals.GetComponent<menus>().ChangeText(speaks, pages);
-
-                        //if npc has a quest, make it active
-                        if (gameObject.GetComponent<newQuest>() != null)
-                            gameObject.GetComponent<newQuest>().CheckQuest();
-
-                        menus.txtActive = true;
+                        prevent = true;
+                        dialogueNumber += 1;
+                        quests.QuestCompleted(gameObject.GetComponent<fetchQuest>().questToStart.questName);
                     }
                 }
-                else
-                {
-                    e.SetActive(false);
-                }
-                break;
-            case interactType.chest:
-                //player is close enough to interact
-                if (dist < 2f)
-                {
-                    e.SetActive(true);
 
-                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch && !menus.talkReady)
-                    {
-                        menus.chestClose = true;
-                    }
-                }
-                else
-                {
-                    e.SetActive(false);
-                }
-                break;
-            case interactType.merchant:
-                //player is close enough to interact
-                if (dist < 2f)
-                {
-                    globals.GetComponent<menus>().ChangeMerchantItems(items);
-                    e.SetActive(true);
-                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch && !menus.talkReady)
-                    {
-                        menus.merchClose = true;
-                    }
-                }
-                else
-                {
-                    e.SetActive(false);
-                }
-                break;
-            case interactType.canAnswer:
-                if(wantsToTalk && dist < 2f)
-                {
-                    e.SetActive(true);
+                if (dialogueNumber == 1)
+                    menus.tempSpeak = talks;
+                else if (dialogueNumber == 2)
+                    menus.tempSpeak = secondDialogue;
+                else if (dialogueNumber == 3)
+                    menus.tempSpeak = thirdDialogue;
+                else if (dialogueNumber == 4)
+                    menus.tempSpeak = fourthDialogue;
 
-                    if (Input.GetKeyDown(KeyCode.E) && !menus.txtActive && !menus.pauseOpen && !menus.invOpen && !menus.stInvOpen && !menus.merch && !menus.talkReady)
-                    {
-                        menus.tempSpeak = talks;
+                menus.talkReady = true;
 
-                        //if npc has a quest, make it active
-                        if (gameObject.GetComponent<newQuest>() != null)
-                            gameObject.GetComponent<newQuest>().CheckQuest();
-
-                        menus.talkReady = true;
-                    }
-                }
-                else
+                if (cycleTexts)
                 {
-                    e.SetActive(false);
+                    dialogueNumber += 1;
+
+                    if (dialogueNumber > maxDialogue)
+                        dialogueNumber = 1;
                 }
-                break;
+
+            }
         }
-        
-	}
-
-    float Distance(Vector3 st, Vector3 en)
-    {
-        float d = 0.0f;
-
-        float dx = st.x - en.x;
-        float dy = st.y - en.y;
-        float dz = st.z - en.z;
-
-        d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
-
-
-        return d;
     }
 
-    public enum interactType
+    public void NextDialogue()
     {
-        talk,
-        chest,
-        merchant,
-        canAnswer
+        dialogueNumber += 1;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "interactzone")
+        {
+            e.SetActive(true);
+            isClose = true;
+        }
+            
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "interactzone")
+        {
+            e.SetActive(false);
+            isClose = false;
+        }
+            
     }
 }
 
@@ -162,7 +112,7 @@ public class Speak
     public whoTalks whoTalks;
     [TextArea]
     public string npcTalk;
-    [Tooltip("Make sure playerAnswers and npcReply are of the same size")]
+    [Tooltip("Make sure playerAnswers, npcReply and consequenses are of the same size, 1-3")]
     public Answer answer;
 }
 

@@ -91,6 +91,8 @@ public class Item
 {
     public string name;
     public int value, sellValue, weight;
+    public bool stackable;
+    public bool canSell;
 }
 
 [System.Serializable]
@@ -106,4 +108,10 @@ public class Gun : Weapon
     public int bullets;
     public float range, rlspeed;
     public string type, special;
+}
+
+[System.Serializable]
+public class QuestItem : Item
+{
+    public string quest;
 }

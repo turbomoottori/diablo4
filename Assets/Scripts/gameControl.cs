@@ -13,6 +13,10 @@ public class gameControl : MonoBehaviour
 
     public int volume;
 
+    public List<MerchantData> merchs;
+    public List<Collectibles> collectibles;
+
+
     void Awake()
     {
         //prevents doubles
@@ -29,8 +33,10 @@ public class gameControl : MonoBehaviour
         //loads options automatically
         LoadOptions();
 
-        //adds sword to inventory
-        //FirstSword();
+        if (merchs == null)
+            merchs = new List<MerchantData>();
+        if (collectibles == null)
+            collectibles = new List<Collectibles>();
     }
 
     public void SaveGame(int saveFile)
@@ -54,6 +60,8 @@ public class gameControl : MonoBehaviour
         data.itemsStored = menus.itemsStored;
         data.knowsSlowTime = knowsSlowTime;
         data.questList = quests.questList;
+        data.merchs = merchs;
+        data.collectibles = collectibles;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -83,6 +91,8 @@ public class gameControl : MonoBehaviour
             menus.itemsStored = data.itemsStored;
             knowsSlowTime = data.knowsSlowTime;
             quests.questList = data.questList;
+            merchs = data.merchs;
+            collectibles = data.collectibles;
         }
     }
 
@@ -122,10 +132,26 @@ class PlayerData
     public string equip1, equip2;
     public List<Item> invItems, itemsStored;
     public List<Quest> questList;
+    public List<MerchantData> merchs;
+    public List<Collectibles> collectibles;
+}
+
+[System.Serializable]
+public class MerchantData
+{
+    public string merchantName;
+    public List<Item> merchantItems;
 }
 
 [System.Serializable]
 class OptionsData
 {
     public int volume;
+}
+
+[System.Serializable]
+public class Collectibles
+{
+    public float posX, posZ;
+    public string cName;
 }

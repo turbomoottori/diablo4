@@ -40,7 +40,6 @@ GameObject:
   - component: {fileID: 224158986022828688}
   - component: {fileID: 222395386243138768}
   - component: {fileID: 114831073986904662}
-  - component: {fileID: 114673057312696016}
   - component: {fileID: 114263202930077220}
   m_Layer: 5
   m_Name: inventory
@@ -269,28 +268,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114673057312696016
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1324093186495818}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 50
-    m_Right: 50
-    m_Top: 150
-    m_Bottom: 50
-  m_ChildAlignment: 4
-  m_Spacing: 50
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
 --- !u!114 &114752727786625034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -423,7 +400,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -20, y: 20}
-  m_SizeDelta: {x: 700, y: 647.1}
+  m_SizeDelta: {x: 700, y: 465}
   m_Pivot: {x: 1, y: 0}
 --- !u!224 &224821336323447574
 RectTransform:

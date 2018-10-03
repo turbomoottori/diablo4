@@ -46,6 +46,26 @@ public class quests : MonoBehaviour {
                 break;
         }
     }
+
+    public static bool CheckIfCompleted(string qName)
+    {
+        Quest q = questList.FirstOrDefault(i => i.questName == qName);
+        if(q is FetchQuest)
+        {
+            FetchQuest fq = q as FetchQuest;
+            List<Item> tempList = menus.invItems.FindAll(i => i.name.Equals(fq.what));
+            if (tempList.Count >= fq.howMany)
+            {
+                for (int i = 0; i < tempList.Count; i++)
+                {
+                    menus.invItems.Remove(tempList[i]);
+                }
+
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 [System.Serializable]
@@ -54,7 +74,6 @@ public class Quest
     public string questName;
     [TextArea]
     public string questDesc;
-    public Requirements requirements;
     public bool completed;
     public Reward reward;
     public Ability rewardAbility;
@@ -62,6 +81,20 @@ public class Quest
     public Item rewardItem;
     public Weapon rewardWeapon;
     public Gun rewardGun;
+}
+
+[System.Serializable]
+public class FetchQuest: Quest
+{
+    public int howMany;
+    public string what;
+}
+
+[System.Serializable]
+public class DeliveryQuest : Quest
+{
+    public QuestItem[] itemsToDeliver;
+    public GameObject[] whereToDeliver;
 }
 
 public enum Reward
@@ -79,12 +112,4 @@ public enum Ability
     dJump,
     dash,
     slowTime
-}
-
-[System.Serializable]
-public class Requirements
-{
-    public string itemToGet;
-    public int money;
-    public bool[] marks;
 }

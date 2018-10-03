@@ -54,10 +54,18 @@ public class playerMovement : MonoBehaviour
         slowTime = false;
         fakeGrav = GetComponent<ConstantForce>();
         slowmobar = Instantiate(Resources.Load("ui/slowmo") as GameObject, canv).transform.GetChild(0).GetChild(0).transform.GetComponent<Image>();
+
+        if (gameControl.control.knowsDash)
+            slowmobar.gameObject.SetActive(true);
+        else
+            slowmobar.gameObject.SetActive(false);
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.U))
+            print(menus.invItems.Count);
+
         if (!paused)
         {
             //MOVEMENT
@@ -268,6 +276,12 @@ public class playerMovement : MonoBehaviour
         moneyui.gameObject.SetActive(false);
         uiActive = false;
         yield return null;
+    }
+
+    //display slow motion bar
+    public void ShowSlowMo()
+    {
+        slowmobar.gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)

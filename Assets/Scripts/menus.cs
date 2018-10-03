@@ -16,6 +16,7 @@ public class menus : MonoBehaviour {
     float moveBox = 176f;
     int page, maxPages;
     public static bool txtActive, chestClose, merchClose, talkReady = false;
+    public static bool anyOpen = false;
     public bool choice = false;
 
     bool talks = false;
@@ -71,7 +72,7 @@ public class menus : MonoBehaviour {
         {
             //TALK
             if (txtActive)
-                ScrollText();
+                Talk();
             //OPEN CHEST
             else if (chestClose)
                 StoredItems();
@@ -85,18 +86,20 @@ public class menus : MonoBehaviour {
         //PRESSING ESC
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!talks && !invOpen && !stInvOpen)
+            if (!talks && !invOpen && !stInvOpen && !stInvOpen && !merch)
                 TogglePause();
             else if (!pauseOpen && !talks && invOpen && !stInvOpen && !merch)
                 Inventory();
-            else if (!pauseOpen && !invOpen && talks && !stInvOpen && !merch)
-                ScrollText();
+            else if (!pauseOpen && !invOpen && talks && !stInvOpen && !merch && !choice)
+                Talk();
             else if (!pauseOpen && !invOpen && !talks && stInvOpen && !merch)
                 StoredItems();
+            else if (!pauseOpen && !invOpen && !talks && !stInvOpen && merch)
+                MerchantUI();
         }
 
         //OPEN INVENTORY
-        if (Input.GetKeyDown(KeyCode.I) && !talks && !pauseOpen && !stInvOpen)
+        if (Input.GetKeyDown(KeyCode.I) && !talks && !pauseOpen && !stInvOpen && !merch)
             Inventory();
 
         // HEALTH
@@ -119,10 +122,12 @@ public class menus : MonoBehaviour {
         }
     }
 
+    //talking to npc
     public void Talk()
     {
         int talkPages = tempSpeak.Length;
 
+        //cycles through conversation
         if (currentPage < talkPages)
         {
             if (currentPage == 0)
@@ -130,6 +135,7 @@ public class menus : MonoBehaviour {
                 talkBox.SetActive(true);
                 PauseNoMenu();
                 talks = true;
+                anyOpen = true;
             }
 
             if (tempSpeak[currentPage].whoTalks == whoTalks.npc)
@@ -156,19 +162,22 @@ public class menus : MonoBehaviour {
                     ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[currentPage].answer.playerAnswers[i];
                 }
             }
-            currentPage += 1;
 
+            currentPage += 1;
         }
+        //ends conversation
         else
         {
             talkBox.SetActive(false);
             talkReady = false;
             currentPage = 0;
             talks = false;
+            anyOpen = false;
             PauseNoMenu();
         }
     }
 
+    //making a choice
     void PlayerChoice()
     {
         string btnName = EventSystem.current.currentSelectedGameObject.name;
@@ -196,6 +205,7 @@ public class menus : MonoBehaviour {
         {
             //unpause
             pauseOpen = false;
+            anyOpen = false;
 
             if (opt != null && opt.activeInHierarchy)
             {
@@ -235,6 +245,8 @@ public class menus : MonoBehaviour {
         {
             playerMovement.paused = true;
             pauseOpen = true;
+            anyOpen = true;
+
             //pause game
             if (p == null)
             {
@@ -501,6 +513,8 @@ public class menus : MonoBehaviour {
         if (!invOpen)
         {
             invOpen = true;
+            anyOpen = true;
+
             PauseNoMenu();
 
             //create inventory menu if it doesn't exist
@@ -541,15 +555,14 @@ public class menus : MonoBehaviour {
             //if there's new items add them too
             foreach (Item itemInInventory in invItems)
                 if (!itemCont.transform.Find(itemInInventory.name))
+                {
                     AddItem(itemInInventory.name, itemInInventory.weight, itemCont, buttonScript.buttonType.equip);
+                    List<Item> tempList = invItems.FindAll(i => i.name.Equals(itemInInventory.name));
+                    string stacks = " (" + tempList.Count.ToString() + ")";
+                }
 
-            //destroys the ones that are not on the list anymore
-            foreach (Transform child in itemCont.transform)
-            {
-                Item temp = invItems.FirstOrDefault(i => i.name == child.name);
-                if (temp == null)
-                    Destroy(child.gameObject);
-            }
+            //checks duplicates
+            CheckDuplicates(itemCont, invItems);
 
             foreach (Transform child in itemCont.transform)
             {
@@ -569,6 +582,7 @@ public class menus : MonoBehaviour {
         else if(invOpen)
         {
             invOpen = false;
+            anyOpen = false;
             inv.SetActive(false);
             PauseNoMenu();
         }
@@ -602,6 +616,36 @@ public class menus : MonoBehaviour {
         q.transform.Find("Title").name = name;
         q.transform.Find("Desc").GetComponent<Text>().text = desc;
         q.transform.Find("Desc").name = name + "desc";
+    }
+
+    //checks duplicates
+    void CheckDuplicates(GameObject g, List<Item> l)
+    {
+        foreach (Transform child in g.transform)
+        {
+            Item temp = l.FirstOrDefault(i => i.name == child.name);
+            Transform[] duplicateCheck = FindChildren(g.transform, child.name);
+
+            //if there's more than one item of the same name, delete the other one
+            if (duplicateCheck.Length > 1)
+            {
+                for (int i = 0; i < duplicateCheck.Length; i++)
+                    if (i != 0)
+                        Destroy(duplicateCheck[i].gameObject);
+            }
+
+            //display amount if item is stackable
+            if (temp != null && temp.stackable)
+            {
+                List<Item> tempList = l.FindAll(i => i.name.Equals(child.name));
+                string stacks = " (" + tempList.Count.ToString() + ")";
+                child.transform.Find("name").GetComponent<Text>().text = temp.name + stacks;
+            }
+            if (temp == null)
+                Destroy(child.gameObject);
+
+            
+        }
     }
 
     //checks if quest is finished
@@ -734,15 +778,7 @@ public class menus : MonoBehaviour {
             {
                 itemsStored.Remove(tempItem);
                 invItems.Add(tempItem);
-
-                //deletes from list
-                foreach (Transform child in stStored.transform)
-                {
-                    Item temp = itemsStored.FirstOrDefault(i => i.name == child.name);
-                    if (temp == null)
-                        Destroy(child.gameObject);
-                }
-
+                
                 //adds to another list
                 foreach (Item itemInInventory in invItems)
                     if (!stInInventory.transform.Find(itemInInventory.name))
@@ -764,14 +800,6 @@ public class menus : MonoBehaviour {
                     invItems.Remove(tempItem);
                     itemsStored.Add(tempItem);
 
-                    //deletes from list
-                    foreach (Transform child in stInInventory.transform)
-                    {
-                        Item temp = invItems.FirstOrDefault(i => i.name == child.name);
-                        if (temp == null)
-                            Destroy(child.gameObject);
-                    }
-
                     //adds to another list
                     foreach (Item itemStored in itemsStored)
                         if (!stStored.transform.Find(itemStored.name))
@@ -779,6 +807,9 @@ public class menus : MonoBehaviour {
                 }
             }
         }
+
+        CheckDuplicates(stInInventory, invItems);
+        CheckDuplicates(stStored, itemsStored);
     }
 
     //opens and closes storage ui 
@@ -788,6 +819,8 @@ public class menus : MonoBehaviour {
         if (!stInvOpen)
         {
             stInvOpen = true;
+            anyOpen = true;
+
             if (stInv == null)
             {
                 stInv = Instantiate(Resources.Load("ui/inventory/storeInv") as GameObject, canv, false);
@@ -809,24 +842,9 @@ public class menus : MonoBehaviour {
                 stInv.SetActive(true);
             }
 
-            //checks if anything has changed in lists
-            foreach (Transform child in stStored.transform)
-            {
-                Item temp = itemsStored.FirstOrDefault(i => i.name == child.name);
-                if (temp == null)
-                    Destroy(child.gameObject);
-            }
-
             foreach (Item itemInInventory in invItems)
                 if (!stInInventory.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.weight, stInInventory, buttonScript.buttonType.storable);
-
-            foreach (Transform child in stInInventory.transform)
-            {
-                Item temp = invItems.FirstOrDefault(i => i.name == child.name);
-                if (temp == null)
-                    Destroy(child.gameObject);
-            }
 
             foreach (Item itemStored in itemsStored)
                 if (!stStored.transform.Find(itemStored.name))
@@ -844,6 +862,9 @@ public class menus : MonoBehaviour {
                     stInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.white;
                 }
             }
+            CheckDuplicates(stStored, itemsStored);
+            CheckDuplicates(stInInventory, invItems);
+
 
             //check if item is removed and remove it from the list
             invItems.RemoveAll(Item => Item == null);
@@ -852,48 +873,13 @@ public class menus : MonoBehaviour {
         {
             //close this inventory
             stInvOpen = false;
+            anyOpen = false;
             stInv.SetActive(false);
             chestClose = false;
         }
 
         //toggles timescale
         PauseNoMenu();
-    }
-
-    //change text to whatever npc is saying
-    public void ChangeText(string NPCtext, int pages)
-    {
-        txt.text = NPCtext;
-        maxPages = pages;
-    }
-
-    //speech box stuff
-    public void ScrollText()
-    {
-        RectTransform box = speech.GetComponent<RectTransform>();
-        //close, open, scroll
-        if (page >= maxPages)
-        {
-            speechBox.SetActive(false);
-            box.anchoredPosition = Vector2.zero;
-            box.offsetMin = Vector2.zero;
-            txtActive = false;
-            page = 0;
-            talks = false;
-            PauseNoMenu();
-        } else if (page == 0) {
-            speechBox.SetActive(true);
-            talks = true;
-            PauseNoMenu();
-            page += 1;
-        } else
-        {
-            Vector2 nextPos = box.anchoredPosition;
-            nextPos.y += moveBox;
-            box.anchoredPosition = nextPos;
-            box.offsetMin = Vector2.zero;
-            page += 1;
-        }
     }
 
     public void ChangeMerchantItems(List<Item> items)
@@ -908,6 +894,8 @@ public class menus : MonoBehaviour {
         if (!merch)
         {
             merch = true;
+            anyOpen = true;
+
             if (merchCont == null)
             {
                 merchCont = Instantiate(Resources.Load("ui/inventory/merchantUI") as GameObject, canv, false);
@@ -944,18 +932,14 @@ public class menus : MonoBehaviour {
                 if (!ownedItems.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
 
-            foreach (Transform child in ownedItems.transform)
-            {
-                Item temp = invItems.FirstOrDefault(i => i.name == child.name);
-                if (temp == null)
-                    Destroy(child.gameObject);
-            }
-
             foreach (Item mItem in merchItems)
                 if (!shopItems.transform.Find(mItem.name))
                     AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
 
+            CheckDuplicates(ownedItems, invItems);
             CheckEquipAndValue();
+
+
 
             //check if item is removed and remove it from the list
             invItems.RemoveAll(Item => Item == null);
@@ -964,6 +948,7 @@ public class menus : MonoBehaviour {
         {
             //close this inventory
             merch = false;
+            anyOpen = false;
             merchCont.SetActive(false);
             merchClose = false;
         }
@@ -1012,27 +997,34 @@ public class menus : MonoBehaviour {
                 Item tempItem = invItems.FirstOrDefault(i => i.name == name);
                 if (tempItem != null)
                 {
-                    invItems.Remove(tempItem);
-                    merchItems.Add(tempItem);
-
-                    //deletes from list
-                    foreach (Transform child in ownedItems.transform)
+                    if (tempItem.canSell)
                     {
-                        Item temp = invItems.FirstOrDefault(i => i.name == child.name);
-                        if (temp == null)
-                            Destroy(child.gameObject);
+                        invItems.Remove(tempItem);
+                        merchItems.Add(tempItem);
+
+                        //deletes from list
+                        foreach (Transform child in ownedItems.transform)
+                        {
+                            Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                            if (temp == null)
+                                Destroy(child.gameObject);
+                        }
+
+                        //adds to another list
+                        foreach (Item mItem in merchItems)
+                            if (!shopItems.transform.Find(mItem.name))
+                                AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
+
+                        gameControl.control.money += tempItem.sellValue;
                     }
-
-                    //adds to another list
-                    foreach (Item mItem in merchItems)
-                        if (!shopItems.transform.Find(mItem.name))
-                            AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
+                    else
+                    {
+                        print("can't sell");
+                    }
                 }
-
-                gameControl.control.money += tempItem.sellValue;
             }
         }
-
+        CheckDuplicates(ownedItems, invItems);
         CheckEquipAndValue();
     }
 
@@ -1044,7 +1036,7 @@ public class menus : MonoBehaviour {
         //changes color of already equipped item
         foreach (Item item in invItems)
         {
-            if (item.name == equipOne || item.name == equipTwo)
+            if (item.name == equipOne || item.name == equipTwo || !item.canSell)
             {
                 ownedItems.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
             }
@@ -1097,6 +1089,11 @@ public class menus : MonoBehaviour {
     public void HideCollected()
     {
         collected.SetActive(false);
+    }
+
+    public static Transform[] FindChildren(Transform tr, string name)
+    {
+        return tr.GetComponentsInChildren<Transform>().Where(t => t.name == name).ToArray();
     }
 }
 

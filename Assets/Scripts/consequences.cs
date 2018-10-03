@@ -39,7 +39,7 @@ public class consequences : MonoBehaviour {
         questName = name;
     }
 
-    public void QuestMarkVisited(int markNumber)
+    /*public void QuestMarkVisited(int markNumber)
     {
         foreach(Quest q in quests.questList)
         {
@@ -60,5 +60,5 @@ public class consequences : MonoBehaviour {
         }
 
         return true;
-    }
+    }*/
 }
