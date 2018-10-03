@@ -4666,6 +4666,8 @@ GameObject:
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
   - component: {fileID: 534669906}
+  - component: {fileID: 534669908}
+  - component: {fileID: 534669907}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4746,6 +4748,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1575445892}
   camSpeed: 4
+--- !u!114 &534669907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: fe01392ee9ced02419496cc85cc29e82, type: 2}
+--- !u!114 &534669908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c24e6abd23306549bd953fd0018e7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threshold: 0.25
+  dimmer: 0
+  edgeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &543006602
 Prefab:
   m_ObjectHideFlags: 0
@@ -6008,6 +6036,8 @@ MonoBehaviour:
   knowsDash: 1
   knowsSlowTime: 1
   volume: 0
+  merchs: []
+  collectibles: []
 --- !u!1001 &760902418
 Prefab:
   m_ObjectHideFlags: 0
