@@ -18,6 +18,7 @@ public class npcSpeechSimple : MonoBehaviour
     public List<Item> items;
     public List<Weapon> swords;
     public List<Gun> guns;
+    public List<Book> books;
 
     void Start()
     {
@@ -44,6 +45,9 @@ public class npcSpeechSimple : MonoBehaviour
 
                 foreach (Gun g in guns)
                     items.Add(g);
+
+                foreach (Book b in books)
+                    items.Add(b);
 
                 foreach (Item i in menus.invItems)
                     CheckItemDuplicates(i.name);
@@ -102,6 +106,23 @@ public class npcSpeechSimple : MonoBehaviour
                         menus.talkReady = true;
                     }
                 }
+                else
+                {
+                    e.SetActive(false);
+                }
+                break;
+            case interactType.bookcase:
+                if (isClose)
+                {
+                    if(Input.GetKeyDown(KeyCode.E) && !menus.anyOpen)
+                    {
+
+                    }
+                }
+                else
+                {
+                    e.SetActive(false);
+                }
                 break;
         }
 
@@ -111,7 +132,8 @@ public class npcSpeechSimple : MonoBehaviour
     {
         chest,
         merchant,
-        regular
+        regular,
+        bookcase
     }
 
     private void OnTriggerEnter(Collider other)

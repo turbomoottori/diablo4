@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class npcSpeech : MonoBehaviour {
 
-    GameObject player, globals, e;
+    GameObject e;
     public bool wantsToTalk = true;
     bool isClose = false;
     public bool cycleTexts;
@@ -20,9 +20,6 @@ public class npcSpeech : MonoBehaviour {
     public Speak[] fourthDialogue;
 
     void Start () {
-        player = GameObject.Find("Player");
-        globals = GameObject.Find("Globals");
-
         e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
         e.SetActive(false);
@@ -77,6 +74,10 @@ public class npcSpeech : MonoBehaviour {
                 }
 
             }
+        }
+        else
+        {
+            e.SetActive(false);
         }
     }
 

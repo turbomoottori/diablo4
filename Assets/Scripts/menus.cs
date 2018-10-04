@@ -10,18 +10,15 @@ using System.Linq;
 public class menus : MonoBehaviour
 {
 
-    GameObject speechBox, speech, playerTalk, playerChoice;
+    GameObject playerTalk, playerChoice;
     GameObject talkBox, talkText, ansCont;
-    Text txt;
     Image healthbar;
-    float moveBox = 176f;
-    int page, maxPages;
     public static bool txtActive, chestClose, merchClose, talkReady = false;
     public static bool anyOpen = false;
     public bool choice = false;
 
     bool talks = false;
-    public static bool pauseOpen, invOpen, stInvOpen, merch = false;
+    public static bool pauseOpen, invOpen, stInvOpen, merch, bcOpen = false;
     int temphp, tempmaxhp, volumeVal;
 
     GameObject p, gen, opt, saves, savePrompt;
@@ -48,20 +45,12 @@ public class menus : MonoBehaviour
     {
         canv = GameObject.Find("Canvas").transform;
         healthbar = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv).transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        speechBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
-        speech = speechBox.transform.GetChild(0).GetChild(0).gameObject;
-        txt = speech.GetComponent<Text>();
 
-        //temp values for speech bubbles
-        page = 0;
-        maxPages = 1;
-
-        speechBox.SetActive(false);
         volumeVal = gameControl.control.volume;
 
         print(invItems.Count);
 
-        talkBox = Instantiate(Resources.Load("ui/speechBoxTwo") as GameObject, canv);
+        talkBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
         talkBox.SetActive(false);
         talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
         ansCont = Instantiate(Resources.Load("ui/answerCont") as GameObject, talkBox.transform.GetChild(0).transform);
@@ -561,11 +550,7 @@ public class menus : MonoBehaviour
             //if there's new items add them too
             foreach (Item itemInInventory in invItems)
                 if (!itemCont.transform.Find(itemInInventory.name))
-                {
                     AddItem(itemInInventory.name, itemInInventory.weight, itemCont, buttonScript.buttonType.equip);
-                    List<Item> tempList = invItems.FindAll(i => i.name.Equals(itemInInventory.name));
-                    string stacks = " (" + tempList.Count.ToString() + ")";
-                }
 
             //checks duplicates
             CheckDuplicates(itemCont, invItems);
@@ -889,6 +874,14 @@ public class menus : MonoBehaviour
         PauseNoMenu();
     }
 
+    //BOOKCASE STUFF HERE
+    //make an image of bookcase and books
+    //if player interacts with bookcase, take every book from inventory and add them to bookcase automatically
+    //add some text to inform the player of this action
+    //image of those books appear and they can be read
+    //if player clicks on a book, a window of text opens
+
+    //changes merchant items
     public void ChangeMerchantItems(List<Item> items)
     {
         merchItems = items;

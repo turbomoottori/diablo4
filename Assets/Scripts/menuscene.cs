@@ -18,7 +18,7 @@ public class menuscene : MonoBehaviour {
 
     int hp, maxhp = 50;
     int money = 0;
-    bool knowsDoubleJump, knowsDash, knowsSlowTime = false;
+    bool knowsDoubleJump, knowsDash, knowsSlowTime;
 
     void Start () {
         cont = GameObject.Find("buttonCont");
@@ -28,6 +28,11 @@ public class menuscene : MonoBehaviour {
         CreateButton("Options", main);
         CreateButton("Exit game", main);
         volumeVal = gameControl.control.volume;
+
+        hp = maxhp;
+        knowsDash = false;
+        knowsDoubleJump = false;
+        knowsSlowTime = false;
 	}
 
     //creates new text

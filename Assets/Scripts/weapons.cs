@@ -115,3 +115,10 @@ public class QuestItem : Item
 {
     public string quest;
 }
+
+[System.Serializable]
+public class Book : Item
+{
+    [TextArea]
+    public string txt;
+}

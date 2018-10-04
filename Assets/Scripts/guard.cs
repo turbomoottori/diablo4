@@ -7,7 +7,6 @@ public class guard : enemy {
     public GameObject[] patrolPoints;
     int patrolNum = 0;
     float timer = 0;
-    bool playerSeen = false;
     public Action action;
     public float stopTimer;
     public string type, special;

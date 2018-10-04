@@ -19,13 +19,21 @@ public class civilian : randomDestination {
         base.Update();
 
         //stops movement to talk to player
-        if (gameObject.GetComponent<npcSpeech>() != null && Distance(player.transform.position, transform.position) < 2f && !hostile)
-            agent.isStopped = true;
-        else
-            agent.isStopped = false;
+        if (agent.isActiveAndEnabled)
+        {
+            if (gameObject.GetComponent<npcSpeech>() != null && Distance(player.transform.position, transform.position) < 2f && !hostile)
+                agent.isStopped = true;
+            else
+                agent.isStopped = false;
+        }
 
         if (hostile)
         {
+            if (gameObject.GetComponent<npcSpeech>() != null)
+                gameObject.GetComponent<npcSpeech>().wantsToTalk = false;
+            if (gameObject.GetComponent<npcSpeechSimple>() != null)
+                gameObject.GetComponent<npcSpeechSimple>().wantsToTalk = false;
+
             switch (action)
             {
                 case Action.follow:

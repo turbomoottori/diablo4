@@ -12,14 +12,13 @@ public class collectible : MonoBehaviour {
     public int damage, bullets;
     public float speed, reloadSpeed, range;
     public string type, special;
-    GameObject e, p;
+    GameObject e;
     bool isClose = false;
 	
 	void Start () {
         e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
         e.SetActive(false);
-        p = GameObject.Find("Player");
 
         Collectibles c = gameControl.control.collectibles.FirstOrDefault(i => i.cName == collectibleName);
         if (c != null)

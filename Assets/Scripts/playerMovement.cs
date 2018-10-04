@@ -36,6 +36,8 @@ public class playerMovement : MonoBehaviour
 
     Transform canv;
     Vector3 tempPos;
+    public LayerMask walkable;
+    bool respawn = false;
 
     void Start()
     {
@@ -77,18 +79,7 @@ public class playerMovement : MonoBehaviour
                 movement.Normalize();
                 Vector3 pos = transform.position;
                 Vector3 targ = transform.position + movement;
-
-                //check if the player runs or walks
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    pos += (targ - pos) * Time.deltaTime * (speed * 1.5f);
-                    runs = true;
-                }
-                else
-                {
-                    pos += (targ - pos) * Time.deltaTime * speed;
-                    runs = false;
-                }
+                pos += (targ - pos) * Time.deltaTime * speed;
                 transform.position = pos;
                 transform.position = pos;
             }
@@ -118,7 +109,6 @@ public class playerMovement : MonoBehaviour
 
                 if (canJump)
                 {
-                    tempPos = transform.position;
                     canJump = false;
                     canDoubleJump = true;
                     rb.velocity = new Vector3(0, jumpForce, 0);
@@ -130,12 +120,18 @@ public class playerMovement : MonoBehaviour
                 }
             }
 
+            RaycastHit h;
+            if(Physics.Raycast(transform.position, Vector3.down, out h, 1.1f, walkable) && rb.velocity.y <= 0.1f)
+            {
+                tempPos = transform.position;
+            }
+
             //DASHING
 
             switch (dashState)
             {
                 case DashState.Ready:
-                    var isDashKeyDown = Input.GetKeyDown(KeyCode.Alpha2);
+                    var isDashKeyDown = Input.GetKeyDown(KeyCode.LeftShift);
                     if (isDashKeyDown)
                     {
                         if (slowTime)
@@ -158,7 +154,7 @@ public class playerMovement : MonoBehaviour
                     GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemy");
                     for (int i = 0; i < enemies.Length; i++)
                     {
-                        if (Vector3.Distance(transform.position, enemies[i].transform.position) <= 5f)
+                        if (Vector3.Distance(transform.position, enemies[i].transform.position) <= 3f)
                         {
                             StartCoroutine(enemies[i].GetComponent<enemy>().Thrown(transform.position));
                         }
@@ -278,6 +274,38 @@ public class playerMovement : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator Fall(float time, Vector3 pos)
+    {
+        respawn = true;
+        float t = 0f;
+        Vector3 from = transform.localScale;
+        Vector3 to = Vector3.zero;
+
+        //prevents from spawning too close to the edge
+        Vector3 d = pos - transform.position;
+        d.y = 0;
+        if (d.z > 1)
+            d.z = 1;
+        else if (d.z < -1)
+            d.z = -1;
+        if (d.x > 1)
+            d.x = 1;
+        else if (d.x < -1)
+            d.x = -1;
+
+        while (t < time)
+        {
+            transform.localScale = Vector3.Slerp(from, to, t / time);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = from;
+        transform.position = pos + d;
+        tempPos = pos;
+        respawn = false;
+    }
+
     //display slow motion bar
     public void ShowSlowMo()
     {
@@ -297,6 +325,10 @@ public class playerMovement : MonoBehaviour
                 gameControl.control.hp -= 2;
                 print("stun attack");
             }
+        }
+        else if (other.gameObject.tag == "fall" && !respawn)
+        {
+            StartCoroutine(Fall(1f, tempPos));
         }
     }
 

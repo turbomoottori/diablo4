@@ -16,6 +16,7 @@ TagManager:
   - saveslot
   - enemyBullet
   - interactzone
+  - fall
   layers:
   - Default
   - TransparentFX
