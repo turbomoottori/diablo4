@@ -20,12 +20,9 @@ public class collectible : MonoBehaviour {
         e.transform.SetParent(GameObject.Find("Canvas").transform, false);
         e.SetActive(false);
 
-        Collectibles c = gameControl.control.collectibles.FirstOrDefault(i => i.cName == collectibleName);
-        if (c != null)
-        {
-            if (c.posX == transform.position.x && c.posZ == transform.position.z)
+        foreach(Collectibles c in gameControl.control.collectibles)
+            if (c.cName == collectibleName && c.posX == transform.position.x && c.posZ == transform.position.z)
                 Destroy(gameObject);
-        }
     }
 
     void Update()

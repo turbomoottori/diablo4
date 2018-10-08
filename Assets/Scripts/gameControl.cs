@@ -15,7 +15,7 @@ public class gameControl : MonoBehaviour
 
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
-
+    public List<EnemyList> enemies;
 
     void Awake()
     {
@@ -37,6 +37,8 @@ public class gameControl : MonoBehaviour
             merchs = new List<MerchantData>();
         if (collectibles == null)
             collectibles = new List<Collectibles>();
+        if (enemies == null)
+            enemies = new List<EnemyList>();
     }
 
     public void SaveGame(int saveFile)
@@ -62,6 +64,7 @@ public class gameControl : MonoBehaviour
         data.questList = quests.questList;
         data.merchs = merchs;
         data.collectibles = collectibles;
+        data.enemies = enemies;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -93,6 +96,7 @@ public class gameControl : MonoBehaviour
             quests.questList = data.questList;
             merchs = data.merchs;
             collectibles = data.collectibles;
+            enemies = data.enemies;
         }
     }
 
@@ -134,6 +138,7 @@ class PlayerData
     public List<Quest> questList;
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
+    public List<EnemyList> enemies;
 }
 
 [System.Serializable]
@@ -154,4 +159,10 @@ public class Collectibles
 {
     public float posX, posZ;
     public string cName;
+}
+
+[System.Serializable]
+public class EnemyList
+{
+    public float posX, posZ, posY;
 }

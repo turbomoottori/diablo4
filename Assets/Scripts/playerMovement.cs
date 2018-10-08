@@ -37,7 +37,7 @@ public class playerMovement : MonoBehaviour
     Transform canv;
     Vector3 tempPos;
     public LayerMask walkable;
-    bool respawn = false;
+    bool respawn, hurt = false;
 
     void Start()
     {
@@ -312,21 +312,22 @@ public class playerMovement : MonoBehaviour
         slowmobar.gameObject.SetActive(true);
     }
 
+    //when enemy hits
+    public IEnumerator Hurt(int dmg)
+    {
+        if (hurt)
+            yield return null;
+
+        hurt = true;
+        gameControl.control.hp -= dmg;
+        //animation and sound here
+        yield return new WaitForSeconds(0.5f); //change to match animation
+        hurt = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "enemysword")
-        {
-            if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 1)
-            {
-                gameControl.control.hp -= 1;
-                print("regular attack");
-            } else if (other.gameObject.transform.parent.parent.GetComponent<civilian>().attackNum == 2)
-            {
-                gameControl.control.hp -= 2;
-                print("stun attack");
-            }
-        }
-        else if (other.gameObject.tag == "fall" && !respawn)
+        if (other.gameObject.tag == "fall" && !respawn)
         {
             StartCoroutine(Fall(1f, tempPos));
         }

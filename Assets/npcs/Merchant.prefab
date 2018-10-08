@@ -195,9 +195,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1163961840349850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db3f88e312cb19e4b88d53d3e4f5597c, type: 3}
+  m_Script: {fileID: 11500000, guid: ebf41428966ec61428448e547bf16db8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wantsToTalk: 1
+  type: 1
+  talks: []
+  items: []
+  swords: []
+  guns: []
+  books: []
 --- !u!136 &136182056460385020
 CapsuleCollider:
   m_ObjectHideFlags: 1

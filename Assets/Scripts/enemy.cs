@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class enemy : MonoBehaviour {
@@ -10,6 +11,7 @@ public class enemy : MonoBehaviour {
     protected UnityEngine.AI.NavMeshAgent agent;
     protected Rigidbody rb;
     public LayerMask mask;
+    private Vector3 startPos;
 
     Vector3 lastPos, vel;
     protected bool isThrown, isAttacked, isGrounded;
@@ -23,12 +25,12 @@ public class enemy : MonoBehaviour {
     float hpTimer = 5f;
 
     protected bool dying, hostile = false;
-
     public int minMoney, maxMoney;
 
     protected virtual void OnEnable () {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        money = Resources.Load<GameObject>("coin"); 
+        money = Resources.Load<GameObject>("coin");
+        startPos = transform.position;
 	}
 
     protected virtual void Start()
@@ -38,6 +40,10 @@ public class enemy : MonoBehaviour {
         enemyHealth = maxHP;
         hostile = false;
         lastPos = transform.position;
+
+        foreach(EnemyList e in gameControl.control.enemies)
+            if(e.posX == startPos.x && e.posY == startPos.y && e.posZ == startPos.z)
+                Destroy(this.gameObject);
     }
 
     public float Distance(Vector3 st, Vector3 en)
@@ -250,6 +256,9 @@ public class enemy : MonoBehaviour {
             t += Time.deltaTime;
             yield return null;
         }
+
+        gameControl.control.enemies.Add(new EnemyList() { posX = startPos.x, posY = startPos.y, posZ = startPos.z });
+
         Destroy(hpb);
         Destroy(this.gameObject);
     }

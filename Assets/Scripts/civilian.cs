@@ -6,13 +6,14 @@ public class civilian : randomDestination {
 
     GameObject sword;
     bool swordActive = false;
-    public int attackNum;
     public Action action = Action.follow;
+    public int damage;
 
     protected override void OnEnable()
     {
         base.OnEnable();
         sword = Resources.Load<GameObject>("enemysword");
+        sword.GetComponentInChildren<enemyAttack>().dmg = damage;
     }
 	
 	protected override void Update () {
@@ -82,9 +83,10 @@ public class civilian : randomDestination {
         agent.speed =2.5f;
         if (atk == 1)
         {
+            damage = 2;
+            sword.GetComponentInChildren<enemyAttack>().dmg = damage;
             Vector3 axis = Vector3.up;
             float angle = 90f;
-            attackNum = 1;
             GameObject sw;
             sw = Instantiate(sword, transform.position, transform.rotation);
             sw.transform.parent = transform;
@@ -106,7 +108,8 @@ public class civilian : randomDestination {
             yield return null;
         } else
         {
-            attackNum = 2;
+            damage = 3;
+            sword.GetComponentInChildren<enemyAttack>().dmg = damage;
             GameObject sw;
             sw = Instantiate(sword, transform.position, transform.rotation);
             sw.transform.parent = transform;

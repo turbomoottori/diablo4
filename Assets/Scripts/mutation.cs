@@ -10,8 +10,18 @@ public class mutation : randomDestination {
     float attackTimer;
     float maxAttackTimer = 3f;
     int randomAttack;
-	
-	protected override void Update () {
+    BoxCollider atkBox;
+    public int damage;
+
+    protected override void Start()
+    {
+        base.Start();
+        atkBox = transform.Find("attackBox").gameObject.GetComponent<BoxCollider>();
+        atkBox.enabled = false;
+        atkBox.gameObject.GetComponent<enemyAttack>().dmg = damage;
+    }
+
+    protected override void Update () {
         base.Update();
 
         float playerDistance = Distance(player.transform.position, agent.transform.position);
@@ -69,10 +79,10 @@ public class mutation : randomDestination {
         dir *= 15;
         dir.y = 75f;
         rb.AddForce(dir, ForceMode.Impulse);
-        //damage dealing here
+        atkBox.enabled = true;
         yield return new WaitForSeconds(0.2f);
         yield return new WaitUntil(() => isGrounded == true);
-        //end damage dealing here
+        atkBox.enabled = false;
         rb.isKinematic = true;
         yield return new WaitForSeconds(jumpcd);
         agent.enabled = true;
@@ -92,10 +102,10 @@ public class mutation : randomDestination {
         rb.freezeRotation = true;
         print("run");
         rb.velocity = transform.forward * 25f;
-        //damage dealing here
+        atkBox.enabled = true;
         yield return new WaitForSeconds(1f);
         yield return new WaitUntil(() => isGrounded == true);
-        //end damage dealing here
+        atkBox.enabled = false;
         agent.enabled = true;
         rb.isKinematic = true;
         attacks = false;

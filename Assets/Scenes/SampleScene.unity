@@ -2313,7 +2313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 268893204}
   - component: {fileID: 268893205}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: interactzone
   m_TagString: interactzone
   m_Icon: {fileID: 0}
@@ -3302,6 +3302,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 114140133250224660, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b,
+        type: 2}
+      propertyPath: damage
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
   m_IsPrefabAsset: 0
@@ -3689,11 +3694,18 @@ MonoBehaviour:
     answer:
       playerAnswers: []
       npcReply: []
+      consequences: []
+  thirdDialogue:
+  - whoTalks: 0
+    npcTalk: thank for fetch u r gr8
+    answer:
+      playerAnswers: []
+      npcReply: []
       consequences:
       - m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 453150413}
-            m_MethodName: CheckProgress
+          - m_Target: {fileID: 453150414}
+            m_MethodName: NextDialogue
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -3705,13 +3717,6 @@ MonoBehaviour:
             m_CallState: 2
         m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-  thirdDialogue:
-  - whoTalks: 0
-    npcTalk: thank for fetch u r gr8
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences: []
   fourthDialogue:
   - whoTalks: 0
     npcTalk: i don't really want to talk to you anymore so fuck off
@@ -3755,8 +3760,8 @@ MonoBehaviour:
   maxMoney: 10
   destRadius: 10
   maxTimer: 10
-  attackNum: 0
   action: 0
+  damage: 0
 --- !u!195 &453150417
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4730,7 +4735,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0.47150326, y: -0, z: -0, w: 0.8818643}
-  m_LocalPosition: {x: 383.04, y: 19.590002, z: 73.19}
+  m_LocalPosition: {x: 382.5, y: 19.590002, z: 72.93001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5452,6 +5457,11 @@ Prefab:
       propertyPath: m_Name
       value: Mutation (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114140133250224660, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b,
+        type: 2}
+      propertyPath: damage
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
   m_IsPrefabAsset: 0
@@ -6039,6 +6049,7 @@ MonoBehaviour:
   volume: 0
   merchs: []
   collectibles: []
+  enemies: []
 --- !u!1001 &760902418
 Prefab:
   m_ObjectHideFlags: 0
@@ -6584,6 +6595,11 @@ Prefab:
     - target: {fileID: 1131948237285872, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
       propertyPath: m_Name
       value: Mutation (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140133250224660, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b,
+        type: 2}
+      propertyPath: damage
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
@@ -8701,29 +8717,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: eef537476ecd6ba4b96c0fd4210560c7,
     type: 3}
   m_PrefabInternal: {fileID: 1140697218}
---- !u!1 &1147073000 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1126585216359096, guid: 1f1122db634a88842a352731224402de,
-    type: 2}
-  m_PrefabInternal: {fileID: 1587401809}
---- !u!114 &1147073008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1147073000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea4e005d2993c3549bde83ba79bf6540, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wantsToTalk: 1
-  cycleTexts: 0
-  dialogueNumber: 1
-  talks: []
-  secondDialogue: []
-  thirdDialogue: []
-  fourthDialogue: []
 --- !u!1 &1148378806
 GameObject:
   m_ObjectHideFlags: 0
@@ -11426,6 +11419,11 @@ Prefab:
       propertyPath: m_Name
       value: Mutation (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114140133250224660, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b,
+        type: 2}
+      propertyPath: damage
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
   m_IsPrefabAsset: 0
@@ -13017,7 +13015,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1575445887}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 383.04, y: 10.06, z: 81.06}
+  m_LocalPosition: {x: 382.5, y: 10.06, z: 80.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 352966630}
@@ -13199,14 +13197,6 @@ Prefab:
     - target: {fileID: 4383179491243450, guid: 1f1122db634a88842a352731224402de, type: 2}
       propertyPath: m_RootOrder
       value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: maxHP
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: hasSword
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f1122db634a88842a352731224402de, type: 2}
@@ -15329,6 +15319,11 @@ Prefab:
     - target: {fileID: 1131948237285872, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
       propertyPath: m_Name
       value: Mutation (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140133250224660, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b,
+        type: 2}
+      propertyPath: damage
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901de1fc27cbd5c4ea1ba1d5ee0d973b, type: 2}
