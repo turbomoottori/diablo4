@@ -116,7 +116,7 @@ public class npcSpeechSimple : MonoBehaviour
                 {
                     if(Input.GetKeyDown(KeyCode.E) && !menus.anyOpen)
                     {
-
+                        menus.bcClose = true;
                     }
                 }
                 else

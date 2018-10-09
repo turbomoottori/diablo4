@@ -65,6 +65,7 @@ public class gameControl : MonoBehaviour
         data.merchs = merchs;
         data.collectibles = collectibles;
         data.enemies = enemies;
+        data.bookcaseBooks = menus.bookcaseBooks;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -97,6 +98,7 @@ public class gameControl : MonoBehaviour
             merchs = data.merchs;
             collectibles = data.collectibles;
             enemies = data.enemies;
+            menus.bookcaseBooks = data.bookcaseBooks;
         }
     }
 
@@ -139,6 +141,7 @@ class PlayerData
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
+    public List<Book> bookcaseBooks;
 }
 
 [System.Serializable]

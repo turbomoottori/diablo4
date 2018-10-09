@@ -121,4 +121,5 @@ public class Book : Item
 {
     [TextArea]
     public string txt;
+    public int id;
 }

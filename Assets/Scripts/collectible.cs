@@ -9,9 +9,13 @@ public class collectible : MonoBehaviour {
     public int value, sellValue, weight;
     public bool stackable, canSell;
     public Type itemType;
-    public int damage, bullets;
-    public float speed, reloadSpeed, range;
-    public string type, special;
+    public int weaponDamage;
+    public float weaponSpeed, gunReloadSpeed, gunRange;
+    public int gunBullets;
+    public string gunType, gunSpecial;
+    public int bookId;
+    [TextArea]
+    public string bookText;
     GameObject e;
     bool isClose = false;
 	
@@ -35,42 +39,65 @@ public class collectible : MonoBehaviour {
 
     void AddItem()
     {
-        if (itemType == Type.Item)
+        switch (itemType)
         {
-            menus.invItems.Add(new Item() {
-                name = collectibleName,
-                value = value,
-                sellValue = sellValue,
-                weight = weight,
-                canSell = canSell,
-                stackable = stackable });
-        }
-        else if (itemType == Type.Weapon)
-        {
-            menus.invItems.Add(new Weapon() {
-                name = collectibleName,
-                canSell = canSell,
-                value = value,
-                sellValue = sellValue,
-                weight = weight,
-                damage = damage,
-                speed = speed });
-        }
-        else if (itemType == Type.Gun)
-        {
-            menus.invItems.Add(new Gun() {
-                name = collectibleName,
-                canSell = canSell,
-                value = value,
-                sellValue = sellValue,
-                weight = weight,
-                damage = damage,
-                speed = speed,
-                bullets = bullets,
-                range = range,
-                rlspeed = reloadSpeed,
-                special = special,
-                type = type });
+            case Type.Item:
+                menus.invItems.Add(new Item()
+                {
+                    name = collectibleName,
+                    value = value,
+                    sellValue = sellValue,
+                    weight = weight,
+                    canSell = canSell,
+                    stackable = stackable
+                });
+
+                break;
+            case Type.Weapon:
+                menus.invItems.Add(new Weapon()
+                {
+                    name = collectibleName,
+                    canSell = canSell,
+                    value = value,
+                    sellValue = sellValue,
+                    weight = weight,
+                    damage = weaponDamage,
+                    speed = weaponSpeed
+                });
+
+                break;
+            case Type.Gun:
+                menus.invItems.Add(new Gun()
+                {
+                    name = collectibleName,
+                    canSell = canSell,
+                    value = value,
+                    sellValue = sellValue,
+                    weight = weight,
+                    damage = weaponDamage,
+                    speed = weaponSpeed,
+                    bullets = gunBullets,
+                    range = gunRange,
+                    rlspeed = gunReloadSpeed,
+                    special = gunSpecial,
+                    type = gunType
+                });
+
+                break;
+            case Type.Book:
+                menus.invItems.Add(new Book()
+                {
+                    name = collectibleName,
+                    canSell = canSell,
+                    id = bookId,
+                    sellValue = sellValue,
+                    stackable = stackable,
+                    txt = bookText,
+                    value = value,
+                    weight = weight
+                });
+
+                break;
         }
     }
 
@@ -113,6 +140,7 @@ public class collectible : MonoBehaviour {
         Item,
         Weapon,
         Gun,
+        Book
     }
 
     float Distance(Vector3 st, Vector3 en)

@@ -45,6 +45,10 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler
                 if (eventData.button == PointerEventData.InputButton.Left)
                     m.GetComponent<menus>().TooExpensive();
                 break;
+            case buttonType.book:
+                if (eventData.button == PointerEventData.InputButton.Left)
+                    m.GetComponent<menus>().ClickBook(gameObject.name);
+                break;
         }
 
     }
@@ -56,6 +60,7 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler
         stored,
         sell,
         buy,
-        expensive
+        expensive,
+        book
     }
 }

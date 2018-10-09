@@ -30,8 +30,6 @@ public class consequences : MonoBehaviour {
         quests.QuestCompleted(q.questToStart.questName);
     }
 
-
-
     //QUEST PROGRESS STUFF
 
     public void QuestName(string name)
