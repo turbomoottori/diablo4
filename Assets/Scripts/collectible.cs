@@ -16,25 +16,11 @@ public class collectible : MonoBehaviour {
     public int bookId;
     [TextArea]
     public string bookText;
-    GameObject e;
-    bool isClose = false;
 	
 	void Start () {
-        e = Instantiate(Resources.Load("ui/interact", typeof(GameObject))) as GameObject;
-        e.transform.SetParent(GameObject.Find("Canvas").transform, false);
-        e.SetActive(false);
-
         foreach(Collectibles c in gameControl.control.collectibles)
             if (c.cName == collectibleName && c.posX == transform.position.x && c.posZ == transform.position.z)
                 Destroy(gameObject);
-    }
-
-    void Update()
-    {
-        e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-
-        if (isClose && Input.GetKeyDown(KeyCode.E))
-            PickUp();
     }
 
     void AddItem()
@@ -101,10 +87,9 @@ public class collectible : MonoBehaviour {
         }
     }
 
-    void PickUp()
+    public void PickUp()
     {
-        e.SetActive(false);
-
+        gameObject.GetComponent<interactable>().HideE();
         gameControl.control.collectibles.Add(new Collectibles()
         {
             posX = transform.position.x,
@@ -115,24 +100,6 @@ public class collectible : MonoBehaviour {
         AddItem();
         menus.ShowCollected(collectibleName);
         Destroy(this.gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "interactzone")
-        {
-            e.SetActive(true);
-            isClose = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "interactzone")
-        {
-            e.SetActive(false);
-            isClose = false;
-        }
     }
 
     public enum Type

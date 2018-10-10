@@ -153,6 +153,10 @@ public class menus : MonoBehaviour
                 ansCont.SetActive(false);
                 talkText.SetActive(true);
                 talkText.GetComponent<Text>().text = tempSpeak[currentPage].npcTalk;
+
+                //if there's consequenses without choice, invoke them
+                if (tempSpeak[currentPage].answer.consequences.Length > 0 && !choice)
+                    tempSpeak[currentPage].answer.consequences[0].Invoke();
             }
             else
             {
@@ -171,7 +175,6 @@ public class menus : MonoBehaviour
                     ans.transform.GetChild(0).GetComponent<Text>().text = tempSpeak[currentPage].answer.playerAnswers[i];
                 }
             }
-
             currentPage += 1;
         }
         //ends conversation
@@ -907,13 +910,16 @@ public class menus : MonoBehaviour
                 bookcasebg.SetActive(true);
 
             //adds every book in inventory to the bookcase
-            foreach (Book b in invItems)
+            foreach (Item i in invItems)
             {
                 //tells new books have been added
-                BooksAdded();
-
-                AddBooks(b.id, b.name);
-                bookcaseBooks.Add(b);
+                //BooksAdded();
+                if (i is Book)
+                {
+                    Book b = i as Book;
+                    AddBooks(b.id, b.name);
+                    bookcaseBooks.Add(b);
+                }
             }
 
             //removes all listed books from inventory
