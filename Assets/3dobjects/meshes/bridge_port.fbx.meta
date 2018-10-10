@@ -1,22 +1,23 @@
 fileFormatVersion: 2
-guid: cc76c14c3c17d9a459267f5b5448053f
+guid: 686b97fd16cd2b543ae2a622f610de90
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
+    100002: bridgeport
+    100004: bridgeport_collisionmap
     400000: //RootNode
-    2100000: planks
-    2100002: metal
-    2100004: wheels
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube.020
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: planks
-    second: {fileID: 2100004, guid: da0c49820bb2d524bbbab40eaaad0311, type: 3}
+    400002: bridgeport
+    400004: bridgeport_collisionmap
+    2100000: No Name
+    2100002: Material
+    2300000: bridgeport
+    2300002: bridgeport_collisionmap
+    3300000: bridgeport
+    3300002: bridgeport_collisionmap
+    4300000: bridgeport_collisionmap
+    4300002: bridgeport
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
