@@ -6,11 +6,6 @@ public class interact : MonoBehaviour {
 
     InteractWith interactWith;
     GameObject target;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -55,7 +50,7 @@ public class interact : MonoBehaviour {
                 menus.chestClose = false;
                 menus.talkReady = true;
                 menus.bcClose = false;
-                if (Input.GetKeyDown(KeyCode.E) && !menus.anyOpen)
+                if (Input.GetKeyDown(KeyCode.E) && !menus.anyOpen && target.GetComponent<npcSpeech>().wantsToTalk)
                     target.GetComponent<npcSpeech>().Interact();
                 break;
             case InteractWith.nobody:

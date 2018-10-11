@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class attack : MonoBehaviour {
 
@@ -85,11 +86,15 @@ public class attack : MonoBehaviour {
 
                 //ready to shoot
                 case Shoot.Ready:
-
                     if (activeWeapon == 1)
+                    {
                         WeaponChange(1, true);
+                    }
                     else
+                    {
                         WeaponChange(2, true);
+                    }
+                        
 
                     if (Input.GetKeyDown(KeyCode.R) && bulletCount != 0)
                         shoot = Shoot.Reload;
@@ -108,6 +113,7 @@ public class attack : MonoBehaviour {
                     b.GetComponent<bullet>().dmg = damage;
 
                     bulletCount += 1;
+
                     shoot = Shoot.Cooldown;
                     break;
 
@@ -159,7 +165,7 @@ public class attack : MonoBehaviour {
                         b.GetComponent<bullet>().maxRange = range;
                         b.GetComponent<bullet>().dmg = damage;
                     }
-                    
+
                     bulletCount += 1;
                     shoot = Shoot.Cooldown;
                     break;
@@ -298,6 +304,8 @@ public class attack : MonoBehaviour {
                     }
                     
                     break;
+                case Shoot.OutOfAmmo:
+                    break;
             }
         }
     }
@@ -311,12 +319,18 @@ public class attack : MonoBehaviour {
             speed = weapons.speed1;
             if (isGun)
             {
-                bullets = weapons.bullets1;
                 rlSpeed = weapons.rlspeed1;
                 range = weapons.range1;
                 shootcd = weapons.rlspeed1;
                 type = weapons.type1;
                 special = weapons.special1;
+
+                if (type == "normal")
+                    bullets = 5;
+                else if (type == "shotgun")
+                    bullets = 2;
+                else
+                    bullets = 10;
             }
         }
         else
@@ -325,12 +339,18 @@ public class attack : MonoBehaviour {
             speed = weapons.speed2;
             if (isGun)
             {
-                bullets = weapons.bullets2;
                 rlSpeed = weapons.rlspeed2;
                 range = weapons.range2;
                 shootcd = weapons.rlspeed2;
                 type = weapons.type2;
                 special = weapons.special2;
+
+                if (type == "normal")
+                    bullets = 5;
+                else if (type == "shotgun")
+                    bullets = 2;
+                else
+                    bullets = 10;
             }
         }
     }
@@ -509,6 +529,7 @@ public class attack : MonoBehaviour {
         Shotgun,
         Special,
         Cooldown,
-        Reload
+        Reload,
+        OutOfAmmo
     }
 }

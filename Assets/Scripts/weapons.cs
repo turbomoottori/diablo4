@@ -10,7 +10,7 @@ public class weapons : MonoBehaviour {
 
     //for swords, smaller speed (0.2f) is faster and for guns, bigger speed (5f) is faster
     public static float speed1, speed2;
-    public static int bullets1, bullets2;
+    public static int ammo1, ammo2;
     public static float range1, range2, rlspeed1, rlspeed2;
 
     //weapon type can be "normal", "rapid" or "shotgun"
@@ -50,12 +50,12 @@ public class weapons : MonoBehaviour {
                     if (w is Gun)
                     {
                         Gun g = w as Gun;
-                        bullets1 = g.bullets;
                         range1 = g.range;
                         weaponType1 = 2;
                         type1 = g.type;
                         special1 = g.special;
                         rlspeed1 = g.rlspeed;
+                        ammo1 = g.ammo;
                     }
                     else
                     {
@@ -69,12 +69,12 @@ public class weapons : MonoBehaviour {
                     if (w is Gun)
                     {
                         Gun g = w as Gun;
-                        bullets2 = g.bullets;
                         range2 = g.range;
                         weaponType2 = 2;
                         type2 = g.type;
                         special2 = g.special;
                         rlspeed2 = g.rlspeed;
+                        ammo2 = g.ammo;
                     }
                     else
                     {
@@ -105,7 +105,7 @@ public class Weapon : Item
 [System.Serializable]
 public class Gun : Weapon
 {
-    public int bullets;
+    public int ammo;
     public float range, rlspeed;
     public string type, special;
 }

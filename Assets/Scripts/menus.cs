@@ -18,7 +18,7 @@ public class menus : MonoBehaviour
     public bool choice = false;
 
     bool talks = false;
-    public static bool pauseOpen, invOpen, stInvOpen, merch, bcOpen, textShown = false;
+    public static bool pauseOpen, invOpen, stInvOpen, merch, bcOpen, textShown, newbookstxt = false;
     int temphp, tempmaxhp, volumeVal;
 
     GameObject p, gen, opt, saves, savePrompt;
@@ -35,7 +35,7 @@ public class menus : MonoBehaviour
 
     //inventory 
     GameObject inventoryContainer, itemContainer, chestContainer, itemsInInventory, itemsInChest;
-    GameObject merchCont, ownedItems, shopItems, money, bookcasebg, bookTxt;
+    GameObject merchCont, ownedItems, shopItems, money, bookcasebg, bookTxt, newBooks;
     public Vector3[] bookPositions;
     public static List<Item> invItems = new List<Item>();
     public static List<Item> itemsStored = new List<Item>();
@@ -50,8 +50,6 @@ public class menus : MonoBehaviour
 
         volumeVal = gameControl.control.volume;
 
-        print(invItems.Count);
-
         talkBox = Instantiate(Resources.Load("ui/speechBox") as GameObject, canv);
         talkBox.SetActive(false);
         talkText = Instantiate(Resources.Load("ui/speechText") as GameObject, talkBox.transform.GetChild(0).transform);
@@ -61,45 +59,51 @@ public class menus : MonoBehaviour
     private void Update()
     {
         //INTERACT
-        if (Input.GetKeyDown(KeyCode.E) && !pauseOpen)
+        if (Input.GetKeyDown(KeyCode.E) && !pauseOpen && !invOpen)
         {
-            //OPEN CHEST
+            //TOGGLE CHEST
             if (chestClose)
                 StoredItems();
-            //SHOW MERCH ITEMS
+            //TOGGLE MERCH ITEMS
             else if (merchClose)
                 MerchantUI();
             //SCROLL TEXT
             else if (talkReady && !choice)
                 Talk();
-            //OPEN BOOKCASE
-            else if (bcClose && !textShown)
+            //TOGGLE BOOKCASE
+            else if (bcClose && !textShown && !newbookstxt)
                 Bookcase();
+            //HIDE BOOK TEXT
             else if (textShown)
                 CloseBookText();
+            //HIDE TEXT TELLING ABOUT NEW BOOKS
+            else if (newbookstxt)
+                HideAddedBooksText();
         }
 
         //PRESSING ESC
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!talks && !invOpen && !stInvOpen && !stInvOpen && !merch && !bcOpen && !textShown)
+            if (!anyOpen || pauseOpen)
                 TogglePause();
-            else if (!pauseOpen && !talks && invOpen && !stInvOpen && !merch && !bcOpen && !textShown)
+            else if (invOpen)
                 Inventory();
-            else if (!pauseOpen && !invOpen && talks && !stInvOpen && !merch && !choice && !bcOpen && !textShown)
+            else if (talks && !choice)
                 Talk();
-            else if (!pauseOpen && !invOpen && !talks && stInvOpen && !merch && !bcOpen && !textShown)
+            else if (stInvOpen)
                 StoredItems();
-            else if (!pauseOpen && !invOpen && !talks && !stInvOpen && merch && !bcOpen && !textShown)
+            else if (merch)
                 MerchantUI();
-            else if (!pauseOpen && !invOpen && !talks && !stInvOpen && !merch && bcOpen && !textShown)
+            else if (bcOpen && !textShown && !newbookstxt)
                 Bookcase();
             else if (textShown)
                 CloseBookText();
+            else if (newbookstxt)
+                HideAddedBooksText();
         }
 
         //if player is talking or reading a book, click will close or scroll
-        if(anyOpen && Input.GetButtonDown("Fire1"))
+        if (anyOpen && Input.GetButtonDown("Fire1"))
         {
             if (!pauseOpen && !invOpen && talks && !stInvOpen && !merch && !choice && !bcOpen && !textShown)
                 Talk();
@@ -108,7 +112,7 @@ public class menus : MonoBehaviour
         }
 
         //OPEN INVENTORY
-        if (Input.GetKeyDown(KeyCode.I) && !talks && !pauseOpen && !stInvOpen && !merch)
+        if (Input.GetKeyDown(KeyCode.I) && (!anyOpen || invOpen))
             Inventory();
 
         // HEALTH
@@ -122,12 +126,12 @@ public class menus : MonoBehaviour
             print("kuolee");
         }
 
-        //SHOW COLLECTED ITEM   
+        //COLLECTED ITEM   
         showCollectibleTime += Time.deltaTime;
         if (showCollectibleTime >= 4 && showC)
         {
             showC = false;
-            HideCollected();
+            collected.SetActive(false);
         }
     }
 
@@ -315,38 +319,7 @@ public class menus : MonoBehaviour
         }
     }
 
-    //creates new button
-    void NewButton(string name, GameObject group)
-    {
-        GameObject btn;
-        if (name == "Back")
-            btn = Instantiate(Resources.Load("ui/backButton") as GameObject, group.transform);
-        else
-            btn = Instantiate(Resources.Load("ui/button") as GameObject, group.transform);
-        btn.gameObject.transform.GetChild(0).GetComponent<Text>().text = name;
-        btn.name = name;
-        btn.GetComponent<Button>().onClick.AddListener(Click);
-    }
-
-    //creates new slider
-    void NewSlider(string name, int minValue, int maxValue, int value, GameObject group)
-    {
-        GameObject sl;
-        sl = Instantiate(Resources.Load("ui/slider") as GameObject, group.transform);
-        sl.gameObject.name = name;
-        Text txt, val;
-        txt = sl.transform.Find("Name").GetComponent<Text>();
-        val = sl.transform.Find("Value").GetComponent<Text>();
-        txt.text = name;
-        val.text = value.ToString();
-        Slider theSlider = sl.transform.Find("Slider").GetComponent<Slider>();
-        theSlider.minValue = minValue;
-        theSlider.maxValue = maxValue;
-        theSlider.value = value;
-        theSlider.onValueChanged.AddListener(delegate { SliderChange(); });
-    }
-
-    //when clicked on a button
+    //when clicked on a button in pause menu
     public void Click()
     {
         string btnName = EventSystem.current.currentSelectedGameObject.name;
@@ -501,28 +474,6 @@ public class menus : MonoBehaviour
         }
     }
 
-    //changes button color if save file already exists
-    public void CheckSaves()
-    {
-        if (File.Exists(Application.persistentDataPath + "/save1.dat"))
-            saves.transform.Find(saveText + "1").GetComponent<Image>().color = Color.gray;
-        if (File.Exists(Application.persistentDataPath + "/save2.dat"))
-            saves.transform.Find(saveText + "2").GetComponent<Image>().color = Color.gray;
-        if (File.Exists(Application.persistentDataPath + "/save3.dat"))
-            saves.transform.Find(saveText + "3").GetComponent<Image>().color = Color.gray;
-    }
-
-    //changes slider values
-    public void SliderChange()
-    {
-        //checks which slider is changed
-        if (EventSystem.current.currentSelectedGameObject.transform.parent.name == "Volume")
-        {
-            volumeVal = (int)EventSystem.current.currentSelectedGameObject.GetComponent<Slider>().value;
-            EventSystem.current.currentSelectedGameObject.transform.parent.Find("Value").GetComponent<Text>().text = volumeVal.ToString();
-        }
-    }
-
     //toggle inventory
     public void Inventory()
     {
@@ -566,6 +517,20 @@ public class menus : MonoBehaviour
             else
             {
                 inventoryContainer.SetActive(true);
+
+                if(invItems.FirstOrDefault(i=>i.name==equipOne) is Gun)
+                {
+                    Gun tempGun = invItems.FirstOrDefault(i => i.name == equipOne) as Gun;
+                    inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").gameObject.SetActive(true);
+                    inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").GetComponent<Text>().text = tempGun.ammo.ToString();
+                }
+
+                if (invItems.FirstOrDefault(i => i.name == equipTwo) is Gun)
+                {
+                    Gun tempGun2 = invItems.FirstOrDefault(i => i.name == equipTwo) as Gun;
+                    inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").gameObject.SetActive(true);
+                    inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").GetComponent<Text>().text = tempGun2.ammo.ToString();
+                }
             }
 
             //if there's new items add them too
@@ -616,6 +581,14 @@ public class menus : MonoBehaviour
         GameObject equip = Instantiate(Resources.Load("ui/inventory/equipped") as GameObject, inventoryContainer.transform.Find("active").transform, false);
         equip.transform.Find("title").GetComponent<Text>().text = name;
         equip.name = name + equipNumber.ToString();
+
+        //checks if equip is a gun, and if yes, show ammo
+        Weapon w = invItems.FirstOrDefault(i => i.name == name) as Weapon;
+        if (w is Gun)
+            equip.transform.Find("ammo").gameObject.SetActive(true);
+        else
+            equip.transform.Find("ammo").gameObject.SetActive(false);
+
         //equip.transform.Find("slot").GetComponent<Image>().sprite = Resources.Load<Sprite>("ui/inventory/sprites/" + name);
     }
 
@@ -696,6 +669,14 @@ public class menus : MonoBehaviour
                     }
                     else
                     {
+                        if (equipOne == "Empty")
+                            inventoryContainer.transform.Find("active").transform.Find(equipOne + "1").name = name;
+                        else
+                            inventoryContainer.transform.Find("active").transform.Find(equipOne).name = name;
+
+                        inventoryContainer.transform.Find("active").transform.Find(name).transform.Find("title").GetComponent<Text>().text = name;
+                        equipOne = name;
+
                         if (item is Gun)
                         {
                             weapons.weaponType1 = 2;
@@ -703,12 +684,12 @@ public class menus : MonoBehaviour
                             Gun g = item as Gun;
                             weapons.damage1 = g.damage;
                             weapons.speed1 = g.speed;
-                            weapons.bullets1 = g.bullets;
+                            weapons.ammo1 = g.ammo;
                             weapons.range1 = g.range;
                             weapons.type1 = g.type;
                             weapons.special1 = g.special;
                             weapons.rlspeed1 = g.rlspeed;
-                            print("is gun");
+                            inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").gameObject.SetActive(true);
                         }
                         else
                         {
@@ -718,11 +699,8 @@ public class menus : MonoBehaviour
                             Weapon w = item as Weapon;
                             weapons.damage1 = w.damage;
                             weapons.speed1 = w.speed;
-                            print("is not a gun");
+                            inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").gameObject.SetActive(false);
                         }
-
-                        inventoryContainer.transform.Find("active").transform.Find(equipOne + "1").transform.Find("title").GetComponent<Text>().text = name;
-                        equipOne = name;
                     }
                 }
             }
@@ -740,6 +718,14 @@ public class menus : MonoBehaviour
                     }
                     else
                     {
+                        if (equipTwo == "Empty")
+                            inventoryContainer.transform.Find("active").transform.Find(equipTwo + "2").name = name;
+                        else
+                            inventoryContainer.transform.Find("active").transform.Find(equipTwo).name = name;
+
+                        inventoryContainer.transform.Find("active").transform.Find(name).transform.Find("title").GetComponent<Text>().text = name;
+                        equipTwo = name;
+
                         if (item is Gun)
                         {
                             weapons.weaponType2 = 2;
@@ -747,12 +733,12 @@ public class menus : MonoBehaviour
                             Gun g = item as Gun;
                             weapons.damage2 = g.damage;
                             weapons.speed2 = g.speed;
-                            weapons.bullets2 = g.bullets;
+                            weapons.ammo2 = g.ammo;
                             weapons.range2 = g.range;
                             weapons.type2 = g.type;
                             weapons.special2 = g.special;
                             weapons.rlspeed2 = g.rlspeed;
-                            print("is gun");
+                            inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").gameObject.SetActive(true);
                         }
                         else
                         {
@@ -761,11 +747,8 @@ public class menus : MonoBehaviour
                             Weapon w = item as Weapon;
                             weapons.damage2 = w.damage;
                             weapons.speed2 = w.speed;
-                            print("is not a gun");
+                            inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").gameObject.SetActive(false);
                         }
-
-                        inventoryContainer.transform.Find("active").transform.Find(equipTwo + "2").transform.Find("title").GetComponent<Text>().text = name;
-                        equipTwo = name;
                     }
                 }
             }
@@ -909,6 +892,7 @@ public class menus : MonoBehaviour
             else
                 bookcasebg.SetActive(true);
 
+            int bookAmount = 0;
             //adds every book in inventory to the bookcase
             foreach (Item i in invItems)
             {
@@ -916,11 +900,15 @@ public class menus : MonoBehaviour
                 //BooksAdded();
                 if (i is Book)
                 {
+                    bookAmount += 1;
                     Book b = i as Book;
                     AddBooks(b.id, b.name);
                     bookcaseBooks.Add(b);
                 }
             }
+
+            if (bookAmount > 0)
+                BooksAdded(bookAmount);
 
             //removes all listed books from inventory
             invItems.RemoveAll(i => bookcaseBooks.Exists(b => i.name == b.name));
@@ -1174,29 +1162,80 @@ public class menus : MonoBehaviour
         }
     }
 
-    //maybe delete this one later or at least modify 
-    //because now it's just the same as collectibles
-    //it's not good
-    void BooksAdded()
+    //show text that tells how many books have been added
+    void BooksAdded(int howMany)
     {
-        showC = true;
-        showCollectibleTime = 0;
+        newbookstxt = true;
 
-        if (collected == null)
-        {
-            collected = Instantiate(Resources.Load("ui/collected") as GameObject, GameObject.Find("Canvas").transform, false);
-            collected.transform.Find("collectedName").GetComponent<Text>().text = "New books!!!!!!!!!";
-        }
+        if (newBooks == null)
+            newBooks = Instantiate(Resources.Load("ui/bookcase/addedbooks") as GameObject, bookcasebg.transform, false);
         else
-        {
-            collected.SetActive(true);
-            collected.transform.Find("collectedName").GetComponent<Text>().text = "New books!!!!!!!!";
-        }
+            newBooks.SetActive(true);
+
+        if (howMany == 1)
+            newBooks.transform.Find("txt").GetComponent<Text>().text = "1 book added";
+        else
+            newBooks.transform.Find("txt").GetComponent<Text>().text = howMany.ToString() + " books added";
     }
 
-    public void HideCollected()
+    //hide text telling about added books
+    void HideAddedBooksText()
     {
-        collected.SetActive(false);
+        newbookstxt = false;
+        newBooks.SetActive(false);
+    }
+
+    //creates new button
+    void NewButton(string name, GameObject group)
+    {
+        GameObject btn;
+        if (name == "Back")
+            btn = Instantiate(Resources.Load("ui/backButton") as GameObject, group.transform);
+        else
+            btn = Instantiate(Resources.Load("ui/button") as GameObject, group.transform);
+        btn.gameObject.transform.GetChild(0).GetComponent<Text>().text = name;
+        btn.name = name;
+        btn.GetComponent<Button>().onClick.AddListener(Click);
+    }
+
+    //creates new slider
+    void NewSlider(string name, int minValue, int maxValue, int value, GameObject group)
+    {
+        GameObject sl;
+        sl = Instantiate(Resources.Load("ui/slider") as GameObject, group.transform);
+        sl.gameObject.name = name;
+        Text txt, val;
+        txt = sl.transform.Find("Name").GetComponent<Text>();
+        val = sl.transform.Find("Value").GetComponent<Text>();
+        txt.text = name;
+        val.text = value.ToString();
+        Slider theSlider = sl.transform.Find("Slider").GetComponent<Slider>();
+        theSlider.minValue = minValue;
+        theSlider.maxValue = maxValue;
+        theSlider.value = value;
+        theSlider.onValueChanged.AddListener(delegate { SliderChange(); });
+    }
+
+    //changes button color if save file already exists
+    public void CheckSaves()
+    {
+        if (File.Exists(Application.persistentDataPath + "/save1.dat"))
+            saves.transform.Find(saveText + "1").GetComponent<Image>().color = Color.gray;
+        if (File.Exists(Application.persistentDataPath + "/save2.dat"))
+            saves.transform.Find(saveText + "2").GetComponent<Image>().color = Color.gray;
+        if (File.Exists(Application.persistentDataPath + "/save3.dat"))
+            saves.transform.Find(saveText + "3").GetComponent<Image>().color = Color.gray;
+    }
+
+    //changes slider values
+    public void SliderChange()
+    {
+        //checks which slider is changed
+        if (EventSystem.current.currentSelectedGameObject.transform.parent.name == "Volume")
+        {
+            volumeVal = (int)EventSystem.current.currentSelectedGameObject.GetComponent<Slider>().value;
+            EventSystem.current.currentSelectedGameObject.transform.parent.Find("Value").GetComponent<Text>().text = volumeVal.ToString();
+        }
     }
 
     public static Transform[] FindChildren(Transform tr, string name)

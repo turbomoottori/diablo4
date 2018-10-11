@@ -11,7 +11,7 @@ public class collectible : MonoBehaviour {
     public Type itemType;
     public int weaponDamage;
     public float weaponSpeed, gunReloadSpeed, gunRange;
-    public int gunBullets;
+    public int gunAmmo;
     public string gunType, gunSpecial;
     public int bookId;
     [TextArea]
@@ -62,7 +62,7 @@ public class collectible : MonoBehaviour {
                     weight = weight,
                     damage = weaponDamage,
                     speed = weaponSpeed,
-                    bullets = gunBullets,
+                    ammo = gunAmmo,
                     range = gunRange,
                     rlspeed = gunReloadSpeed,
                     special = gunSpecial,

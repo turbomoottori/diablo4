@@ -154,13 +154,13 @@ MonoBehaviour:
   stackable: 0
   canSell: 1
   itemType: 2
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunBullets: 0
-  gunType: 
-  gunSpecial: 
+  weaponDamage: 3
+  weaponSpeed: 3
+  gunReloadSpeed: 1
+  gunRange: 4
+  gunAmmo: 20
+  gunType: normal
+  gunSpecial: big
   bookId: 0
   bookText: 
 --- !u!65 &2144940
@@ -1905,6 +1905,138 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &203289700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 1854599146704390, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 203289706}
+  - component: {fileID: 203289705}
+  - component: {fileID: 203289704}
+  - component: {fileID: 203289703}
+  - component: {fileID: 203289702}
+  - component: {fileID: 203289701}
+  m_Layer: 0
+  m_Name: Collectible (6)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &203289701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 203289700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectibleName: Sword
+  value: 10
+  sellValue: 2
+  weight: 2
+  stackable: 0
+  canSell: 1
+  itemType: 1
+  weaponDamage: 3
+  weaponSpeed: 0.2
+  gunReloadSpeed: 0
+  gunRange: 0
+  gunAmmo: 0
+  gunType: 
+  gunSpecial: 
+  bookId: 0
+  bookText: 
+--- !u!65 &203289702
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 65653566676049220, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 203289700}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &203289703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 203289700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d2235b3dffdae48831ae9563ec833b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+--- !u!23 &203289704
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 23028314432469748, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 203289700}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &203289705
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 33378860715679084, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 203289700}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &203289706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 203289700}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 377.53, y: 8.9, z: 81.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 90
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &214534411
 GameObject:
   m_ObjectHideFlags: 0
@@ -3556,7 +3688,7 @@ MonoBehaviour:
       canSell: 0
       damage: 0
       speed: 0
-      bullets: 0
+      ammo: 0
       range: 0
       rlspeed: 0
       type: 
@@ -5288,7 +5420,7 @@ MonoBehaviour:
   weaponSpeed: 0
   gunReloadSpeed: 0
   gunRange: 0
-  gunBullets: 0
+  gunAmmo: 0
   gunType: 
   gunSpecial: 
   bookId: 0
@@ -6577,7 +6709,7 @@ MonoBehaviour:
     canSell: 1
     damage: 4
     speed: 4
-    bullets: 5
+    ammo: 0
     range: 20
     rlspeed: 4
     type: normal
@@ -13284,7 +13416,7 @@ MonoBehaviour:
   weaponSpeed: 0
   gunReloadSpeed: 0
   gunRange: 0
-  gunBullets: 0
+  gunAmmo: 0
   gunType: 
   gunSpecial: 
   bookId: 1
@@ -15269,7 +15401,7 @@ MonoBehaviour:
   weaponSpeed: 0
   gunReloadSpeed: 0
   gunRange: 0
-  gunBullets: 0
+  gunAmmo: 0
   gunType: 
   gunSpecial: 
   bookId: 0
