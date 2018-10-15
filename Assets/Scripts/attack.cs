@@ -99,6 +99,9 @@ public class attack : MonoBehaviour {
                     if (Input.GetKeyDown(KeyCode.R) && bulletCount != 0)
                         shoot = Shoot.Reload;
 
+                    if ((type == "normal" && gameControl.basicAmmo <= 0) || (type == "shotgun" && gameControl.shotgunAmmo <= 0) || (type == "rapid" && gameControl.rapidAmmo <= 0))
+                        shoot = Shoot.OutOfAmmo;
+
                     break;
 
                 //normal shooting
@@ -113,6 +116,7 @@ public class attack : MonoBehaviour {
                     b.GetComponent<bullet>().dmg = damage;
 
                     bulletCount += 1;
+                    gameControl.basicAmmo -= 1;
 
                     shoot = Shoot.Cooldown;
                     break;
@@ -125,7 +129,7 @@ public class attack : MonoBehaviour {
                         attacking = true;
                         InvokeRepeating("RapidFire", 0.01f, 1 / speed);
                     }
-                    else if (bulletCount >= bullets)
+                    else if (bulletCount >= bullets || gameControl.rapidAmmo <= 0)
                     {
                         shoot = Shoot.Cooldown;
                         CancelInvoke("RapidFire");
@@ -167,6 +171,8 @@ public class attack : MonoBehaviour {
                     }
 
                     bulletCount += 1;
+                    gameControl.shotgunAmmo -= 1;
+
                     shoot = Shoot.Cooldown;
                     break;
 
@@ -185,6 +191,8 @@ public class attack : MonoBehaviour {
                         b.GetComponent<bullet>().dmg = damage * 4;
 
                         bulletCount += bullets;
+                        gameControl.basicAmmo -= 2;
+
                         shootcd *= 2f;
                         shoot = Shoot.Cooldown;
                     }
@@ -194,7 +202,7 @@ public class attack : MonoBehaviour {
                         specialTimer += Time.deltaTime;
 
                         if (Input.GetButton("Fire2"))
-                            RapidFire();
+                            RapidFireUnlimited();
 
                         if (specialTimer >= 3f)
                         {
@@ -267,6 +275,8 @@ public class attack : MonoBehaviour {
                         }
 
                         bulletCount += bullets;
+                        gameControl.shotgunAmmo -= 2;
+
                         shootcd *= 3f;
                         shoot = Shoot.Cooldown;
                     }
@@ -276,6 +286,9 @@ public class attack : MonoBehaviour {
                 //reloading
                 case Shoot.Cooldown:
                     attacking = false;
+
+                    if ((type == "normal" && gameControl.basicAmmo <= 0) || (type == "shotgun" && gameControl.shotgunAmmo <= 0) || (type == "rapid" && gameControl.rapidAmmo <= 0))
+                        shoot = Shoot.OutOfAmmo;
 
                     if (bulletCount >= bullets)
                     {
@@ -305,6 +318,8 @@ public class attack : MonoBehaviour {
                     
                     break;
                 case Shoot.OutOfAmmo:
+                    if ((type=="normal" && gameControl.basicAmmo > 0) || (type == "shotgun" && gameControl.shotgunAmmo > 0) || (type == "rapid" && gameControl.rapidAmmo > 0))
+                        shoot = Shoot.Ready;
                     break;
             }
         }
@@ -326,7 +341,7 @@ public class attack : MonoBehaviour {
                 special = weapons.special1;
 
                 if (type == "normal")
-                    bullets = 5;
+                    bullets = 5;  
                 else if (type == "shotgun")
                     bullets = 2;
                 else
@@ -462,6 +477,18 @@ public class attack : MonoBehaviour {
         b.GetComponent<bullet>().maxRange = range;
         b.GetComponent<bullet>().dmg = damage;
         bulletCount += 1;
+        gameControl.rapidAmmo -= 1;
+    }
+
+    void RapidFireUnlimited()
+    {
+        attacking = true;
+        Vector3 bPos = transform.position + transform.forward;
+        GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
+        b.transform.position = bPos;
+        b.GetComponent<Rigidbody>().AddForce(transform.forward * 300 * speed);
+        b.GetComponent<bullet>().maxRange = range;
+        b.GetComponent<bullet>().dmg = damage;
     }
 
     //basic attack

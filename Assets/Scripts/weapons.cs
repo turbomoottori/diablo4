@@ -10,7 +10,6 @@ public class weapons : MonoBehaviour {
 
     //for swords, smaller speed (0.2f) is faster and for guns, bigger speed (5f) is faster
     public static float speed1, speed2;
-    public static int ammo1, ammo2;
     public static float range1, range2, rlspeed1, rlspeed2;
 
     //weapon type can be "normal", "rapid" or "shotgun"
@@ -38,12 +37,12 @@ public class weapons : MonoBehaviour {
     //checks which items are equipped
     public void LoadEquips()
     {
-        foreach(Item i in menus.invItems)
+        foreach(Item i in gameControl.invItems)
         {
             if (i is Weapon)
             {
                 Weapon w = i as Weapon;
-                if (w.name == menus.equipOne)
+                if (w.name == gameControl.equipOne)
                 {
                     damage1 = w.damage;
                     speed1 = w.speed;
@@ -55,14 +54,13 @@ public class weapons : MonoBehaviour {
                         type1 = g.type;
                         special1 = g.special;
                         rlspeed1 = g.rlspeed;
-                        ammo1 = g.ammo;
                     }
                     else
                     {
                         weaponType1 = 1;
                     }
                 }
-                if (w.name == menus.equipTwo)
+                if (w.name == gameControl.equipTwo)
                 {
                     damage2 = w.damage;
                     speed2 = w.speed;
@@ -74,7 +72,6 @@ public class weapons : MonoBehaviour {
                         type2 = g.type;
                         special2 = g.special;
                         rlspeed2 = g.rlspeed;
-                        ammo2 = g.ammo;
                     }
                     else
                     {
@@ -105,7 +102,6 @@ public class Weapon : Item
 [System.Serializable]
 public class Gun : Weapon
 {
-    public int ammo;
     public float range, rlspeed;
     public string type, special;
 }

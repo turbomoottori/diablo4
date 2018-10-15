@@ -63,11 +63,8 @@ public class playerMovement : MonoBehaviour
             slowmobar.gameObject.SetActive(false);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.U))
-            print(menus.invItems.Count);
-
         if (!paused)
         {
             //MOVEMENT
@@ -77,6 +74,12 @@ public class playerMovement : MonoBehaviour
                 float moveVertical = Input.GetAxis("Vertical");
                 Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
                 movement.Normalize();
+
+                //prevents being stuck on wall
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, movement, out hit, 1f))
+                    movement = Vector3.zero;
+
                 Vector3 pos = transform.position;
                 Vector3 targ = transform.position + movement;
                 pos += (targ - pos) * Time.deltaTime * speed;
@@ -186,6 +189,10 @@ public class playerMovement : MonoBehaviour
                 StartCoroutine(SlowTime(3f, 6f));
             }
         }
+
+        //load autosave if dead
+        if (gameControl.control.hp <= 0)
+            gameControl.control.AutoLoad();
     }
 
     public enum DashState

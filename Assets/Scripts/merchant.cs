@@ -33,7 +33,7 @@ public class merchant : MonoBehaviour {
             foreach (Book b in books)
                 items.Add(b);
 
-            foreach (Item i in menus.invItems)
+            foreach (Item i in gameControl.invItems)
                 CheckItemDuplicates(i.name);
 
             gameControl.control.merchs.Add(new MerchantData()

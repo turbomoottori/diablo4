@@ -37,11 +37,9 @@ public class menus : MonoBehaviour
     GameObject inventoryContainer, itemContainer, chestContainer, itemsInInventory, itemsInChest;
     GameObject merchCont, ownedItems, shopItems, money, bookcasebg, bookTxt, newBooks;
     public Vector3[] bookPositions;
-    public static List<Item> invItems = new List<Item>();
-    public static List<Item> itemsStored = new List<Item>();
     List<Item> merchItems = new List<Item>();
-    public static List<Book> bookcaseBooks = new List<Book>();
-    public static string equipOne, equipTwo;
+    //public static List<Book> bookcaseBooks = new List<Book>();
+    //public static string equipOne, equipTwo;
 
     void Start()
     {
@@ -119,12 +117,6 @@ public class menus : MonoBehaviour
         temphp = gameControl.control.hp;
         tempmaxhp = gameControl.control.maxhp;
         healthbar.fillAmount = (float)temphp / (float)tempmaxhp;
-
-        //DIE
-        if (gameControl.control.hp <= 0)
-        {
-            print("kuolee");
-        }
 
         //COLLECTED ITEM   
         showCollectibleTime += Time.deltaTime;
@@ -491,18 +483,18 @@ public class menus : MonoBehaviour
                 itemContainer = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, inventoryContainer.transform.Find("items").transform, false);
 
                 //show every item in inventory
-                if (invItems != null)
-                    foreach (Item item in invItems)
+                if (gameControl.invItems != null)
+                    foreach (Item item in gameControl.invItems)
                         AddItem(item.name, item.weight, itemContainer, buttonScript.buttonType.equip);
 
-                if (equipOne == null)
-                    equipOne = "Empty";
-                if (equipTwo == null)
-                    equipTwo = "Empty";
+                if (gameControl.equipOne == null)
+                    gameControl.equipOne = "Empty";
+                if (gameControl.equipTwo == null)
+                    gameControl.equipTwo = "Empty";
 
                 //display equipped items
-                AddEquipped(equipOne, 1);
-                AddEquipped(equipTwo, 2);
+                AddEquipped(gameControl.equipOne, 1);
+                AddEquipped(gameControl.equipTwo, 2);
 
                 if (quests.questList != null)
                 {
@@ -518,32 +510,24 @@ public class menus : MonoBehaviour
             {
                 inventoryContainer.SetActive(true);
 
-                if(invItems.FirstOrDefault(i=>i.name==equipOne) is Gun)
-                {
-                    Gun tempGun = invItems.FirstOrDefault(i => i.name == equipOne) as Gun;
-                    inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").gameObject.SetActive(true);
-                    inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").GetComponent<Text>().text = tempGun.ammo.ToString();
-                }
+                if(gameControl.invItems.FirstOrDefault(i=>i.name == gameControl.equipOne) is Gun)
+                    EquippedGunType(1);
 
-                if (invItems.FirstOrDefault(i => i.name == equipTwo) is Gun)
-                {
-                    Gun tempGun2 = invItems.FirstOrDefault(i => i.name == equipTwo) as Gun;
-                    inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").gameObject.SetActive(true);
-                    inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").GetComponent<Text>().text = tempGun2.ammo.ToString();
-                }
+                if (gameControl.invItems.FirstOrDefault(i => i.name == gameControl.equipTwo) is Gun)
+                    EquippedGunType(2);
             }
 
             //if there's new items add them too
-            foreach (Item itemInInventory in invItems)
+            foreach (Item itemInInventory in gameControl.invItems)
                 if (!itemContainer.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.weight, itemContainer, buttonScript.buttonType.equip);
 
             //checks duplicates
-            CheckDuplicates(itemContainer, invItems);
+            CheckDuplicates(itemContainer, gameControl.invItems);
 
             foreach (Transform child in itemContainer.transform)
             {
-                if (child.name == equipOne || child.name == equipTwo)
+                if (child.name == gameControl.equipOne || child.name == gameControl.equipTwo)
                     child.GetComponent<Image>().color = Color.gray;
                 else
                     child.GetComponent<Image>().color = Color.white;
@@ -552,7 +536,7 @@ public class menus : MonoBehaviour
             if (quests.questList != null)
                 CheckQuests();
 
-            invItems.RemoveAll(Item => Item == null);
+            gameControl.invItems.RemoveAll(Item => Item == null);
 
         }
         //closes inventory
@@ -583,7 +567,7 @@ public class menus : MonoBehaviour
         equip.name = name + equipNumber.ToString();
 
         //checks if equip is a gun, and if yes, show ammo
-        Weapon w = invItems.FirstOrDefault(i => i.name == name) as Weapon;
+        Weapon w = gameControl.invItems.FirstOrDefault(i => i.name == name) as Weapon;
         if (w is Gun)
             equip.transform.Find("ammo").gameObject.SetActive(true);
         else
@@ -657,25 +641,25 @@ public class menus : MonoBehaviour
         //assigning weapon 1
         if (leftClick)
         {
-            foreach (Item item in invItems)
+            foreach (Item item in gameControl.invItems)
             {
                 //equips only if item is a weapons
                 if (item.name == name && item is Weapon)
                 {
-                    if (name == equipOne || name == equipTwo)
+                    if (name == gameControl.equipOne || name == gameControl.equipTwo)
                     {
                         //this item is already equipped
                         print("already equipped");
                     }
                     else
                     {
-                        if (equipOne == "Empty")
-                            inventoryContainer.transform.Find("active").transform.Find(equipOne + "1").name = name;
+                        if (gameControl.equipOne == "Empty")
+                            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne + "1").name = name;
                         else
-                            inventoryContainer.transform.Find("active").transform.Find(equipOne).name = name;
+                            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne).name = name;
 
                         inventoryContainer.transform.Find("active").transform.Find(name).transform.Find("title").GetComponent<Text>().text = name;
-                        equipOne = name;
+                        gameControl.equipOne = name;
 
                         if (item is Gun)
                         {
@@ -684,12 +668,11 @@ public class menus : MonoBehaviour
                             Gun g = item as Gun;
                             weapons.damage1 = g.damage;
                             weapons.speed1 = g.speed;
-                            weapons.ammo1 = g.ammo;
                             weapons.range1 = g.range;
                             weapons.type1 = g.type;
                             weapons.special1 = g.special;
                             weapons.rlspeed1 = g.rlspeed;
-                            inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").gameObject.SetActive(true);
+                            EquippedGunType(1);
                         }
                         else
                         {
@@ -699,7 +682,7 @@ public class menus : MonoBehaviour
                             Weapon w = item as Weapon;
                             weapons.damage1 = w.damage;
                             weapons.speed1 = w.speed;
-                            inventoryContainer.transform.Find("active").transform.Find(equipOne).transform.Find("ammo").gameObject.SetActive(false);
+                            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne).transform.Find("ammo").gameObject.SetActive(false);
                         }
                     }
                 }
@@ -708,23 +691,23 @@ public class menus : MonoBehaviour
         //assigning weapon 2
         else
         {
-            foreach (Item item in invItems)
+            foreach (Item item in gameControl.invItems)
             {
                 if (item.name == name && item is Weapon)
                 {
-                    if (name == equipTwo || name == equipOne)
+                    if (name == gameControl.equipTwo || name == gameControl.equipOne)
                     {
                         print("already equipped");
                     }
                     else
                     {
-                        if (equipTwo == "Empty")
-                            inventoryContainer.transform.Find("active").transform.Find(equipTwo + "2").name = name;
+                        if (gameControl.equipTwo == "Empty")
+                            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipTwo + "2").name = name;
                         else
-                            inventoryContainer.transform.Find("active").transform.Find(equipTwo).name = name;
+                            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipTwo).name = name;
 
                         inventoryContainer.transform.Find("active").transform.Find(name).transform.Find("title").GetComponent<Text>().text = name;
-                        equipTwo = name;
+                        gameControl.equipTwo = name;
 
                         if (item is Gun)
                         {
@@ -733,12 +716,11 @@ public class menus : MonoBehaviour
                             Gun g = item as Gun;
                             weapons.damage2 = g.damage;
                             weapons.speed2 = g.speed;
-                            weapons.ammo2 = g.ammo;
                             weapons.range2 = g.range;
                             weapons.type2 = g.type;
                             weapons.special2 = g.special;
                             weapons.rlspeed2 = g.rlspeed;
-                            inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").gameObject.SetActive(true);
+                            EquippedGunType(2);
                         }
                         else
                         {
@@ -747,7 +729,7 @@ public class menus : MonoBehaviour
                             Weapon w = item as Weapon;
                             weapons.damage2 = w.damage;
                             weapons.speed2 = w.speed;
-                            inventoryContainer.transform.Find("active").transform.Find(equipTwo).transform.Find("ammo").gameObject.SetActive(false);
+                            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipTwo).transform.Find("ammo").gameObject.SetActive(false);
                         }
                     }
                 }
@@ -756,7 +738,7 @@ public class menus : MonoBehaviour
 
         foreach (Transform child in itemContainer.transform)
         {
-            if (child.name == equipOne || child.name == equipTwo)
+            if (child.name == gameControl.equipOne || child.name == gameControl.equipTwo)
                 child.GetComponent<Image>().color = Color.gray;
             else
                 child.GetComponent<Image>().color = Color.white;
@@ -769,14 +751,14 @@ public class menus : MonoBehaviour
         //taking from storage to inventory
         if (take)
         {
-            Item tempItem = itemsStored.FirstOrDefault(i => i.name == name);
+            Item tempItem = gameControl.itemsStored.FirstOrDefault(i => i.name == name);
             if (tempItem != null)
             {
-                itemsStored.Remove(tempItem);
-                invItems.Add(tempItem);
+                gameControl.itemsStored.Remove(tempItem);
+                gameControl.invItems.Add(tempItem);
 
                 //adds to another list
-                foreach (Item itemInInventory in invItems)
+                foreach (Item itemInInventory in gameControl.invItems)
                     if (!itemsInInventory.transform.Find(itemInInventory.name))
                         AddItem(itemInInventory.name, itemInInventory.weight, itemsInInventory, buttonScript.buttonType.storable);
             }
@@ -784,28 +766,28 @@ public class menus : MonoBehaviour
         //taking from inventory to storage
         else
         {
-            if (name == equipOne || name == equipTwo)
+            if (name == gameControl.equipOne || name == gameControl.equipTwo)
             {
                 print("equipped, cannot store");
             }
             else
             {
-                Item tempItem = invItems.FirstOrDefault(i => i.name == name);
+                Item tempItem = gameControl.invItems.FirstOrDefault(i => i.name == name);
                 if (tempItem != null)
                 {
-                    invItems.Remove(tempItem);
-                    itemsStored.Add(tempItem);
+                    gameControl.invItems.Remove(tempItem);
+                    gameControl.itemsStored.Add(tempItem);
 
                     //adds to another list
-                    foreach (Item itemStored in itemsStored)
+                    foreach (Item itemStored in gameControl.itemsStored)
                         if (!itemsInChest.transform.Find(itemStored.name))
                             AddItem(itemStored.name, itemStored.weight, itemsInChest, buttonScript.buttonType.stored);
                 }
             }
         }
 
-        CheckDuplicates(itemsInInventory, invItems);
-        CheckDuplicates(itemsInChest, itemsStored);
+        CheckDuplicates(itemsInInventory, gameControl.invItems);
+        CheckDuplicates(itemsInChest, gameControl.itemsStored);
     }
 
     //opens and closes storage ui 
@@ -824,13 +806,13 @@ public class menus : MonoBehaviour
                 itemsInChest = Instantiate(Resources.Load("ui/inventory/itemInventory") as GameObject, chestContainer.transform.Find("stored"), false);
 
                 //show every item in inventory
-                if (invItems != null)
-                    foreach (Item item in invItems)
+                if (gameControl.invItems != null)
+                    foreach (Item item in gameControl.invItems)
                         AddItem(item.name, item.weight, itemsInInventory, buttonScript.buttonType.storable);
 
                 //show every stored item
-                if (itemsStored != null)
-                    foreach (Item stitem in itemsStored)
+                if (gameControl.itemsStored != null)
+                    foreach (Item stitem in gameControl.itemsStored)
                         AddItem(stitem.name, stitem.weight, itemsInChest, buttonScript.buttonType.stored);
             }
             else
@@ -838,18 +820,18 @@ public class menus : MonoBehaviour
                 chestContainer.SetActive(true);
             }
 
-            foreach (Item itemInInventory in invItems)
+            foreach (Item itemInInventory in gameControl.invItems)
                 if (!itemsInInventory.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.weight, itemsInInventory, buttonScript.buttonType.storable);
 
-            foreach (Item itemStored in itemsStored)
+            foreach (Item itemStored in gameControl.itemsStored)
                 if (!itemsInChest.transform.Find(itemStored.name))
                     AddItem(itemStored.name, itemStored.weight, itemsInChest, buttonScript.buttonType.stored);
 
             //changes color of already equipped item
-            foreach (Item item in invItems)
+            foreach (Item item in gameControl.invItems)
             {
-                if (item.name == equipOne || item.name == equipTwo)
+                if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo)
                 {
                     itemsInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
                 }
@@ -858,12 +840,12 @@ public class menus : MonoBehaviour
                     itemsInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.white;
                 }
             }
-            CheckDuplicates(itemsInChest, itemsStored);
-            CheckDuplicates(itemsInInventory, invItems);
+            CheckDuplicates(itemsInChest, gameControl.itemsStored);
+            CheckDuplicates(itemsInInventory, gameControl.invItems);
 
 
             //check if item is removed and remove it from the list
-            invItems.RemoveAll(Item => Item == null);
+            gameControl.invItems.RemoveAll(Item => Item == null);
         }
         else
         {
@@ -888,30 +870,39 @@ public class menus : MonoBehaviour
             anyOpen = true;
 
             if (bookcasebg == null)
+            {
                 bookcasebg = Instantiate(Resources.Load("ui/bookcase/bookcasebg") as GameObject, canv, false);
+
+                //shows already existing books
+                if (gameControl.bookcaseBooks != null)
+                    foreach (Book b in gameControl.bookcaseBooks)
+                        AddBooks(b.id, b.name);
+            }
             else
+            {
                 bookcasebg.SetActive(true);
+            }
+                
 
             int bookAmount = 0;
             //adds every book in inventory to the bookcase
-            foreach (Item i in invItems)
+            foreach (Item i in gameControl.invItems)
             {
-                //tells new books have been added
-                //BooksAdded();
                 if (i is Book)
                 {
                     bookAmount += 1;
                     Book b = i as Book;
                     AddBooks(b.id, b.name);
-                    bookcaseBooks.Add(b);
+                    gameControl.bookcaseBooks.Add(b);
                 }
             }
 
+            //tells the amount of added books
             if (bookAmount > 0)
                 BooksAdded(bookAmount);
 
             //removes all listed books from inventory
-            invItems.RemoveAll(i => bookcaseBooks.Exists(b => i.name == b.name));
+            gameControl.invItems.RemoveAll(i => gameControl.bookcaseBooks.Exists(b => i.name == b.name));
 
             PauseNoMenu();
         }
@@ -944,7 +935,7 @@ public class menus : MonoBehaviour
         else
             bookTxt.SetActive(true);
 
-        Book book = bookcaseBooks.FirstOrDefault(b => b.name == name);
+        Book book = gameControl.bookcaseBooks.FirstOrDefault(b => b.name == name);
         bookTxt.transform.GetChild(0).GetComponent<Text>().text = book.txt;
         textShown = true;
     }
@@ -981,8 +972,8 @@ public class menus : MonoBehaviour
                 money.GetComponent<Text>().text = gameControl.control.money.ToString();
 
                 //show every item in inventory
-                if (invItems != null)
-                    foreach (Item item in invItems)
+                if (gameControl.invItems != null)
+                    foreach (Item item in gameControl.invItems)
                         AddItem(item.name, item.sellValue, ownedItems, buttonScript.buttonType.sell);
 
                 //show every item on sale
@@ -1003,7 +994,7 @@ public class menus : MonoBehaviour
                     Destroy(child.gameObject);
             }
 
-            foreach (Item itemInInventory in invItems)
+            foreach (Item itemInInventory in gameControl.invItems)
                 if (!ownedItems.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
 
@@ -1011,13 +1002,13 @@ public class menus : MonoBehaviour
                 if (!shopItems.transform.Find(mItem.name))
                     AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
 
-            CheckDuplicates(ownedItems, invItems);
+            CheckDuplicates(ownedItems, gameControl.invItems);
             CheckEquipAndValue();
 
 
 
             //check if item is removed and remove it from the list
-            invItems.RemoveAll(Item => Item == null);
+            gameControl.invItems.RemoveAll(Item => Item == null);
         }
         else
         {
@@ -1042,7 +1033,7 @@ public class menus : MonoBehaviour
             if (tempItem != null)
             {
                 merchItems.Remove(tempItem);
-                invItems.Add(tempItem);
+                gameControl.invItems.Add(tempItem);
 
                 gameControl.control.money -= tempItem.value;
 
@@ -1055,7 +1046,7 @@ public class menus : MonoBehaviour
                 }
 
                 //adds to another list
-                foreach (Item itemInInventory in invItems)
+                foreach (Item itemInInventory in gameControl.invItems)
                     if (!ownedItems.transform.Find(itemInInventory.name))
                         AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
             }
@@ -1063,24 +1054,24 @@ public class menus : MonoBehaviour
         //selling
         else
         {
-            if (name == equipOne || name == equipTwo)
+            if (name == gameControl.equipOne || name == gameControl.equipTwo)
             {
                 print("equipped, cannot sell");
             }
             else
             {
-                Item tempItem = invItems.FirstOrDefault(i => i.name == name);
+                Item tempItem = gameControl.invItems.FirstOrDefault(i => i.name == name);
                 if (tempItem != null)
                 {
                     if (tempItem.canSell)
                     {
-                        invItems.Remove(tempItem);
+                        gameControl.invItems.Remove(tempItem);
                         merchItems.Add(tempItem);
 
                         //deletes from list
                         foreach (Transform child in ownedItems.transform)
                         {
-                            Item temp = invItems.FirstOrDefault(i => i.name == child.name);
+                            Item temp = gameControl.invItems.FirstOrDefault(i => i.name == child.name);
                             if (temp == null)
                                 Destroy(child.gameObject);
                         }
@@ -1099,7 +1090,7 @@ public class menus : MonoBehaviour
                 }
             }
         }
-        CheckDuplicates(ownedItems, invItems);
+        CheckDuplicates(ownedItems, gameControl.invItems);
         CheckEquipAndValue();
     }
 
@@ -1109,9 +1100,9 @@ public class menus : MonoBehaviour
         money.GetComponent<Text>().text = gameControl.control.money.ToString();
 
         //changes color of already equipped item
-        foreach (Item item in invItems)
+        foreach (Item item in gameControl.invItems)
         {
-            if (item.name == equipOne || item.name == equipTwo || !item.canSell)
+            if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo || !item.canSell)
             {
                 ownedItems.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
             }
@@ -1225,6 +1216,39 @@ public class menus : MonoBehaviour
             saves.transform.Find(saveText + "2").GetComponent<Image>().color = Color.gray;
         if (File.Exists(Application.persistentDataPath + "/save3.dat"))
             saves.transform.Find(saveText + "3").GetComponent<Image>().color = Color.gray;
+    }
+
+    void EquippedGunType(int equip)
+    {
+        Gun tempGun;
+        string tempAmmo;
+
+        if(equip == 1)
+        {
+            tempGun = gameControl.invItems.FirstOrDefault(i => i.name == gameControl.equipOne) as Gun;
+            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne).transform.Find("ammo").gameObject.SetActive(true);
+            if (tempGun.type == "normal")
+                tempAmmo = gameControl.basicAmmo.ToString();
+            else if (tempGun.type == "shotgun")
+                tempAmmo = gameControl.shotgunAmmo.ToString();
+            else
+                tempAmmo = gameControl.rapidAmmo.ToString();
+
+            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne).transform.Find("ammo").GetComponent<Text>().text = tempAmmo;
+        }
+        else
+        {
+            tempGun = gameControl.invItems.FirstOrDefault(i => i.name == gameControl.equipTwo) as Gun;
+            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipTwo).transform.Find("ammo").gameObject.SetActive(true);
+            if (tempGun.type == "normal")
+                tempAmmo = gameControl.basicAmmo.ToString();
+            else if (tempGun.type == "shotgun")
+                tempAmmo = gameControl.shotgunAmmo.ToString();
+            else
+                tempAmmo = gameControl.rapidAmmo.ToString();
+
+            inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne).transform.Find("ammo").GetComponent<Text>().text = tempAmmo;
+        }
     }
 
     //changes slider values

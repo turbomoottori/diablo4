@@ -28,7 +28,7 @@ public class collectible : MonoBehaviour {
         switch (itemType)
         {
             case Type.Item:
-                menus.invItems.Add(new Item()
+                gameControl.invItems.Add(new Item()
                 {
                     name = collectibleName,
                     value = value,
@@ -40,7 +40,7 @@ public class collectible : MonoBehaviour {
 
                 break;
             case Type.Weapon:
-                menus.invItems.Add(new Weapon()
+                gameControl.invItems.Add(new Weapon()
                 {
                     name = collectibleName,
                     canSell = canSell,
@@ -53,7 +53,7 @@ public class collectible : MonoBehaviour {
 
                 break;
             case Type.Gun:
-                menus.invItems.Add(new Gun()
+                gameControl.invItems.Add(new Gun()
                 {
                     name = collectibleName,
                     canSell = canSell,
@@ -62,7 +62,6 @@ public class collectible : MonoBehaviour {
                     weight = weight,
                     damage = weaponDamage,
                     speed = weaponSpeed,
-                    ammo = gunAmmo,
                     range = gunRange,
                     rlspeed = gunReloadSpeed,
                     special = gunSpecial,
@@ -71,7 +70,7 @@ public class collectible : MonoBehaviour {
 
                 break;
             case Type.Book:
-                menus.invItems.Add(new Book()
+                gameControl.invItems.Add(new Book()
                 {
                     name = collectibleName,
                     canSell = canSell,

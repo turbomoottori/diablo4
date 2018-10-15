@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine.SceneManagement;
 
 public class gameControl : MonoBehaviour
 {
@@ -12,6 +13,14 @@ public class gameControl : MonoBehaviour
     public bool knowsDoubleJump, knowsDash, knowsSlowTime;
 
     public int volume;
+
+    public static string equipOne, equipTwo;
+
+    public static int basicAmmo, shotgunAmmo, rapidAmmo;
+
+    public static List<Item> invItems = new List<Item>();
+    public static List<Item> itemsStored = new List<Item>();
+    public static List<Book> bookcaseBooks = new List<Book>();
 
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
@@ -39,6 +48,25 @@ public class gameControl : MonoBehaviour
             collectibles = new List<Collectibles>();
         if (enemies == null)
             enemies = new List<EnemyList>();
+
+        basicAmmo = 5;
+        rapidAmmo = 20;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += LevelLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= LevelLoaded;
+    }
+
+    void LevelLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "mainmenu")
+            AutoSave();
     }
 
     public void SaveGame(int saveFile)
@@ -56,16 +84,53 @@ public class gameControl : MonoBehaviour
         data.money = money;
         data.knowsDoubleJump = knowsDoubleJump;
         data.knowsDash = knowsDash;
-        data.equip1 = menus.equipOne;
-        data.equip2 = menus.equipTwo;
-        data.invItems = menus.invItems;
-        data.itemsStored = menus.itemsStored;
+        data.equip1 = equipOne;
+        data.equip2 = equipTwo;
+        data.invItems = invItems;
+        data.itemsStored = itemsStored;
         data.knowsSlowTime = knowsSlowTime;
         data.questList = quests.questList;
         data.merchs = merchs;
         data.collectibles = collectibles;
         data.enemies = enemies;
-        data.bookcaseBooks = menus.bookcaseBooks;
+        data.bookcaseBooks = bookcaseBooks;
+        data.basicAmmo = basicAmmo;
+        data.shotgunAmmo = shotgunAmmo;
+        data.rapidAmmo = rapidAmmo;
+
+        //serializes and closes file
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    public void AutoSave()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file;
+
+        //creates new save file
+        file = File.Create(Application.persistentDataPath + "/autosave.dat");
+        PlayerData data = new PlayerData();
+
+        //stores all relevant data
+        data.hp = hp;
+        data.maxhp = maxhp;
+        data.money = money;
+        data.knowsDoubleJump = knowsDoubleJump;
+        data.knowsDash = knowsDash;
+        data.equip1 = equipOne;
+        data.equip2 = equipTwo;
+        data.invItems = invItems;
+        data.itemsStored = itemsStored;
+        data.knowsSlowTime = knowsSlowTime;
+        data.questList = quests.questList;
+        data.merchs = merchs;
+        data.collectibles = collectibles;
+        data.enemies = enemies;
+        data.bookcaseBooks = bookcaseBooks;
+        data.basicAmmo = basicAmmo;
+        data.shotgunAmmo = shotgunAmmo;
+        data.rapidAmmo = rapidAmmo;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -89,16 +154,52 @@ public class gameControl : MonoBehaviour
             money = data.money;
             knowsDoubleJump = data.knowsDoubleJump;
             knowsDash = data.knowsDash;
-            menus.equipOne = data.equip1;
-            menus.equipTwo = data.equip2;
-            menus.invItems = data.invItems;
-            menus.itemsStored = data.itemsStored;
+            equipOne = data.equip1;
+            equipTwo = data.equip2;
+            invItems = data.invItems;
+            itemsStored = data.itemsStored;
             knowsSlowTime = data.knowsSlowTime;
             quests.questList = data.questList;
             merchs = data.merchs;
             collectibles = data.collectibles;
             enemies = data.enemies;
-            menus.bookcaseBooks = data.bookcaseBooks;
+            bookcaseBooks = data.bookcaseBooks;
+            basicAmmo = data.basicAmmo;
+            shotgunAmmo = data.shotgunAmmo;
+            rapidAmmo = data.rapidAmmo;
+        }
+    }
+
+    public void AutoLoad()
+    {
+        //check if file exists
+        if (File.Exists(Application.persistentDataPath + "/autosave.dat"))
+        {
+            //loads file
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/autosave.dat", FileMode.Open);
+            PlayerData data = (PlayerData)bf.Deserialize(file);
+            file.Close();
+
+            //sets all fetched data
+            hp = data.hp;
+            maxhp = data.maxhp;
+            money = data.money;
+            knowsDoubleJump = data.knowsDoubleJump;
+            knowsDash = data.knowsDash;
+            equipOne = data.equip1;
+            equipTwo = data.equip2;
+            invItems = data.invItems;
+            itemsStored = data.itemsStored;
+            knowsSlowTime = data.knowsSlowTime;
+            quests.questList = data.questList;
+            merchs = data.merchs;
+            collectibles = data.collectibles;
+            enemies = data.enemies;
+            bookcaseBooks = data.bookcaseBooks;
+            basicAmmo = data.basicAmmo;
+            shotgunAmmo = data.shotgunAmmo;
+            rapidAmmo = data.rapidAmmo;
         }
     }
 
@@ -133,7 +234,7 @@ public class gameControl : MonoBehaviour
 [System.Serializable]
 class PlayerData
 {
-    public int hp, maxhp, money;
+    public int hp, maxhp, money, basicAmmo, shotgunAmmo, rapidAmmo;
     public bool knowsDoubleJump, knowsDash, knowsSlowTime;
     public string equip1, equip2;
     public List<Item> invItems, itemsStored;
