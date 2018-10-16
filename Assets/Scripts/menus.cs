@@ -12,7 +12,7 @@ public class menus : MonoBehaviour
 
     GameObject playerTalk, playerChoice;
     GameObject talkBox, talkText, ansCont;
-    Image healthbar;
+    Image healthbar, batteryHp;
     public static bool chestClose, merchClose, talkReady, bcClose = false;
     public static bool anyOpen = false;
     public bool choice = false;
@@ -496,6 +496,10 @@ public class menus : MonoBehaviour
                 AddEquipped(gameControl.equipOne, 1);
                 AddEquipped(gameControl.equipTwo, 2);
 
+                GameObject btr = Instantiate(Resources.Load("ui/inventory/battery") as GameObject, inventoryContainer.transform.Find("active").transform, false);
+                btr.transform.Find("Toggle").GetComponent<Toggle>().onValueChanged.AddListener(BatteryToggle);
+                batteryHp = btr.transform.Find("slot").Find("BatteryHpContainer").GetChild(0).GetComponent<Image>();
+
                 if (quests.questList != null)
                 {
                     foreach (Quest quest in quests.questList)
@@ -517,6 +521,19 @@ public class menus : MonoBehaviour
                     EquippedGunType(2);
             }
 
+            //YOU ARE WORKING WITH THIS ONE HERE
+            //NOTICE ME
+            //AAAAAAAAAAAAAAAAAAAAAAAAAA
+
+            /*
+            foreach(Battery bt in gameControl.invItems)
+            {
+                if (bt.id == gameControl.batteryId)
+                {
+                    batteryHp.fillAmount = bt.energy;
+                }
+            }*/
+
             //if there's new items add them too
             foreach (Item itemInInventory in gameControl.invItems)
                 if (!itemContainer.transform.Find(itemInInventory.name))
@@ -537,7 +554,6 @@ public class menus : MonoBehaviour
                 CheckQuests();
 
             gameControl.invItems.RemoveAll(Item => Item == null);
-
         }
         //closes inventory
         else if (invOpen)
@@ -1259,6 +1275,18 @@ public class menus : MonoBehaviour
         {
             volumeVal = (int)EventSystem.current.currentSelectedGameObject.GetComponent<Slider>().value;
             EventSystem.current.currentSelectedGameObject.transform.parent.Find("Value").GetComponent<Text>().text = volumeVal.ToString();
+        }
+    }
+
+    void BatteryToggle(bool toggleOn)
+    {
+        if(toggleOn)
+        {
+            gameControl.control.autoBattery = true;
+        }
+        else
+        {
+            gameControl.control.autoBattery = false;
         }
     }
 

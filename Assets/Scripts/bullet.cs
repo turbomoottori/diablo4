@@ -29,6 +29,9 @@ public class bullet : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
+
+        if (this.gameObject.tag == "enemyBullet" && collision.gameObject.tag == "player")
+            Destroy(this.gameObject);
     }
 
     public float Distance(Vector3 st, Vector3 en)

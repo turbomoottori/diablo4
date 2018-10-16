@@ -119,3 +119,10 @@ public class Book : Item
     public string txt;
     public int id;
 }
+
+[System.Serializable]
+public class Battery : Item
+{
+    public float energy;
+    public int id;
+}

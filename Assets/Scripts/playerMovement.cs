@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 {
+    public Animator anim;
     public float speed, rotationSpeed, jumpForce, dashForce;
     public bool runs, dashes;
     bool canJump, canDoubleJump, canMove;
@@ -74,10 +75,14 @@ public class playerMovement : MonoBehaviour
                 float moveVertical = Input.GetAxis("Vertical");
                 Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
                 movement.Normalize();
+                if (movement != Vector3.zero)
+                    anim.SetBool("movement", true);
+                else
+                    anim.SetBool("movement", false);
 
                 //prevents being stuck on wall
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, movement, out hit, 1f))
+                if (Physics.Raycast(transform.position, movement, out hit, 1.1f) || Physics.Raycast(transform.position+Vector3.down, movement, out hit, 1.1f))
                     movement = Vector3.zero;
 
                 Vector3 pos = transform.position;
@@ -85,6 +90,11 @@ public class playerMovement : MonoBehaviour
                 pos += (targ - pos) * Time.deltaTime * speed;
                 transform.position = pos;
                 transform.position = pos;
+
+                Vector3 localDir = transform.InverseTransformDirection(movement);
+                //for walking animation, use localDir
+                //z for forward/backwards movement, x for left/right
+                //final walking animation here
             }
 
             //LOOKAT MOVEMENT DIRECTION
@@ -101,30 +111,34 @@ public class playerMovement : MonoBehaviour
             float direction = 0;
             if (hPlane.Raycast(ray, out direction))
             {
-                transform.LookAt(ray.GetPoint(direction));
+                Vector3 target = ray.GetPoint(direction);
+                var targetRot = Quaternion.LookRotation(target - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10 * Time.deltaTime);
             }
 
             //JUMP AND DOUBLE JUMP
 
             if (Input.GetButtonDown("Jump"))
             {
-                canJump = (Physics.Raycast(transform.position, Vector3.down, 1.5f));
+                canJump = (Physics.Raycast(transform.position, Vector3.down, 3f));
 
                 if (canJump)
                 {
                     canJump = false;
                     canDoubleJump = true;
+                    anim.SetTrigger("jump");
                     rb.velocity = new Vector3(0, jumpForce, 0);
                 }
                 else if (canDoubleJump && gameControl.control.knowsDoubleJump)
                 {
                     canDoubleJump = false;
+                    anim.SetTrigger("jump");
                     rb.velocity = new Vector3(0, jumpForce, 0);
                 }
             }
 
             RaycastHit h;
-            if(Physics.Raycast(transform.position, Vector3.down, out h, 1.1f, walkable) && rb.velocity.y <= 0.1f)
+            if(Physics.Raycast(transform.position, Vector3.down, out h, 3f, walkable) && rb.velocity.y <= 0.1f)
             {
                 tempPos = transform.position;
             }
@@ -147,6 +161,7 @@ public class playerMovement : MonoBehaviour
                 case DashState.Dashing:
                     canMove = false;
                     dashes = true;
+                    anim.SetTrigger("dash");
                     dashTimer += Time.deltaTime * 3;
                     if (dashTimer >= maxDash)
                     {

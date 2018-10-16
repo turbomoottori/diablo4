@@ -10,11 +10,12 @@ public class gameControl : MonoBehaviour
     public static gameControl control;
 
     public int hp, maxhp, money;
-    public bool knowsDoubleJump, knowsDash, knowsSlowTime;
+    public bool knowsDoubleJump, knowsDash, knowsSlowTime, autoBattery;
 
     public int volume;
 
     public static string equipOne, equipTwo;
+    public static int batteryId;
 
     public static int basicAmmo, shotgunAmmo, rapidAmmo;
 
@@ -97,6 +98,8 @@ public class gameControl : MonoBehaviour
         data.basicAmmo = basicAmmo;
         data.shotgunAmmo = shotgunAmmo;
         data.rapidAmmo = rapidAmmo;
+        data.autoBattery = autoBattery;
+        data.batteryId = batteryId;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -131,6 +134,8 @@ public class gameControl : MonoBehaviour
         data.basicAmmo = basicAmmo;
         data.shotgunAmmo = shotgunAmmo;
         data.rapidAmmo = rapidAmmo;
+        data.autoBattery = autoBattery;
+        data.batteryId = batteryId;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -167,6 +172,8 @@ public class gameControl : MonoBehaviour
             basicAmmo = data.basicAmmo;
             shotgunAmmo = data.shotgunAmmo;
             rapidAmmo = data.rapidAmmo;
+            autoBattery = data.autoBattery;
+            batteryId = data.batteryId;
         }
     }
 
@@ -200,6 +207,8 @@ public class gameControl : MonoBehaviour
             basicAmmo = data.basicAmmo;
             shotgunAmmo = data.shotgunAmmo;
             rapidAmmo = data.rapidAmmo;
+            autoBattery = data.autoBattery;
+            batteryId = data.batteryId;
         }
     }
 
@@ -234,8 +243,8 @@ public class gameControl : MonoBehaviour
 [System.Serializable]
 class PlayerData
 {
-    public int hp, maxhp, money, basicAmmo, shotgunAmmo, rapidAmmo;
-    public bool knowsDoubleJump, knowsDash, knowsSlowTime;
+    public int hp, maxhp, money, basicAmmo, shotgunAmmo, rapidAmmo, batteryId;
+    public bool knowsDoubleJump, knowsDash, knowsSlowTime, autoBattery;
     public string equip1, equip2;
     public List<Item> invItems, itemsStored;
     public List<Quest> questList;

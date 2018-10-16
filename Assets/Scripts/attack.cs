@@ -5,6 +5,7 @@ using System.Linq;
 
 public class attack : MonoBehaviour {
 
+    public Animator anim;
     GameObject sword;
     public static float swordTime = 0.2f;
     public static float swordSpinTime = 0.5f;
@@ -495,6 +496,7 @@ public class attack : MonoBehaviour {
     IEnumerator Attack(Vector3 axis, float angle, float time)
     {
         attacking = true;
+        anim.SetTrigger("attack");
         if (swordActive)
             yield break;
         swordActive = true;
@@ -524,6 +526,7 @@ public class attack : MonoBehaviour {
     IEnumerator AttackTwo(Vector3 axis, float time)
     {
         attacking = true;
+
         if (swordActive)
             yield break;
         swordActive = true;

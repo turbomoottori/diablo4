@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class civilian : randomDestination {
 
+    Animator anim;
     GameObject sword;
     bool swordActive = false;
     public Action action = Action.follow;
@@ -15,13 +16,27 @@ public class civilian : randomDestination {
         sword = Resources.Load<GameObject>("enemysword");
         sword.GetComponentInChildren<enemyAttack>().dmg = damage;
     }
-	
-	protected override void Update () {
+
+    protected override void Start()
+    {
+        base.Start();
+        anim = transform.Find("body").GetComponent<Animator>();
+    }
+
+    protected override void Update () {
         base.Update();
 
         //stops movement to talk to player
         if (agent.isActiveAndEnabled)
         {
+            if (anim != null)
+            {
+                if (agent.velocity != Vector3.zero)
+                    anim.SetBool("movement", true);
+                else
+                    anim.SetBool("movement", false);
+            }
+
             if (gameObject.GetComponent<npcSpeech>() != null && Distance(player.transform.position, transform.position) < 2f && !hostile)
                 agent.isStopped = true;
             else
@@ -78,6 +93,7 @@ public class civilian : randomDestination {
         if (swordActive)
             yield break;
         swordActive = true;
+        anim.SetTrigger("attack");
         agent.speed =2.5f;
         if (atk == 1)
         {

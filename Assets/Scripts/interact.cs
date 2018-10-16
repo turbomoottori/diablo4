@@ -131,9 +131,7 @@ public class interact : MonoBehaviour {
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.GetComponent<interactable>() != null)
-        {
             other.gameObject.GetComponent<interactable>().HideE();
-        }
     }
 
     enum InteractWith
