@@ -153,9 +153,19 @@ public class enemy : MonoBehaviour {
     }
 
     //attacked with basic attack
-    public IEnumerator Attacked(Vector3 playerPos, int w)
+    public IEnumerator Attacked(Vector3 playerPos, int w, bool battery)
     {
         hostile = true;
+
+        int dmg;
+        if (w == 1)
+            dmg = weapons.damage1;
+        else
+            dmg = weapons.damage2;
+
+        if (battery)
+            dmg *= 2;
+
         Vector3 dir = transform.position - playerPos;
         dir.x *= 10;
         dir.z *= 10;
@@ -167,18 +177,11 @@ public class enemy : MonoBehaviour {
         if (isGrounded)
         {
             rb.AddForce(dir, ForceMode.Impulse);
-
-            if (w == 1)
-                enemyHealth -= weapons.damage1;
-            else
-                enemyHealth -= weapons.damage2;
+            enemyHealth -= dmg;
 
         } else {
             rb.AddForce(dir * 3, ForceMode.Impulse);
-            if (w == 1)
-                enemyHealth -= (weapons.damage1 + 3);
-            else
-                enemyHealth -= (weapons.damage2 + 3);
+            enemyHealth -= dmg + 2;
         }
 
         if (isAttacked)
@@ -192,12 +195,22 @@ public class enemy : MonoBehaviour {
     }
 
     //attacked with stun attack
-    public IEnumerator AttackStun(Vector3 playerPos, int w)
+    public IEnumerator AttackStun(Vector3 playerPos, int w, bool battery)
     {
         if (isAttacked)
             yield break;
         isAttacked = true;
         hostile = true;
+
+        int dmg;
+        if (w == 1)
+            dmg = weapons.damage1;
+        else
+            dmg = weapons.damage2;
+
+        if (battery)
+            dmg *= 2;
+
         Vector3 dir = transform.position - playerPos;
         dir.x *= 10;
         dir.z *= 10;
@@ -206,10 +219,7 @@ public class enemy : MonoBehaviour {
         rb.isKinematic = false;
         ShowHP();
 
-        if (w == 1)
-            enemyHealth -= weapons.damage1;
-        else
-            enemyHealth -= weapons.damage2;
+        enemyHealth -= dmg;
 
         rb.AddForce(dir * 1.5f, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
@@ -268,9 +278,9 @@ public class enemy : MonoBehaviour {
         if (other.gameObject.tag == "sword")
         {
             if (attack.attackNum == 1)
-                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon));
+                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon, battery.batteryOn));
             else if (attack.attackNum == 2)
-                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon));
+                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon, battery.batteryOn));
         }
     }
 

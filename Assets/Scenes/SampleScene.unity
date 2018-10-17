@@ -162,6 +162,7 @@ MonoBehaviour:
   gunType: normal
   gunSpecial: big
   bookId: 0
+  batteryEnergy: 0
   bookText: 
 --- !u!65 &2144940
 BoxCollider:
@@ -228,7 +229,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2144938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 378.45, y: 8.9, z: 83.7}
+  m_LocalPosition: {x: 397.4, y: 8.9, z: 78.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2200,6 +2201,7 @@ MonoBehaviour:
   gunType: 
   gunSpecial: 
   bookId: 0
+  batteryEnergy: 0
   bookText: 
 --- !u!65 &203289702
 BoxCollider:
@@ -2278,7 +2280,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 203289700}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 377.53, y: 8.9, z: 81.9}
+  m_LocalPosition: {x: 396.47998, y: 8.9, z: 76.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4245,6 +4247,139 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: eef537476ecd6ba4b96c0fd4210560c7,
     type: 3}
   m_PrefabInternal: {fileID: 479625493}
+--- !u!1 &482930423
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 1854599146704390, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 482930429}
+  - component: {fileID: 482930428}
+  - component: {fileID: 482930427}
+  - component: {fileID: 482930426}
+  - component: {fileID: 482930425}
+  - component: {fileID: 482930424}
+  m_Layer: 0
+  m_Name: Collectible (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &482930424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 482930423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectibleName: Battery
+  value: 100
+  sellValue: 20
+  weight: 1
+  stackable: 1
+  canSell: 1
+  itemType: 4
+  weaponDamage: 0
+  weaponSpeed: 0
+  gunReloadSpeed: 0
+  gunRange: 0
+  gunAmmo: 0
+  gunType: 
+  gunSpecial: 
+  bookId: 0
+  batteryEnergy: 1
+  bookText: 
+--- !u!65 &482930425
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 65653566676049220, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 482930423}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &482930426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 482930423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d2235b3dffdae48831ae9563ec833b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+--- !u!23 &482930427
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 23028314432469748, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 482930423}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &482930428
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 33378860715679084, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 482930423}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &482930429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 482930423}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 376.52, y: 8.9, z: 83.21}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 54
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &493251971 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: c145b9e1eff72784397d7570d964049d,
@@ -5764,6 +5899,7 @@ MonoBehaviour:
   gunType: 
   gunSpecial: 
   bookId: 0
+  batteryEnergy: 0
   bookText: 
 --- !u!65 &649489572
 BoxCollider:
@@ -5989,6 +6125,139 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 84d3461dcea922a498753491ccef2e19,
     type: 3}
   m_PrefabInternal: {fileID: 665509604}
+--- !u!1 &666858231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 1854599146704390, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 666858237}
+  - component: {fileID: 666858236}
+  - component: {fileID: 666858235}
+  - component: {fileID: 666858234}
+  - component: {fileID: 666858233}
+  - component: {fileID: 666858232}
+  m_Layer: 0
+  m_Name: Collectible (8)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &666858232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectibleName: Battery
+  value: 100
+  sellValue: 20
+  weight: 1
+  stackable: 1
+  canSell: 1
+  itemType: 4
+  weaponDamage: 0
+  weaponSpeed: 0
+  gunReloadSpeed: 0
+  gunRange: 0
+  gunAmmo: 0
+  gunType: 
+  gunSpecial: 
+  bookId: 0
+  batteryEnergy: 1
+  bookText: 
+--- !u!65 &666858233
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 65653566676049220, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &666858234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d2235b3dffdae48831ae9563ec833b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+--- !u!23 &666858235
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 23028314432469748, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &666858236
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 33378860715679084, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &666858237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 379.08, y: 8.9, z: 84.74}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 53
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &668412091
 Prefab:
   m_ObjectHideFlags: 0
@@ -9737,6 +10006,7 @@ GameObject:
   - component: {fileID: 1148378809}
   - component: {fileID: 1148378810}
   - component: {fileID: 1148378811}
+  - component: {fileID: 1148378812}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -9805,6 +10075,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99209a331aa1ba49b7c9f7fb47675d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1148378812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1148378806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d514be13d61b74147930149ea0f1c98a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  batteries: []
+  allBatteries: []
 --- !u!4 &1151721589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 7ea17e19baf8f9f4c8b4bb915827a7b0,
@@ -15068,6 +15351,7 @@ MonoBehaviour:
   gunType: 
   gunSpecial: 
   bookId: 1
+  batteryEnergy: 0
   bookText: en osaa perkele
 --- !u!65 &1587602800
 BoxCollider:
@@ -17764,6 +18048,7 @@ MonoBehaviour:
   gunType: 
   gunSpecial: 
   bookId: 0
+  batteryEnergy: 0
   bookText: 
 --- !u!65 &1896365693
 BoxCollider:
@@ -18095,6 +18380,7 @@ MonoBehaviour:
   gunType: rapid
   gunSpecial: unlimited
   bookId: 0
+  batteryEnergy: 0
   bookText: 
 --- !u!65 &1914793994
 BoxCollider:
@@ -18173,7 +18459,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1914793992}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 380.45, y: 8.9, z: 84.04}
+  m_LocalPosition: {x: 399.4, y: 8.9, z: 79.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

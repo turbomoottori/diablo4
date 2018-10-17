@@ -125,4 +125,5 @@ public class Battery : Item
 {
     public float energy;
     public int id;
+    public bool isEmpty;
 }

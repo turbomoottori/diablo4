@@ -14,6 +14,7 @@ public class collectible : MonoBehaviour {
     public int gunAmmo;
     public string gunType, gunSpecial;
     public int bookId;
+    public float batteryEnergy;
     [TextArea]
     public string bookText;
 	
@@ -83,6 +84,28 @@ public class collectible : MonoBehaviour {
                 });
 
                 break;
+            case Type.Battery:
+                GameObject globals = GameObject.Find("Globals");
+                int newId;
+                if (globals.GetComponent<battery>().allBatteries.Count == 0)
+                    newId = 1;
+                else
+                    newId = globals.GetComponent<battery>().allBatteries.Count + 1;
+
+                print(newId);
+                gameControl.invItems.Add(new Battery()
+                {
+                    name = collectibleName + (batteryEnergy / 1 * 100).ToString("F0") + "%",
+                    canSell = canSell,
+                    id = newId,
+                    energy = batteryEnergy,
+                    isEmpty = false,
+                    sellValue = sellValue,
+                    stackable = stackable,
+                    value = value,
+                    weight = weight
+                });
+                break;
         }
     }
 
@@ -98,6 +121,10 @@ public class collectible : MonoBehaviour {
 
         AddItem();
         menus.ShowCollected(collectibleName);
+
+        if (itemType == Type.Battery)
+            GameObject.Find("Globals").GetComponent<battery>().UpdateBatteryList();
+
         Destroy(this.gameObject);
     }
 
@@ -106,7 +133,8 @@ public class collectible : MonoBehaviour {
         Item,
         Weapon,
         Gun,
-        Book
+        Book,
+        Battery
     }
 
     float Distance(Vector3 st, Vector3 en)

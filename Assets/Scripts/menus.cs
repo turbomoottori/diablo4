@@ -484,8 +484,13 @@ public class menus : MonoBehaviour
 
                 //show every item in inventory
                 if (gameControl.invItems != null)
+                {
                     foreach (Item item in gameControl.invItems)
+                    {
                         AddItem(item.name, item.weight, itemContainer, buttonScript.buttonType.equip);
+                    }
+                }
+                        
 
                 if (gameControl.equipOne == null)
                     gameControl.equipOne = "Empty";
@@ -497,8 +502,10 @@ public class menus : MonoBehaviour
                 AddEquipped(gameControl.equipTwo, 2);
 
                 GameObject btr = Instantiate(Resources.Load("ui/inventory/battery") as GameObject, inventoryContainer.transform.Find("active").transform, false);
+                batteryHp = btr.transform.Find("slot").transform.Find("BatteryHpContainer").transform.Find("batteryHp").GetComponent<Image>();
+                DisplayBatteryEnergy();
                 btr.transform.Find("Toggle").GetComponent<Toggle>().onValueChanged.AddListener(BatteryToggle);
-                batteryHp = btr.transform.Find("slot").Find("BatteryHpContainer").GetChild(0).GetComponent<Image>();
+                btr.transform.Find("Toggle").GetComponent<Toggle>().isOn = gameControl.control.autoBattery;
 
                 if (quests.questList != null)
                 {
@@ -521,23 +528,14 @@ public class menus : MonoBehaviour
                     EquippedGunType(2);
             }
 
-            //YOU ARE WORKING WITH THIS ONE HERE
-            //NOTICE ME
-            //AAAAAAAAAAAAAAAAAAAAAAAAAA
-
-            /*
-            foreach(Battery bt in gameControl.invItems)
-            {
-                if (bt.id == gameControl.batteryId)
-                {
-                    batteryHp.fillAmount = bt.energy;
-                }
-            }*/
+            DisplayBatteryEnergy();
 
             //if there's new items add them too
             foreach (Item itemInInventory in gameControl.invItems)
+            {
                 if (!itemContainer.transform.Find(itemInInventory.name))
                     AddItem(itemInInventory.name, itemInInventory.weight, itemContainer, buttonScript.buttonType.equip);
+            }
 
             //checks duplicates
             CheckDuplicates(itemContainer, gameControl.invItems);
@@ -562,6 +560,21 @@ public class menus : MonoBehaviour
             anyOpen = false;
             inventoryContainer.SetActive(false);
             PauseNoMenu();
+        }
+    }
+
+    void DisplayBatteryEnergy()
+    {
+        //shows battery energy
+        if (battery.batteryOn)
+        {
+            foreach (Battery bt in gameControl.invItems)
+                if (bt.id == gameControl.batteryId)
+                    batteryHp.fillAmount = bt.energy;
+        }
+        else
+        {
+            batteryHp.fillAmount = 0f;
         }
     }
 
@@ -700,6 +713,14 @@ public class menus : MonoBehaviour
                             weapons.speed1 = w.speed;
                             inventoryContainer.transform.Find("active").transform.Find(gameControl.equipOne).transform.Find("ammo").gameObject.SetActive(false);
                         }
+                    }
+                }
+                else if(item.name == name && item is Battery)
+                {
+                    Battery b = item as Battery;
+                    if (!b.isEmpty)
+                    {
+
                     }
                 }
             }
@@ -1280,7 +1301,7 @@ public class menus : MonoBehaviour
 
     void BatteryToggle(bool toggleOn)
     {
-        if(toggleOn)
+        if (toggleOn)
         {
             gameControl.control.autoBattery = true;
         }

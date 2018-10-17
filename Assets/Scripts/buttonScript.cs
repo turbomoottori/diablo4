@@ -61,6 +61,6 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler
         sell,
         buy,
         expensive,
-        book
+        book,
     }
 }
