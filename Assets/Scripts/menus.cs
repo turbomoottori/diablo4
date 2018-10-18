@@ -9,6 +9,15 @@ using System.Linq;
 
 public class menus : MonoBehaviour
 {
+    //FRIENDLY REMINDER THAT YOU ARE ACTUALLY WORKING WITH ANOTHER SCRIPT U DUMBASS
+    //THEY'RE NAMED "newCollectible" AND "items" SO GO CHECK 'EM OUT
+    //JUST LEAVE THIS ONE ALONE PLS AND FIX YOUR SHIT
+    // >:(
+
+    //actually now that we're at it why don't you make the whole fucking ui from scracth
+    //since it sucks ass rn
+
+    //also remember to delete this rant
 
     GameObject playerTalk, playerChoice;
     GameObject talkBox, talkText, ansCont;
@@ -487,7 +496,7 @@ public class menus : MonoBehaviour
                 {
                     foreach (Item item in gameControl.invItems)
                     {
-                        AddItem(item.name, item.weight, itemContainer, buttonScript.buttonType.equip);
+                        AddItem(item, itemContainer, buttonScript.buttonType.equip);
                     }
                 }
                         
@@ -503,7 +512,6 @@ public class menus : MonoBehaviour
 
                 GameObject btr = Instantiate(Resources.Load("ui/inventory/battery") as GameObject, inventoryContainer.transform.Find("active").transform, false);
                 batteryHp = btr.transform.Find("slot").transform.Find("BatteryHpContainer").transform.Find("batteryHp").GetComponent<Image>();
-                DisplayBatteryEnergy();
                 btr.transform.Find("Toggle").GetComponent<Toggle>().onValueChanged.AddListener(BatteryToggle);
                 btr.transform.Find("Toggle").GetComponent<Toggle>().isOn = gameControl.control.autoBattery;
 
@@ -513,43 +521,40 @@ public class menus : MonoBehaviour
                     {
                         AddQuest(quest.questName, quest.questDesc);
                     }
-
                     CheckQuests();
                 }
             }
             else
             {
                 inventoryContainer.SetActive(true);
-
                 if(gameControl.invItems.FirstOrDefault(i=>i.name == gameControl.equipOne) is Gun)
                     EquippedGunType(1);
-
                 if (gameControl.invItems.FirstOrDefault(i => i.name == gameControl.equipTwo) is Gun)
                     EquippedGunType(2);
             }
 
-            DisplayBatteryEnergy();
-
             //if there's new items add them too
             foreach (Item itemInInventory in gameControl.invItems)
-            {
                 if (!itemContainer.transform.Find(itemInInventory.name))
-                    AddItem(itemInInventory.name, itemInInventory.weight, itemContainer, buttonScript.buttonType.equip);
-            }
+                    AddItem(itemInInventory, itemContainer, buttonScript.buttonType.equip);
 
-            //checks duplicates
-            CheckDuplicates(itemContainer, gameControl.invItems);
-
-            foreach (Transform child in itemContainer.transform)
+            //changes color of already equipped item
+            foreach (Item item in gameControl.invItems)
             {
-                if (child.name == gameControl.equipOne || child.name == gameControl.equipTwo)
-                    child.GetComponent<Image>().color = Color.gray;
+                if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo || item.name == battery.batteryName)
+                    itemContainer.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
                 else
-                    child.GetComponent<Image>().color = Color.white;
+                    itemContainer.transform.Find(item.name).GetComponent<Image>().color = Color.white;
             }
 
             if (quests.questList != null)
                 CheckQuests();
+
+            //checks duplicates
+            CheckDuplicates(itemContainer, gameControl.invItems);
+
+            UpdateBatteries(itemContainer);
+            DisplayBatteryEnergy();
 
             gameControl.invItems.RemoveAll(Item => Item == null);
         }
@@ -568,9 +573,15 @@ public class menus : MonoBehaviour
         //shows battery energy
         if (battery.batteryOn)
         {
-            foreach (Battery bt in gameControl.invItems)
-                if (bt.id == gameControl.batteryId)
-                    batteryHp.fillAmount = bt.energy;
+            foreach (Item i in gameControl.invItems)
+            {
+                if(i is Battery)
+                {
+                    Battery bt = i as Battery;
+                    if (bt.id == gameControl.batteryId)
+                        batteryHp.fillAmount = bt.energy;
+                }
+            }
         }
         else
         {
@@ -578,13 +589,54 @@ public class menus : MonoBehaviour
         }
     }
 
-    //display items in inventory
-    void AddItem(string name, int wt, GameObject place, buttonScript.buttonType type)
+    void UpdateBatteries(GameObject container)
+    {
+        foreach (Transform child in container.transform)
+        {
+            if (child.name.Contains("Battery"))
+            {
+                if (container == itemContainer || container == ownedItems)
+                {
+                    Battery b = gameControl.invItems.FirstOrDefault(i => i.name == child.name) as Battery;
+                    print(b.name);
+                    child.transform.Find("name").GetComponent<Text>().text = "Battery " + (b.energy / 1 * 100).ToString("F0") + "%";
+                }
+                else if (container == shopItems)
+                {
+                    Battery b = merchItems.FirstOrDefault(i => i.name == child.name) as Battery;
+                    child.transform.Find("name").GetComponent<Text>().text = "Battery " + (b.energy / 1 * 100).ToString("F0") + "%";
+                }
+                else if (container == chestContainer)
+                {
+                    Battery b = gameControl.itemsStored.FirstOrDefault(i => i.name == child.name) as Battery;
+                    child.transform.Find("name").GetComponent<Text>().text = "Battery " + (b.energy / 1 * 100).ToString("F0") + "%";
+                }
+            }
+        }
+    }
+
+    void AddItem(Item item, GameObject place, buttonScript.buttonType type)
     {
         GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, place.transform, false);
-        i.transform.Find("name").GetComponent<Text>().text = name;
-        i.transform.Find("weight").GetComponent<Text>().text = wt.ToString();
-        i.name = name;
+        if(item is Battery)
+        {
+            Battery b = item as Battery;
+            i.transform.Find("name").GetComponent<Text>().text = "Battery " + (b.energy/1*100).ToString("F0")+ "%";
+            i.name = item.name;
+        }
+        else
+        {
+            i.transform.Find("name").GetComponent<Text>().text = item.name;
+            i.name = item.name;
+        }
+
+        if (place == ownedItems)
+            i.transform.Find("weight").GetComponent<Text>().text = item.sellValue.ToString();
+        else if (place == shopItems)
+            i.transform.Find("weight").GetComponent<Text>().text = item.value.ToString();
+        else
+            i.transform.Find("weight").GetComponent<Text>().text = item.weight.ToString();
+
         i.GetComponent<buttonScript>().type = type;
     }
 
@@ -641,8 +693,6 @@ public class menus : MonoBehaviour
             }
             if (temp == null)
                 Destroy(child.gameObject);
-
-
         }
     }
 
@@ -720,7 +770,12 @@ public class menus : MonoBehaviour
                     Battery b = item as Battery;
                     if (!b.isEmpty)
                     {
-
+                        GameObject.Find("Globals").GetComponent<battery>().UseSpecificBattery(b);
+                        battery.batteryName = item.name;
+                    }
+                    else
+                    {
+                        print("this battery is empty");
                     }
                 }
             }
@@ -775,7 +830,7 @@ public class menus : MonoBehaviour
 
         foreach (Transform child in itemContainer.transform)
         {
-            if (child.name == gameControl.equipOne || child.name == gameControl.equipTwo)
+            if (child.name == gameControl.equipOne || child.name == gameControl.equipTwo || child.name==battery.batteryName)
                 child.GetComponent<Image>().color = Color.gray;
             else
                 child.GetComponent<Image>().color = Color.white;
@@ -797,13 +852,13 @@ public class menus : MonoBehaviour
                 //adds to another list
                 foreach (Item itemInInventory in gameControl.invItems)
                     if (!itemsInInventory.transform.Find(itemInInventory.name))
-                        AddItem(itemInInventory.name, itemInInventory.weight, itemsInInventory, buttonScript.buttonType.storable);
+                        AddItem(itemInInventory, itemsInInventory, buttonScript.buttonType.storable);
             }
         }
         //taking from inventory to storage
         else
         {
-            if (name == gameControl.equipOne || name == gameControl.equipTwo)
+            if (name == gameControl.equipOne || name == gameControl.equipTwo || name == battery.batteryName)
             {
                 print("equipped, cannot store");
             }
@@ -818,7 +873,7 @@ public class menus : MonoBehaviour
                     //adds to another list
                     foreach (Item itemStored in gameControl.itemsStored)
                         if (!itemsInChest.transform.Find(itemStored.name))
-                            AddItem(itemStored.name, itemStored.weight, itemsInChest, buttonScript.buttonType.stored);
+                            AddItem(itemStored, itemsInChest, buttonScript.buttonType.stored);
                 }
             }
         }
@@ -845,12 +900,12 @@ public class menus : MonoBehaviour
                 //show every item in inventory
                 if (gameControl.invItems != null)
                     foreach (Item item in gameControl.invItems)
-                        AddItem(item.name, item.weight, itemsInInventory, buttonScript.buttonType.storable);
+                        AddItem(item, itemsInInventory, buttonScript.buttonType.storable);
 
                 //show every stored item
                 if (gameControl.itemsStored != null)
                     foreach (Item stitem in gameControl.itemsStored)
-                        AddItem(stitem.name, stitem.weight, itemsInChest, buttonScript.buttonType.stored);
+                        AddItem(stitem, itemsInChest, buttonScript.buttonType.stored);
             }
             else
             {
@@ -859,16 +914,16 @@ public class menus : MonoBehaviour
 
             foreach (Item itemInInventory in gameControl.invItems)
                 if (!itemsInInventory.transform.Find(itemInInventory.name))
-                    AddItem(itemInInventory.name, itemInInventory.weight, itemsInInventory, buttonScript.buttonType.storable);
+                    AddItem(itemInInventory, itemsInInventory, buttonScript.buttonType.storable);
 
             foreach (Item itemStored in gameControl.itemsStored)
                 if (!itemsInChest.transform.Find(itemStored.name))
-                    AddItem(itemStored.name, itemStored.weight, itemsInChest, buttonScript.buttonType.stored);
+                    AddItem(itemStored, itemsInChest, buttonScript.buttonType.stored);
 
             //changes color of already equipped item
             foreach (Item item in gameControl.invItems)
             {
-                if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo)
+                if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo || item.name == battery.batteryName)
                 {
                     itemsInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
                 }
@@ -877,6 +932,8 @@ public class menus : MonoBehaviour
                     itemsInInventory.transform.Find(item.name).GetComponent<Image>().color = Color.white;
                 }
             }
+
+            UpdateBatteries(itemsInChest);
             CheckDuplicates(itemsInChest, gameControl.itemsStored);
             CheckDuplicates(itemsInInventory, gameControl.invItems);
 
@@ -1011,12 +1068,12 @@ public class menus : MonoBehaviour
                 //show every item in inventory
                 if (gameControl.invItems != null)
                     foreach (Item item in gameControl.invItems)
-                        AddItem(item.name, item.sellValue, ownedItems, buttonScript.buttonType.sell);
+                        AddItem(item, ownedItems, buttonScript.buttonType.sell);
 
                 //show every item on sale
                 if (merchItems != null)
                     foreach (Item merchitem in merchItems)
-                        AddItem(merchitem.name, merchitem.value, shopItems, buttonScript.buttonType.buy);
+                        AddItem(merchitem, shopItems, buttonScript.buttonType.buy);
             }
             else
             {
@@ -1033,12 +1090,14 @@ public class menus : MonoBehaviour
 
             foreach (Item itemInInventory in gameControl.invItems)
                 if (!ownedItems.transform.Find(itemInInventory.name))
-                    AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
+                    AddItem(itemInInventory, ownedItems, buttonScript.buttonType.sell);
 
             foreach (Item mItem in merchItems)
                 if (!shopItems.transform.Find(mItem.name))
-                    AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
+                    AddItem(mItem, shopItems, buttonScript.buttonType.buy);
 
+            UpdateBatteries(ownedItems);
+            UpdateBatteries(shopItems);
             CheckDuplicates(ownedItems, gameControl.invItems);
             CheckEquipAndValue();
 
@@ -1085,13 +1144,13 @@ public class menus : MonoBehaviour
                 //adds to another list
                 foreach (Item itemInInventory in gameControl.invItems)
                     if (!ownedItems.transform.Find(itemInInventory.name))
-                        AddItem(itemInInventory.name, itemInInventory.sellValue, ownedItems, buttonScript.buttonType.sell);
+                        AddItem(itemInInventory, ownedItems, buttonScript.buttonType.sell);
             }
         }
         //selling
         else
         {
-            if (name == gameControl.equipOne || name == gameControl.equipTwo)
+            if (name == gameControl.equipOne || name == gameControl.equipTwo || name == battery.batteryName)
             {
                 print("equipped, cannot sell");
             }
@@ -1116,7 +1175,7 @@ public class menus : MonoBehaviour
                         //adds to another list
                         foreach (Item mItem in merchItems)
                             if (!shopItems.transform.Find(mItem.name))
-                                AddItem(mItem.name, mItem.value, shopItems, buttonScript.buttonType.buy);
+                                AddItem(mItem, shopItems, buttonScript.buttonType.buy);
 
                         gameControl.control.money += tempItem.sellValue;
                     }
@@ -1139,7 +1198,7 @@ public class menus : MonoBehaviour
         //changes color of already equipped item
         foreach (Item item in gameControl.invItems)
         {
-            if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo || !item.canSell)
+            if (item.name == gameControl.equipOne || item.name == gameControl.equipTwo || !item.canSell || item.name == battery.batteryName)
             {
                 ownedItems.transform.Find(item.name).GetComponent<Image>().color = Color.gray;
             }

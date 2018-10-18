@@ -3,23 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class collectible : MonoBehaviour {
+public class newCollectible : MonoBehaviour
+{
+    //WORK IN PROGRESS
+    //TEST 
+    //IT'S A TEST
+    //DO U GET IT
+    //IT'S A TEST SCRIPT
 
     public string collectibleName;
-    public int value, sellValue, weight;
-    public bool stackable, canSell;
+    public int value, weight, id;
+    public bool stackable;
     public Type itemType;
+
     public int weaponDamage;
-    public float weaponSpeed, gunReloadSpeed, gunRange;
-    public int gunAmmo;
-    public string gunType, gunSpecial;
-    public int bookId;
+    public float weaponSpeed, gunRange;
+    public GunType gunType;
+
     public float batteryEnergy;
+
     [TextArea]
     public string bookText;
-	
-	void Start () {
-        foreach(Collectibles c in gameControl.control.collectibles)
+
+    void Start()
+    {
+        foreach (Collectibles c in gameControl.control.collectibles)
             if (c.cName == collectibleName && c.posX == transform.position.x && c.posZ == transform.position.z)
                 Destroy(gameObject);
     }
@@ -29,80 +37,69 @@ public class collectible : MonoBehaviour {
         switch (itemType)
         {
             case Type.Item:
-                gameControl.invItems.Add(new Item()
+                items.ownedItems.Add(new Item2()
                 {
                     name = collectibleName,
-                    value = value,
-                    sellValue = sellValue,
+                    id = id,
+                    baseValue = value,
                     weight = weight,
-                    canSell = canSell,
                     stackable = stackable
                 });
 
                 break;
             case Type.Weapon:
-                gameControl.invItems.Add(new Weapon()
+                items.ownedItems.Add(new Weapon2()
                 {
                     name = collectibleName,
-                    canSell = canSell,
-                    value = value,
-                    sellValue = sellValue,
+                    id = id,
+                    baseValue = value,
                     weight = weight,
+                    stackable = stackable,
                     damage = weaponDamage,
                     speed = weaponSpeed
                 });
 
                 break;
             case Type.Gun:
-                gameControl.invItems.Add(new Gun()
+                items.ownedItems.Add(new Gun2()
                 {
                     name = collectibleName,
-                    canSell = canSell,
-                    value = value,
-                    sellValue = sellValue,
+                    id = id,
+                    baseValue = value,
                     weight = weight,
+                    stackable = stackable,
                     damage = weaponDamage,
                     speed = weaponSpeed,
                     range = gunRange,
-                    rlspeed = gunReloadSpeed,
-                    special = gunSpecial,
                     type = gunType
                 });
 
                 break;
             case Type.Book:
-                gameControl.invItems.Add(new Book()
+                items.ownedItems.Add(new Book2()
                 {
                     name = collectibleName,
-                    canSell = canSell,
-                    id = bookId,
-                    sellValue = sellValue,
+                    id = id,
                     stackable = stackable,
-                    txt = bookText,
-                    value = value,
+                    text = bookText,
+                    baseValue = value,
                     weight = weight
                 });
 
                 break;
             case Type.Battery:
-                GameObject globals = GameObject.Find("Globals");
-                int newId;
-                if (globals.GetComponent<battery>().allBatteries.Count == 0)
-                    newId = 1;
-                else
-                    newId = globals.GetComponent<battery>().allBatteries.Count + 1;
 
-                print(newId);
-                gameControl.invItems.Add(new Battery()
+                int newId = items.nextBatteryId;
+                items.nextBatteryId += 1;
+
+                items.ownedItems.Add(new Battery2()
                 {
                     name = collectibleName + newId.ToString(),
-                    canSell = canSell,
                     id = newId,
                     energy = batteryEnergy,
                     isEmpty = false,
-                    sellValue = sellValue,
                     stackable = stackable,
-                    value = value,
+                    baseValue = value,
                     weight = weight
                 });
                 break;
@@ -115,7 +112,7 @@ public class collectible : MonoBehaviour {
         gameControl.control.collectibles.Add(new Collectibles()
         {
             posX = transform.position.x,
-            posZ=transform.position.z,
+            posZ = transform.position.z,
             cName = collectibleName
         });
 
@@ -135,20 +132,6 @@ public class collectible : MonoBehaviour {
         Gun,
         Book,
         Battery
-    }
-
-    float Distance(Vector3 st, Vector3 en)
-    {
-        float d = 0.0f;
-
-        float dx = st.x - en.x;
-        float dy = st.y - en.y;
-        float dz = st.z - en.z;
-
-        d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
-
-
-        return d;
     }
 }
 

@@ -5,20 +5,24 @@ using System.Linq;
 
 public class battery : MonoBehaviour {
 
+    //fix this too
+    //maybe put it all to items.cs???????
+    //or smth idk
+    //batteries cause a bug where if one is active and one is put in a chest, the one put away will still show up in inventory
+    //and cause an error ofc
+    //so idk i guess u should go and fix it
+
     float batteryDrain = 0.2f;
     public List<Battery> batteries;
     public List<Battery> allBatteries;
     Battery batteryInUse;
     public static bool batteryOn;
+    public static string batteryName;
 
     // Use this for initialization
     void Start () {
         UpdateBatteryList();
 	}
-
-    //NOTE TO SELF
-    //BATTERIES LOSE ENERGY WHEN IN STORAGE
-    //FIX PLS
 	
 	// Update is called once per frame
 	void Update () {
@@ -31,8 +35,8 @@ public class battery : MonoBehaviour {
                 if (batteryOn)
                 {
                     batteryInUse.energy -= batteryDrain * Time.deltaTime;
-                    print(batteryInUse.energy);
-                    batteryInUse.name = "Battery " + (batteryInUse.energy / 1 * 100).ToString("F0") + "%";
+                    batteryInUse.name = "Battery" + batteryInUse.id;
+                    batteryName = batteryInUse.name;
                     if (batteryInUse.energy <= 0 && batteries.Count > 1)
                     {
                         ChangeBattery();
@@ -48,7 +52,8 @@ public class battery : MonoBehaviour {
                 if (batteryOn)
                 {
                     batteryInUse.energy -= batteryDrain * Time.deltaTime;
-                    batteryInUse.name = "Battery " + (batteryInUse.energy / 1 * 100).ToString("F0") + "%";
+                    batteryInUse.name = "Battery" + batteryInUse.id;
+                    batteryName = batteryInUse.name;
                     if (batteryInUse.energy <= 0)
                     {
                         UpdateBatteryList();
@@ -80,19 +85,30 @@ public class battery : MonoBehaviour {
         }
     }
 
+    public void UseSpecificBattery(Battery b)
+    {
+        batteryInUse = batteries.FirstOrDefault(Battery => Battery == b);
+        gameControl.batteryId = batteryInUse.id;
+        batteryOn = true;
+    }
+
     public void UpdateBatteryList()
     {
-        foreach (Battery b in gameControl.invItems)
+        foreach (Item i in gameControl.invItems)
         {
-            if(!allBatteries.Exists(Battery => Battery.id == b.id))
-                allBatteries.Add(b);
+            if (i is Battery)
+            {
+                Battery b = i as Battery;
+                if (!allBatteries.Exists(Battery => Battery.id == b.id))
+                    allBatteries.Add(b);
 
-            if (!batteries.Exists(Battery => Battery.id == b.id) && !b.isEmpty)
-                batteries.Add(b);
+                if (!batteries.Exists(Battery => Battery.id == b.id) && !b.isEmpty)
+                    batteries.Add(b);
+            }
         }
 
         batteries.RemoveAll(b => b.isEmpty == true);
-        print(allBatteries.Count + " full batteries: " + batteries.Count);
+        print("total batteries: " + allBatteries.Count + ", full batteries: " + batteries.Count);
 
         print("battery list updated");
     }
