@@ -4271,31 +4271,25 @@ GameObject:
 --- !u!114 &482930424
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114726231853922512, guid: f071e0353effd3341b09e2261c96bd0e,
-    type: 2}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 482930423}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
+  m_Script: {fileID: 11500000, guid: 245683ca959af7146991595a7c82c22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: Battery
-  value: 100
-  sellValue: 20
+  collectibleName: sdjkgdsg
+  value: 2
   weight: 1
+  id: 4
   stackable: 0
-  canSell: 1
-  itemType: 4
+  itemType: 0
   weaponDamage: 0
   weaponSpeed: 0
-  gunReloadSpeed: 0
   gunRange: 0
-  gunAmmo: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 0
-  batteryEnergy: 1
+  gunType: 0
+  batteryEnergy: 0
   bookText: 
 --- !u!65 &482930425
 BoxCollider:
@@ -10007,6 +10001,7 @@ GameObject:
   - component: {fileID: 1148378810}
   - component: {fileID: 1148378811}
   - component: {fileID: 1148378812}
+  - component: {fileID: 1148378813}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -10020,7 +10015,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1148378806}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9ad66d88a6f1924f91c84d9d453fb74, type: 3}
   m_Name: 
@@ -10088,6 +10083,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   batteries: []
   allBatteries: []
+--- !u!114 &1148378813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1148378806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aeea2b7cd6f46246af72a76390b78bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1151721589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 7ea17e19baf8f9f4c8b4bb915827a7b0,

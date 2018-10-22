@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class items : MonoBehaviour {
 
-    //WORK IN PROGRESS
-    //NOT IN USE YET
-    //IT DOESN'T WORK
-    //HALP
-    //FIX
-    //MAKE ITEMS GREAT AGAIN
+    // W I P 
 
     public static List<Item2> ownedItems, storedItems;
     public static List<Book2> books;
     public static Weapon equippedOne, equippedTwo;
+    public static Battery2 inUse;
     public static int nextBatteryId;
+    public static bool batteryOn;
 
 	// Use this for initialization
 	void Start () {
@@ -23,7 +20,7 @@ public class items : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 }
 
