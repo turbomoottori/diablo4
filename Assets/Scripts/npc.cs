@@ -14,7 +14,7 @@ public class npc : MonoBehaviour {
 		
 	}
 	
-	void Interact()
+	public void Interact()
     {
         if (cycleText)
         {

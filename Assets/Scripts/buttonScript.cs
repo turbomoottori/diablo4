@@ -17,6 +17,7 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        /*
         switch (type)
         {
             case buttonType.equip:
@@ -50,7 +51,7 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler
                     m.GetComponent<menus>().ClickBook(gameObject.name);
                 break;
         }
-
+        */
     }
 
     public enum buttonType

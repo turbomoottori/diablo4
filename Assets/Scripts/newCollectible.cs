@@ -10,24 +10,35 @@ public class newCollectible : MonoBehaviour
     //IT'S A TEST
     //DO U GET IT
     //IT'S A TEST SCRIPT
-
-    public string collectibleName;
-    public int value, weight, id;
-    public bool stackable;
     public Type itemType;
-
-    public int weaponDamage;
-    public float weaponSpeed, gunRange;
-    public GunType gunType;
-
-    public float batteryEnergy;
-
-    [TextArea]
-    public string bookText;
+    public Item item;
+    public Weapon weapon;
+    public Gun gun;
+    public Book book;
+    public Battery battery;
+    string collectibleName = " ";
 
     void Start()
     {
-        foreach (Collectibles c in gameControl.control.collectibles)
+        switch (itemType)
+        {
+            case Type.Item:
+                collectibleName = item.name;
+                break;
+            case Type.Weapon:
+                collectibleName = weapon.name;
+                break;
+            case Type.Gun:
+                collectibleName = gun.name;
+                break;
+            case Type.Book:
+                collectibleName = book.name;
+                break;
+            case Type.Battery:
+                collectibleName = battery.name;
+                break;
+        }
+                foreach (Collectibles c in gameControl.control.collectibles)
             if (c.cName == collectibleName && c.posX == transform.position.x && c.posZ == transform.position.z)
                 Destroy(gameObject);
     }
@@ -37,70 +48,31 @@ public class newCollectible : MonoBehaviour
         switch (itemType)
         {
             case Type.Item:
-                items.ownedItems.Add(new Item2()
-                {
-                    name = collectibleName,
-                    id = id,
-                    baseValue = value,
-                    weight = weight,
-                    stackable = stackable
-                });
-
+                items.ownedItems.Add(item);
                 break;
             case Type.Weapon:
-                items.ownedItems.Add(new Weapon2()
-                {
-                    name = collectibleName,
-                    id = id,
-                    baseValue = value,
-                    weight = weight,
-                    stackable = stackable,
-                    damage = weaponDamage,
-                    speed = weaponSpeed
-                });
-
+                items.ownedItems.Add(weapon);
                 break;
             case Type.Gun:
-                items.ownedItems.Add(new Gun2()
-                {
-                    name = collectibleName,
-                    id = id,
-                    baseValue = value,
-                    weight = weight,
-                    stackable = stackable,
-                    damage = weaponDamage,
-                    speed = weaponSpeed,
-                    range = gunRange,
-                    type = gunType
-                });
-
+                items.ownedItems.Add(gun);
                 break;
             case Type.Book:
-                items.ownedItems.Add(new Book2()
-                {
-                    name = collectibleName,
-                    id = id,
-                    stackable = stackable,
-                    text = bookText,
-                    baseValue = value,
-                    weight = weight
-                });
-
+                items.ownedItems.Add(book);
                 break;
             case Type.Battery:
 
                 int newId = items.nextBatteryId;
                 items.nextBatteryId += 1;
 
-                items.ownedItems.Add(new Battery2()
+                items.ownedItems.Add(new Battery()
                 {
-                    name = collectibleName + newId.ToString(),
+                    name = battery.name + newId.ToString(),
                     id = newId,
-                    energy = batteryEnergy,
-                    isEmpty = false,
-                    stackable = stackable,
-                    baseValue = value,
-                    weight = weight
+                    energy = battery.energy,
+                    isEmpty = battery.isEmpty,
+                    stackable = battery.stackable,
+                    baseValue = battery.baseValue,
+                    weight = battery.weight
                 });
                 break;
         }
@@ -117,7 +89,7 @@ public class newCollectible : MonoBehaviour
         });
 
         AddItem();
-        menus.ShowCollected(collectibleName);
+        //menus.ShowCollected(collectibleName);
 
         if (itemType == Type.Battery)
             GameObject.Find("Globals").GetComponent<battery>().UpdateBatteryList();

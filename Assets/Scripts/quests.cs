@@ -93,7 +93,7 @@ public class FetchQuest: Quest
 [System.Serializable]
 public class DeliveryQuest : Quest
 {
-    public QuestItem[] itemsToDeliver;
+    //public QuestItem[] itemsToDeliver;
     public GameObject[] whereToDeliver;
 }
 

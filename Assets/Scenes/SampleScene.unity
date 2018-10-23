@@ -147,23 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: Shotgun
-  value: 10
-  sellValue: 2
-  weight: 2
-  stackable: 0
-  canSell: 1
-  itemType: 2
-  weaponDamage: 3
-  weaponSpeed: 3
-  gunReloadSpeed: 1
-  gunRange: 4
-  gunAmmo: 20
-  gunType: normal
-  gunSpecial: big
-  bookId: 0
-  batteryEnergy: 0
-  bookText: 
 --- !u!65 &2144940
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1105,13 +1088,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea4e005d2993c3549bde83ba79bf6540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wantsToTalk: 1
-  cycleTexts: 0
-  dialogueNumber: 1
-  firstDialogue: []
-  secondDialogue: []
-  thirdDialogue: []
-  fourthDialogue: []
 --- !u!136 &99007307
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2186,23 +2162,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: Sword
-  value: 10
-  sellValue: 2
-  weight: 2
-  stackable: 0
-  canSell: 1
-  itemType: 1
-  weaponDamage: 3
-  weaponSpeed: 0.2
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunAmmo: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 0
-  batteryEnergy: 0
-  bookText: 
 --- !u!65 &203289702
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4279,18 +4238,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 245683ca959af7146991595a7c82c22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: sdjkgdsg
-  value: 2
-  weight: 1
-  id: 4
-  stackable: 0
   itemType: 0
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunRange: 0
-  gunType: 0
-  batteryEnergy: 0
-  bookText: 
+  item:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+  weapon:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+  gun:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+    type: 0
+    range: 0
+  book:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    text: 
+  battery:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    energy: 0
+    isEmpty: 0
 --- !u!65 &482930425
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5532,33 +5519,28 @@ MonoBehaviour:
     rewardMoney: 200
     rewardItem:
       name: 
-      value: 0
-      sellValue: 0
+      id: 0
+      baseValue: 0
       weight: 0
       stackable: 0
-      canSell: 0
     rewardWeapon:
       name: 
-      value: 0
-      sellValue: 0
+      id: 0
+      baseValue: 0
       weight: 0
       stackable: 0
-      canSell: 0
       damage: 0
       speed: 0
     rewardGun:
       name: 
-      value: 0
-      sellValue: 0
+      id: 0
+      baseValue: 0
       weight: 0
       stackable: 0
-      canSell: 0
       damage: 0
       speed: 0
+      type: 0
       range: 0
-      rlspeed: 0
-      type: 
-      special: 
     howMany: 3
     what: thing
 --- !u!114 &589307881
@@ -5572,115 +5554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea4e005d2993c3549bde83ba79bf6540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wantsToTalk: 1
-  cycleTexts: 0
-  dialogueNumber: 1
-  firstDialogue:
-  - whoTalks: 0
-    npcTalk: i have a quest
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences: []
-  - whoTalks: 0
-    npcTalk: do you want to take it
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences: []
-  - whoTalks: 1
-    npcTalk: 
-    answer:
-      playerAnswers:
-      - yes
-      - no
-      npcReply:
-      - cool
-      - then die
-      consequences:
-      - m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 0}
-            m_MethodName: CheckQuest
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-          - m_Target: {fileID: 589307881}
-            m_MethodName: NextDialogue
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      - m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 1148378811}
-            m_MethodName: TurnHostile
-            m_Mode: 2
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-  secondDialogue:
-  - whoTalks: 0
-    npcTalk: fucking go on and fetch the /things/ for me already
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences: []
-  - whoTalks: 0
-    npcTalk: AAAAAAAAAA
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences: []
-  thirdDialogue:
-  - whoTalks: 0
-    npcTalk: thank for fetch u r gr8
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences:
-      - m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 589307881}
-            m_MethodName: NextDialogue
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-        m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-  fourthDialogue:
-  - whoTalks: 0
-    npcTalk: i don't really want to talk to you anymore so fuck off
-    answer:
-      playerAnswers: []
-      npcReply: []
-      consequences: []
 --- !u!1001 &596534743
 Prefab:
   m_ObjectHideFlags: 0
@@ -5878,23 +5751,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: thing
-  value: 10
-  sellValue: 2
-  weight: 2
-  stackable: 1
-  canSell: 0
-  itemType: 0
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunAmmo: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 0
-  batteryEnergy: 0
-  bookText: 
 --- !u!65 &649489572
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6132,6 +5988,7 @@ GameObject:
   - component: {fileID: 666858235}
   - component: {fileID: 666858234}
   - component: {fileID: 666858233}
+  - component: {fileID: 666858238}
   - component: {fileID: 666858232}
   m_Layer: 0
   m_Name: Collectible (8)
@@ -6152,23 +6009,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: Battery
-  value: 100
-  sellValue: 20
-  weight: 1
-  stackable: 0
-  canSell: 1
-  itemType: 4
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunAmmo: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 0
-  batteryEnergy: 1
-  bookText: 
 --- !u!65 &666858233
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6252,6 +6092,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 53
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &666858238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 666858231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245683ca959af7146991595a7c82c22e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0
+  item:
+    name: dfgdfg
+    id: 3
+    baseValue: 3
+    weight: 3
+    stackable: 0
+  weapon:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+  gun:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+    type: 0
+    range: 0
+  book:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    text: 
+  battery:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    energy: 0
+    isEmpty: 0
 --- !u!1001 &668412091
 Prefab:
   m_ObjectHideFlags: 0
@@ -10002,6 +9893,7 @@ GameObject:
   - component: {fileID: 1148378811}
   - component: {fileID: 1148378812}
   - component: {fileID: 1148378813}
+  - component: {fileID: 1148378814}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -10020,10 +9912,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9ad66d88a6f1924f91c84d9d453fb74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  choice: 0
-  bookPositions:
-  - {x: -400, y: 216, z: 0}
-  - {x: -200, y: 216, z: 0}
 --- !u!4 &1148378808
 Transform:
   m_ObjectHideFlags: 0
@@ -10092,6 +9980,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0aeea2b7cd6f46246af72a76390b78bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1148378814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1148378806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee4d8d3697435e3468b9fd3d1e5a42aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1151721589 stripped
@@ -15342,23 +15241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: second book
-  value: 0
-  sellValue: 0
-  weight: 0
-  stackable: 0
-  canSell: 0
-  itemType: 3
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunAmmo: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 1
-  batteryEnergy: 0
-  bookText: en osaa perkele
 --- !u!65 &1587602800
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18039,23 +17921,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: thing
-  value: 10
-  sellValue: 2
-  weight: 2
-  stackable: 1
-  canSell: 0
-  itemType: 0
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunAmmo: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 0
-  batteryEnergy: 0
-  bookText: 
 --- !u!65 &1896365693
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18371,23 +18236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleName: ggg
-  value: 10
-  sellValue: 2
-  weight: 2
-  stackable: 0
-  canSell: 1
-  itemType: 2
-  weaponDamage: 3
-  weaponSpeed: 3
-  gunReloadSpeed: 1
-  gunRange: 4
-  gunAmmo: 20
-  gunType: rapid
-  gunSpecial: unlimited
-  bookId: 0
-  batteryEnergy: 0
-  bookText: 
 --- !u!65 &1914793994
 BoxCollider:
   m_ObjectHideFlags: 0

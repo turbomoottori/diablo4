@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 public class collectible : MonoBehaviour {
-
+    /*
     public string collectibleName;
     public int value, sellValue, weight;
     public bool stackable, canSell;
@@ -149,7 +149,7 @@ public class collectible : MonoBehaviour {
 
 
         return d;
-    }
+    }*/
 }
 
 

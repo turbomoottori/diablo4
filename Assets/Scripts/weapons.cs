@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class weapons : MonoBehaviour {
-
+public class weapons : MonoBehaviour { }
+    /*
     public static weapons w;
 
     public static int damage1, damage2;
@@ -83,6 +83,7 @@ public class weapons : MonoBehaviour {
     }
 }
 
+
 [System.Serializable]
 public class Item
 {
@@ -127,3 +128,4 @@ public class Battery : Item
     public int id;
     public bool isEmpty;
 }
+*/

@@ -19,6 +19,30 @@ public class interact : MonoBehaviour {
         switch (interactWith)
         {
             case InteractWith.merchant:
+                ui.closestInteractable = "merchant";
+                target.GetComponent<merchant>().ChangeItems();
+                break;
+            case InteractWith.collectible:
+                ui.closestInteractable = "collectible";
+                break;
+            case InteractWith.chest:
+                ui.closestInteractable = "chest";
+                break;
+            case InteractWith.bookcase:
+                ui.closestInteractable = "bookcase";
+                break;
+            case InteractWith.npc:
+                ui.closestInteractable = "npc";
+                break;
+            case InteractWith.nobody:
+                ui.closestInteractable = "nobody";
+                break;
+        }
+        
+        /*
+        switch (interactWith)
+        {
+            case InteractWith.merchant:
                 menus.merchClose = true;
                 menus.chestClose = false;
                 menus.talkReady = false;
@@ -60,6 +84,7 @@ public class interact : MonoBehaviour {
                 menus.bcClose = false;
                 break;
         }
+        */
     }
 
     public bool CanInteract()
@@ -126,6 +151,7 @@ public class interact : MonoBehaviour {
         }
 
         target = closest;
+        ui.interactableObject = closest;
     }
 
     private void OnTriggerExit(Collider other)

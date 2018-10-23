@@ -54,7 +54,8 @@ public class merchant : MonoBehaviour {
 
     public void ChangeItems()
     {
-        globals.GetComponent<menus>().ChangeMerchantItems(items);
+        //globals.GetComponent<menus>().ChangeMerchantItems(items);
+        ui.merchantItems = items;
     }
 
     // Update is called once per frame

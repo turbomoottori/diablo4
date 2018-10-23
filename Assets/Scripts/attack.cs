@@ -19,6 +19,7 @@ public class attack : MonoBehaviour {
     int damage, bullets;
     float speed, rlSpeed, range;
     string type, special;
+    GunType activeType;
 
     void Start () {
         sword = Resources.Load<GameObject>("sword");
@@ -31,40 +32,12 @@ public class attack : MonoBehaviour {
             //CHANGE ACTIVE WEAPON
             if (Input.GetAxis("Mouse ScrollWheel") > 0f && activeWeapon != 1 && !attacking)
             {
-                activeWeapon = 1;
-
-                if (weapons.weaponType1 != 2)
-                {
-                    //weapon 1 is sword
-                    WeaponChange(1, false);
-                    shoot = Shoot.Off;
-                }
-                else
-                {
-                    //weapon 1 is gun
-                    shoot = Shoot.Cooldown;
-                    WeaponChange(1, true);
-                } 
-
+                WeaponChange(1);
                 print("weapon 1 selected");
             }
             else if (Input.GetAxis("Mouse ScrollWheel") < 0f && activeWeapon != 2 && !attacking)
             {
-                activeWeapon = 2;
-
-                if (weapons.weaponType2 != 2)
-                {
-                    //weapon 2 is sword
-                    WeaponChange(2, false);
-                    shoot = Shoot.Off;
-                }
-                else
-                {
-                    //weapon 2 is gun
-                    shoot = Shoot.Cooldown;
-                    WeaponChange(2, true);
-                }
-
+                WeaponChange(2);
                 print("weapon 2 selected");
             }
             //ATTACKING
@@ -79,28 +52,23 @@ public class attack : MonoBehaviour {
             {
                 //gun not available
                 case Shoot.Off:
-                    if (activeWeapon == 1 && weapons.weaponType1 == 2)
+                    if (activeWeapon == 1 && items.equippedOne is Gun)
                         shoot = Shoot.Ready;
-                    if (activeWeapon == 2 && weapons.weaponType2 == 2)
+                    if (activeWeapon == 2 && items.equippedTwo is Gun)
                         shoot = Shoot.Ready;
                     break;
 
                 //ready to shoot
                 case Shoot.Ready:
                     if (activeWeapon == 1)
-                    {
-                        WeaponChange(1, true);
-                    }
+                        WeaponChange(1);
                     else
-                    {
-                        WeaponChange(2, true);
-                    }
+                        WeaponChange(2);
                         
-
                     if (Input.GetKeyDown(KeyCode.R) && bulletCount != 0)
                         shoot = Shoot.Reload;
 
-                    if ((type == "normal" && gameControl.basicAmmo <= 0) || (type == "shotgun" && gameControl.shotgunAmmo <= 0) || (type == "rapid" && gameControl.rapidAmmo <= 0))
+                    if ((activeType==GunType.basic && gameControl.basicAmmo <= 0) || (activeType==GunType.shotgun && gameControl.shotgunAmmo <= 0) || (activeType==GunType.rapid && gameControl.rapidAmmo <= 0))
                         shoot = Shoot.OutOfAmmo;
 
                     break;
@@ -288,7 +256,7 @@ public class attack : MonoBehaviour {
                 case Shoot.Cooldown:
                     attacking = false;
 
-                    if ((type == "normal" && gameControl.basicAmmo <= 0) || (type == "shotgun" && gameControl.shotgunAmmo <= 0) || (type == "rapid" && gameControl.rapidAmmo <= 0))
+                    if ((activeType == GunType.basic && gameControl.basicAmmo <= 0) || (activeType == GunType.shotgun && gameControl.shotgunAmmo <= 0) || (activeType == GunType.rapid && gameControl.rapidAmmo <= 0))
                         shoot = Shoot.OutOfAmmo;
 
                     if (bulletCount >= bullets)
@@ -319,111 +287,137 @@ public class attack : MonoBehaviour {
                     
                     break;
                 case Shoot.OutOfAmmo:
-                    if ((type=="normal" && gameControl.basicAmmo > 0) || (type == "shotgun" && gameControl.shotgunAmmo > 0) || (type == "rapid" && gameControl.rapidAmmo > 0))
+                    if ((activeType == GunType.basic && gameControl.basicAmmo > 0) || (activeType == GunType.shotgun && gameControl.shotgunAmmo > 0) || (activeType == GunType.rapid && gameControl.rapidAmmo > 0))
                         shoot = Shoot.Ready;
                     break;
             }
         }
     }
 
-    void WeaponChange(int active, bool isGun)
+    void WeaponChange(int active)
     {
         //change weapon variables
         if (active == 1)
         {
-            damage = weapons.damage1;
-            speed = weapons.speed1;
-            if (isGun)
+            activeWeapon = 1;
+            damage = items.equippedOne.damage;
+            speed = items.equippedOne.speed;
+            if(items.equippedOne is Gun)
             {
-                rlSpeed = weapons.rlspeed1;
-                range = weapons.range1;
-                shootcd = weapons.rlspeed1;
-                type = weapons.type1;
-                special = weapons.special1;
+                Gun g = items.equippedOne as Gun;
+                range = g.range;
+                activeType = g.type;
 
-                if (type == "normal")
-                    bullets = 5;  
-                else if (type == "shotgun")
-                    bullets = 2;
-                else
+                if (g.type == GunType.basic)
+                {
+                    rlSpeed = 2f;
+                    shootcd = 2f;
+                    special = "big";
+                    bullets = 5;
+                }
+                else if (g.type == GunType.rapid)
+                {
+                    rlSpeed = 3f;
+                    shootcd = 3f;
+                    special = "unlimited";
                     bullets = 10;
+                }
+                else
+                {
+                    rlSpeed = 4f;
+                    shootcd = 4f;
+                    special = "multi";
+                    bullets = 2;
+                }
             }
         }
         else
         {
-            damage = weapons.damage2;
-            speed = weapons.speed2;
-            if (isGun)
+            activeWeapon = 2;
+            damage = items.equippedTwo.damage;
+            speed = items.equippedTwo.speed;
+            if (items.equippedTwo is Gun)
             {
-                rlSpeed = weapons.rlspeed2;
-                range = weapons.range2;
-                shootcd = weapons.rlspeed2;
-                type = weapons.type2;
-                special = weapons.special2;
+                Gun g = items.equippedTwo as Gun;
+                range = g.range;
+                activeType = g.type;
 
-                if (type == "normal")
+                if (g.type == GunType.basic)
+                {
+                    rlSpeed = 2f;
+                    shootcd = 2f;
+                    special = "big";
                     bullets = 5;
-                else if (type == "shotgun")
-                    bullets = 2;
-                else
+                }
+                else if (g.type == GunType.rapid)
+                {
+                    rlSpeed = 3f;
+                    shootcd = 3f;
+                    special = "unlimited";
                     bullets = 10;
+                }
+                else
+                {
+                    rlSpeed = 4f;
+                    shootcd = 4f;
+                    special = "multi";
+                    bullets = 2;
+                }
             }
         }
     }
 
     void BasicAttack()
     {
+
         if (activeWeapon == 1)
         {
-            if (weapons.weaponType1 == 1)
+            if (items.equippedOne == null)
             {
-                //equip one is sword
-                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed1));
+                //no weapon
+                print("no weapon");
             }
-            else if (weapons.weaponType1 == 2)
+            else if(items.equippedOne is Gun)
             {
-                //equip one is gun
                 if (shoot == Shoot.Ready)
                 {
-                    if (weapons.type1 == "normal")
+                    Gun g = items.equippedOne as Gun;
+                    if (g.type == GunType.basic)
                         shoot = Shoot.Shooting;
-                    if (weapons.type1 == "rapid")
+                    else if (g.type == GunType.rapid)
                         shoot = Shoot.Rapid;
-                    if (weapons.type1 == "shotgun")
+                    else
                         shoot = Shoot.Shotgun;
                 }
             }
-            else if (weapons.weaponType1 == 0)
+            else
             {
-                //no equip
-                print("no weapon");
+                StartCoroutine(Attack(Vector3.up, 90f, speed));
             }
         }
         else if (activeWeapon == 2)
         {
-            if (weapons.weaponType2 == 1)
+            if (items.equippedTwo == null)
             {
-                //equip two is sword
-                StartCoroutine(Attack(Vector3.up, 90f, weapons.speed2));
+                //no weapon
+                print("no weapon");
             }
-            else if (weapons.weaponType2 == 2)
+            else if (items.equippedTwo is Gun)
             {
-                //equip two is gun
                 if (shoot == Shoot.Ready)
                 {
-                    if (weapons.type2 == "normal")
+                    Gun g = items.equippedTwo as Gun;
+                    if (g.type == GunType.basic)
                         shoot = Shoot.Shooting;
-                    if (weapons.type2 == "rapid")
+                    else if (g.type == GunType.rapid)
                         shoot = Shoot.Rapid;
-                    if (weapons.type2 == "shotgun")
+                    else
                         shoot = Shoot.Shotgun;
                 }
-                //Shoot(weapons.range2);
             }
-            else if (weapons.weaponType2 == 0)
+            else
             {
-                //no equip
-                print("no weapon");
+                StartCoroutine(Attack(Vector3.up, 90f, speed));
             }
         }
     }
@@ -432,38 +426,34 @@ public class attack : MonoBehaviour {
     {
         if (activeWeapon == 1)
         {
-            if (weapons.weaponType1 == 1)
+            if (items.equippedOne == null)
             {
-                //equip one is sword
-                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
-            }
-            else if (weapons.weaponType1 == 2 && shoot == Shoot.Ready)
-            {
-                //equip one is gun
-                shoot = Shoot.Special;
-            }
-            else if (weapons.weaponType1 == 0)
-            {
-                //no equip
                 print("no weapon");
+            }
+            else if(items.equippedOne is Gun)
+            {
+                if (shoot == Shoot.Ready)
+                    shoot = Shoot.Special;
+            }
+            else
+            {
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
             }
         }
         else if (activeWeapon == 2)
         {
-            if (weapons.weaponType2 == 1)
+            if (items.equippedTwo == null)
             {
-                //equip two is sword
-                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
-            }
-            else if (weapons.weaponType2 == 2 && shoot == Shoot.Ready)
-            {
-                //equip two is gun
-                shoot = Shoot.Special;
-            }
-            else if (weapons.weaponType2 == 0)
-            {
-                //no equip
                 print("no weapon");
+            }
+            else if (items.equippedTwo is Gun)
+            {
+                if (shoot == Shoot.Ready)
+                    shoot = Shoot.Special;
+            }
+            else
+            {
+                StartCoroutine(AttackTwo(Vector3.up, swordSpinTime));
             }
         }
     }

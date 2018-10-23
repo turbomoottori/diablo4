@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class items : MonoBehaviour {
 
-    // W I P 
-
-    public static List<Item2> ownedItems, storedItems;
-    public static List<Book2> books;
+    public static List<Item> ownedItems, storedItems;
+    public static List<Book> books;
     public static Weapon equippedOne, equippedTwo;
-    public static Battery2 inUse;
+    public static Battery inUse;
     public static int nextBatteryId;
     public static bool batteryOn;
 
 	// Use this for initialization
 	void Start () {
-		
+        if (ownedItems == null)
+            ownedItems = new List<Item>();
+        if (storedItems == null)
+            storedItems = new List<Item>();
 	}
 	
 	// Update is called once per frame
@@ -25,7 +26,7 @@ public class items : MonoBehaviour {
 }
 
 [System.Serializable]
-public class Item2
+public class Item
 {
     public string name;
     public int id, baseValue, weight;
@@ -33,28 +34,28 @@ public class Item2
 }
 
 [System.Serializable]
-public class Weapon2 : Item2
+public class Weapon : Item
 {
     public int damage;
     public float speed;
 }
 
 [System.Serializable]
-public class Gun2 : Weapon2
+public class Gun : Weapon
 {
     public GunType type;
     public float range;
 }
 
 [System.Serializable]
-public class Book2 : Item2
+public class Book : Item
 {
     [TextArea]
     public string text;
 }
 
 [System.Serializable]
-public class Battery2 : Item2
+public class Battery : Item
 {
     public float energy;
     public bool isEmpty;

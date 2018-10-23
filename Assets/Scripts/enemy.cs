@@ -64,10 +64,11 @@ public class enemy : MonoBehaviour {
         //ATTACK PLAYER
         if (hostile)
         {
+            /*
             //disables interaction
             if (GetComponent<npcSpeech>() != null) {
                 GetComponent<npcSpeech>().wantsToTalk = false;
-            }
+            }*/
 
             //follows player
             if(agent.isOnNavMesh)
@@ -159,9 +160,9 @@ public class enemy : MonoBehaviour {
 
         int dmg;
         if (w == 1)
-            dmg = weapons.damage1;
+            dmg = items.equippedOne.damage;
         else
-            dmg = weapons.damage2;
+            dmg = items.equippedTwo.damage;
 
         if (battery)
             dmg *= 2;
@@ -204,9 +205,9 @@ public class enemy : MonoBehaviour {
 
         int dmg;
         if (w == 1)
-            dmg = weapons.damage1;
+            dmg = items.equippedOne.damage;
         else
-            dmg = weapons.damage2;
+            dmg = items.equippedTwo.damage;
 
         if (battery)
             dmg *= 2;

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine.Events;
 
 public class npcSpeech : MonoBehaviour {
-
+    /*
     public bool wantsToTalk = true;
     public bool cycleTexts;
     public int dialogueNumber = 1;
@@ -64,9 +64,9 @@ public class npcSpeech : MonoBehaviour {
     public void NextDialogue()
     {
         dialogueNumber += 1;
-    }
+    }*/
 }
-
+/*
 [System.Serializable]
 public class Speak
 {
@@ -92,4 +92,4 @@ public class Answer
     public string[] npcReply;
     [Tooltip("Consequences to player choice of equal value")]
     public UnityEvent[] consequences;
-}
+}*/

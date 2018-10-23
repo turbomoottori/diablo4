@@ -9,6 +9,7 @@ using System.Linq;
 
 public class menus : MonoBehaviour
 {
+    /*
     //FRIENDLY REMINDER THAT YOU ARE ACTUALLY WORKING WITH ANOTHER SCRIPT U DUMBASS
     //THEY'RE NAMED "newCollectible" AND "items" SO GO CHECK 'EM OUT
     //JUST LEAVE THIS ONE ALONE PLS AND FIX YOUR SHIT
@@ -1373,6 +1374,6 @@ public class menus : MonoBehaviour
     public static Transform[] FindChildren(Transform tr, string name)
     {
         return tr.GetComponentsInChildren<Transform>().Where(t => t.name == name).ToArray();
-    }
+    }*/
 }
 

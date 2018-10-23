@@ -45,8 +45,9 @@ public class civilian : randomDestination {
 
         if (hostile)
         {
+            /*
             if (gameObject.GetComponent<npcSpeech>() != null)
-                gameObject.GetComponent<npcSpeech>().wantsToTalk = false;
+                gameObject.GetComponent<npcSpeech>().wantsToTalk = false;*/
 
             switch (action)
             {
