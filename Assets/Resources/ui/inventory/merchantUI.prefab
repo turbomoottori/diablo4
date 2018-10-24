@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114227322361239200}
   - component: {fileID: 114565077485296824}
   m_Layer: 5
-  m_Name: stored
+  m_Name: selling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

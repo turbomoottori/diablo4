@@ -13,7 +13,6 @@ public class merchant : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        globals = GameObject.Find("Globals");
         MerchantData m = gameControl.control.merchs.FirstOrDefault(i => i.merchantName == gameObject.name);
 
         //load merchant's items
@@ -54,7 +53,6 @@ public class merchant : MonoBehaviour {
 
     public void ChangeItems()
     {
-        //globals.GetComponent<menus>().ChangeMerchantItems(items);
         ui.merchantItems = items;
     }
 

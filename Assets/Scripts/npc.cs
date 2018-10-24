@@ -38,6 +38,7 @@ public class npcDialogue
 {
     [TextArea]
     public string talk;
+    public UnityEvent consequenseWithoutAction;
 }
 
 [System.Serializable]

@@ -89,10 +89,11 @@ public class newCollectible : MonoBehaviour
         });
 
         AddItem();
-        //menus.ShowCollected(collectibleName);
+        GameObject.Find("Globals").GetComponent<ui>().ShowCollectedItem(collectibleName);
 
+        /*
         if (itemType == Type.Battery)
-            GameObject.Find("Globals").GetComponent<battery>().UpdateBatteryList();
+            GameObject.Find("Globals").GetComponent<battery>().UpdateBatteryList();*/
 
         Destroy(this.gameObject);
     }

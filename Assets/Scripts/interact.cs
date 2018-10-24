@@ -38,53 +38,6 @@ public class interact : MonoBehaviour {
                 ui.closestInteractable = "nobody";
                 break;
         }
-        
-        /*
-        switch (interactWith)
-        {
-            case InteractWith.merchant:
-                menus.merchClose = true;
-                menus.chestClose = false;
-                menus.talkReady = false;
-                menus.bcClose = false;
-                target.GetComponent<merchant>().ChangeItems();
-                break;
-            case InteractWith.collectible:
-                menus.merchClose = false;
-                menus.chestClose = false;
-                menus.talkReady = false;
-                menus.bcClose = false;
-                if (Input.GetKeyDown(KeyCode.E))
-                    target.GetComponent<collectible>().PickUp();
-                break;
-            case InteractWith.chest:
-                menus.chestClose = true;
-                menus.merchClose = false;
-                menus.talkReady = false;
-                menus.bcClose = false;
-                break;
-            case InteractWith.bookcase:
-                menus.bcClose = true;
-                menus.merchClose = false;
-                menus.chestClose = false;
-                menus.talkReady = false;
-                break;
-            case InteractWith.npc:
-                menus.merchClose = false;
-                menus.chestClose = false;
-                menus.talkReady = true;
-                menus.bcClose = false;
-                if (Input.GetKeyDown(KeyCode.E) && !menus.anyOpen && target.GetComponent<npcSpeech>().wantsToTalk)
-                    target.GetComponent<npcSpeech>().Interact();
-                break;
-            case InteractWith.nobody:
-                menus.merchClose = false;
-                menus.chestClose = false;
-                menus.talkReady = false;
-                menus.bcClose = false;
-                break;
-        }
-        */
     }
 
     public bool CanInteract()

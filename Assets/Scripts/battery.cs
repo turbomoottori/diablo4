@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 public class battery : MonoBehaviour {
-
+    /*
     //fix this too
     //maybe put it all to items.cs???????
     //or smth idk
@@ -111,5 +111,5 @@ public class battery : MonoBehaviour {
         print("total batteries: " + allBatteries.Count + ", full batteries: " + batteries.Count);
 
         print("battery list updated");
-    }
+    }*/
 }

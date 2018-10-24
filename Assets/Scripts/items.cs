@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class items : MonoBehaviour {
 
@@ -10,19 +11,53 @@ public class items : MonoBehaviour {
     public static Battery inUse;
     public static int nextBatteryId;
     public static bool batteryOn;
+    float energyDrain = 0.2f;
+    List<Battery> batteriesToUse;
 
-	// Use this for initialization
 	void Start () {
         if (ownedItems == null)
             ownedItems = new List<Item>();
         if (storedItems == null)
             storedItems = new List<Item>();
+        if (books == null)
+            books = new List<Book>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
-	}
+    void Update()
+    {
+        if (inUse != null)
+        {
+            inUse.energy -= energyDrain * Time.deltaTime;
+            if (inUse.energy <= 0)
+            {
+                inUse.isEmpty = true;
+                if (gameControl.control.autoBattery)
+                    NewBattery();
+            }
+        }
+    }
+
+    void NewBattery()
+    {
+        CheckBatteries();
+        if (batteriesToUse.Count > 0)
+            inUse = batteriesToUse.FirstOrDefault();
+    }
+
+    void CheckBatteries()
+    {
+        foreach(Item i in ownedItems)
+        {
+            if(i is Battery)
+            {
+                Battery b = i as Battery;
+                if (!b.isEmpty)
+                    batteriesToUse.Add(b);
+            }
+        }
+
+        batteriesToUse.RemoveAll(b => b.isEmpty == true);
+    }
 }
 
 [System.Serializable]

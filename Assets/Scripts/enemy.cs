@@ -279,9 +279,9 @@ public class enemy : MonoBehaviour {
         if (other.gameObject.tag == "sword")
         {
             if (attack.attackNum == 1)
-                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon, battery.batteryOn));
+                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon, false)); // BATTERY STUFF HERE INSTEAD OF FALSE
             else if (attack.attackNum == 2)
-                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon, battery.batteryOn));
+                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon, false)); // BATTERY STUFF HERE INSTEAD OF FALSE
         }
     }
 
