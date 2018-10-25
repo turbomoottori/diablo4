@@ -10,9 +10,8 @@ public class items : MonoBehaviour {
     public static Weapon equippedOne, equippedTwo;
     public static Battery inUse;
     public static int nextBatteryId;
-    public static bool batteryOn;
     float energyDrain = 0.2f;
-    List<Battery> batteriesToUse;
+    public static List<Battery> batteriesToUse;
 
 	void Start () {
         if (ownedItems == null)
@@ -21,6 +20,8 @@ public class items : MonoBehaviour {
             storedItems = new List<Item>();
         if (books == null)
             books = new List<Book>();
+        if (batteriesToUse == null)
+            batteriesToUse = new List<Battery>();
 	}
 
     void Update()
@@ -32,31 +33,43 @@ public class items : MonoBehaviour {
             {
                 inUse.isEmpty = true;
                 if (gameControl.control.autoBattery)
-                    NewBattery();
+                    CheckBatteries();
             }
         }
     }
 
-    void NewBattery()
+    public static void NewBattery()
     {
-        CheckBatteries();
         if (batteriesToUse.Count > 0)
             inUse = batteriesToUse.FirstOrDefault();
     }
 
-    void CheckBatteries()
+    public static void CheckBatteries()
     {
         foreach(Item i in ownedItems)
         {
             if(i is Battery)
             {
                 Battery b = i as Battery;
-                if (!b.isEmpty)
+                if (!b.isEmpty && !batteriesToUse.Exists(battery => battery == b))
                     batteriesToUse.Add(b);
             }
         }
 
         batteriesToUse.RemoveAll(b => b.isEmpty == true);
+        print("batteries checked, there's " + batteriesToUse.Count + " batteries");
+        if (batteriesToUse.Count <= 0)
+            inUse = null;
+        if (batteriesToUse.Count > 0 && gameControl.control.autoBattery)
+            NewBattery();
+    }
+
+    public static bool batteryOn()
+    {
+        if (inUse == null)
+            return false;
+        else
+            return true;
     }
 }
 

@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4601610282405100}
   - component: {fileID: 33378860715679084}
   - component: {fileID: 23028314432469748}
-  - component: {fileID: 114540084574244946}
+  - component: {fileID: 114758042601636168}
   - component: {fileID: 65653566676049220}
-  - component: {fileID: 114726231853922512}
+  - component: {fileID: 114326822406895136}
   m_Layer: 0
   m_Name: collectible
   m_TagString: Untagged
@@ -38,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1854599146704390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 379.09, y: 8.9, z: 72.12}
+  m_LocalPosition: {x: 397.4, y: 8.9, z: 78.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,7 +98,58 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114540084574244946
+--- !u!114 &114326822406895136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1854599146704390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245683ca959af7146991595a7c82c22e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0
+  item:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+  weapon:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+  gun:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+    type: 0
+    range: 0
+  book:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    text: 
+  battery:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    energy: 0
+    isEmpty: 0
+--- !u!114 &114758042601636168
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,30 +160,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d2235b3dffdae48831ae9563ec833b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114726231853922512
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1854599146704390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c4c51a3e002284aa720943c10f8990, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  collectibleName: book of something
-  value: 0
-  sellValue: 0
-  weight: 0
-  stackable: 0
-  canSell: 0
-  itemType: 3
-  weaponDamage: 0
-  weaponSpeed: 0
-  gunReloadSpeed: 0
-  gunRange: 0
-  gunBullets: 0
-  gunType: 
-  gunSpecial: 
-  bookId: 0
-  bookText: 'lkasjdklajsdflkj lkdsjfjksdf lkjdsfdslkfsdljf lkdsjflkjsdf '
+  type: 0

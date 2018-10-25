@@ -16,6 +16,8 @@ public class interactable : MonoBehaviour {
     private void Update()
     {
         e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+        if (ui.anyOpen)
+            HideE();
     }
 
     public void ShowE()

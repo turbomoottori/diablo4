@@ -45,9 +45,11 @@ public class civilian : randomDestination {
 
         if (hostile)
         {
-            /*
-            if (gameObject.GetComponent<npcSpeech>() != null)
-                gameObject.GetComponent<npcSpeech>().wantsToTalk = false;*/
+            if (gameObject.GetComponent<interactable>() != null)
+            {
+                gameObject.GetComponent<interactable>().HideE();
+                Destroy(gameObject.GetComponent<interactable>());
+            }
 
             switch (action)
             {
@@ -55,14 +57,14 @@ public class civilian : randomDestination {
                     agent.speed = 4f;
                     float dist = Distance(player.transform.position, agent.transform.position);
 
-                    if (dist <= 1.5f)
+                    if (dist <= 2.7f)
                         action = Action.chooseAction;
 
                     break;
 
                 case Action.chooseAction:
                     int atkNum = Random.Range(1, 3);
-
+                    agent.speed = 0f;
                     if (atkNum == 1)
                         action = Action.basicAttack;
                     else
@@ -95,7 +97,7 @@ public class civilian : randomDestination {
             yield break;
         swordActive = true;
         anim.SetTrigger("attack");
-        agent.speed =2.5f;
+        //agent.speed = 0f;
         if (atk == 1)
         {
             damage = 2;
@@ -103,7 +105,7 @@ public class civilian : randomDestination {
             Vector3 axis = Vector3.up;
             float angle = 90f;
             GameObject sw;
-            sw = Instantiate(sword, transform.position, transform.rotation);
+            sw = Instantiate(sword, transform.position + transform.forward, transform.rotation);
             sw.transform.parent = transform;
             sw.transform.Rotate(0, -45, 0, Space.Self);
             Quaternion from = sw.transform.rotation;
@@ -126,7 +128,7 @@ public class civilian : randomDestination {
             damage = 3;
             sword.GetComponentInChildren<enemyAttack>().dmg = damage;
             GameObject sw;
-            sw = Instantiate(sword, transform.position, transform.rotation);
+            sw = Instantiate(sword, transform.position + transform.forward, transform.rotation);
             sw.transform.parent = transform;
             float from = transform.eulerAngles.y;
             float to = from + 360f;

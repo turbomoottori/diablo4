@@ -15,18 +15,20 @@ public class ui : MonoBehaviour {
     Text merchant_playerMoney;
     GameObject[] pauseWindows, answers, books;
     KeyCode keyInventory, keyInteract;
-    bool anyOpen, choice, bookReading;
-    public static string closestInteractable;
+    public static bool anyOpen;
+    bool choice, bookReading;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
     public static Dialogue[] npcDialogue;
     int currentPage;
     float showItemTimer = 0f;
+    int tempHp;
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
         DefaultKeys();
         LoadUI();
+        tempHp = gameControl.control.hp;
 	}
 
     //sets default keys
@@ -42,6 +44,12 @@ public class ui : MonoBehaviour {
             showItemTimer += Time.deltaTime;
         if (showItemTimer > 2f)
             newItem.SetActive(false);
+
+        if (gameControl.control.hp != tempHp)
+        {
+            hp.transform.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = (float)gameControl.control.hp / (float)gameControl.control.maxhp;
+            tempHp = gameControl.control.hp;
+        }
 
         switch (anyOpen)
         {
@@ -109,28 +117,29 @@ public class ui : MonoBehaviour {
                     OpenPauseMenu();
                 if (Input.GetKeyDown(keyInteract))
                 {
-                    switch (closestInteractable)
+                    if (interactableObject != null)
                     {
-                        case "merchant":
-                            OpenMerchantWindow();
-                            break;
-                        case "collectible":
-                            interactableObject.GetComponent<newCollectible>().PickUp();
-                            break;
-                        case "chest":
-                            OpenChestWindow();
-                            break;
-                        case "bookcase":
-                            OpenBookcase();
-                            break;
-                        case "npc":
-                            npcDialogue = interactableObject.GetComponent<npc>().dialogue;
-                            currentPage = 0;
-                            Dialogue();
-                            interactableObject.GetComponent<npc>().Interact();
-                            break;
-                        case "nobody":
-                            break;
+                        switch (interactableObject.gameObject.GetComponent<interactable>().type)
+                        {
+                            case interactable.Type.merchant:
+                                OpenMerchantWindow();
+                                break;
+                            case interactable.Type.collectible:
+                                interactableObject.GetComponent<newCollectible>().PickUp();
+                                break;
+                            case interactable.Type.chest:
+                                OpenChestWindow();
+                                break;
+                            case interactable.Type.npc:
+                                npcDialogue = interactableObject.GetComponent<npc>().dialogue;
+                                currentPage = 0;
+                                Dialogue();
+                                interactableObject.GetComponent<npc>().Interact();
+                                break;
+                            case interactable.Type.bookcase:
+                                OpenBookcase();
+                                break;
+                        }
                     }
                 }
                 break;
@@ -650,7 +659,11 @@ public class ui : MonoBehaviour {
     void BtrToggle(bool toggleOn)
     {
         if (toggleOn)
+        {
             gameControl.control.autoBattery = true;
+            items.CheckBatteries();
+            ShowEquips();
+        }
         else
             gameControl.control.autoBattery = false;
     }
@@ -684,6 +697,7 @@ public class ui : MonoBehaviour {
         {
             inv = Instantiate(Resources.Load("ui/inventory/inv") as GameObject, canv, false);
             itemContainer = inv.transform.Find("items").Find("itemInventory").gameObject;
+            inv.transform.Find("active").Find("battery").Find("Toggle").GetComponent<Toggle>().isOn = gameControl.control.autoBattery;
             inv.transform.Find("active").Find("battery").Find("Toggle").GetComponent<Toggle>().onValueChanged.AddListener(BtrToggle);
             inv.SetActive(false);
         }

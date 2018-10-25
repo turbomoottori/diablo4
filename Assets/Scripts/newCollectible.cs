@@ -15,7 +15,8 @@ public class newCollectible : MonoBehaviour
     public Weapon weapon;
     public Gun gun;
     public Book book;
-    public Battery battery;
+    public float batteryEnergy;
+    //public Battery battery;
     string collectibleName = " ";
 
     void Start()
@@ -35,7 +36,7 @@ public class newCollectible : MonoBehaviour
                 collectibleName = book.name;
                 break;
             case Type.Battery:
-                collectibleName = battery.name;
+                collectibleName = "Battery";
                 break;
         }
                 foreach (Collectibles c in gameControl.control.collectibles)
@@ -66,13 +67,13 @@ public class newCollectible : MonoBehaviour
 
                 items.ownedItems.Add(new Battery()
                 {
-                    name = battery.name + newId.ToString(),
+                    name = collectibleName + newId.ToString(),
                     id = newId,
-                    energy = battery.energy,
-                    isEmpty = battery.isEmpty,
-                    stackable = battery.stackable,
-                    baseValue = battery.baseValue,
-                    weight = battery.weight
+                    energy = batteryEnergy,
+                    isEmpty = false,
+                    stackable = false,
+                    baseValue = 100,
+                    weight = 1
                 });
                 break;
         }
@@ -91,9 +92,9 @@ public class newCollectible : MonoBehaviour
         AddItem();
         GameObject.Find("Globals").GetComponent<ui>().ShowCollectedItem(collectibleName);
 
-        /*
+
         if (itemType == Type.Battery)
-            GameObject.Find("Globals").GetComponent<battery>().UpdateBatteryList();*/
+            items.CheckBatteries();
 
         Destroy(this.gameObject);
     }

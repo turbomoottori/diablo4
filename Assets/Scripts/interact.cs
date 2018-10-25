@@ -14,30 +14,7 @@ public class interact : MonoBehaviour {
         if (interacting)
             CheckObjects();
         else
-            interactWith = InteractWith.nobody;
-
-        switch (interactWith)
-        {
-            case InteractWith.merchant:
-                ui.closestInteractable = "merchant";
-                target.GetComponent<merchant>().ChangeItems();
-                break;
-            case InteractWith.collectible:
-                ui.closestInteractable = "collectible";
-                break;
-            case InteractWith.chest:
-                ui.closestInteractable = "chest";
-                break;
-            case InteractWith.bookcase:
-                ui.closestInteractable = "bookcase";
-                break;
-            case InteractWith.npc:
-                ui.closestInteractable = "npc";
-                break;
-            case InteractWith.nobody:
-                ui.closestInteractable = "nobody";
-                break;
-        }
+            ui.interactableObject = null;
     }
 
     public bool CanInteract()
@@ -82,25 +59,6 @@ public class interact : MonoBehaviour {
             {
                 hitColliders[j].gameObject.GetComponent<interactable>().HideE();
             }
-        }
-
-        switch (closest.gameObject.GetComponent<interactable>().type)
-        {
-            case interactable.Type.merchant:
-                interactWith = InteractWith.merchant;
-                break;
-            case interactable.Type.collectible:
-                interactWith = InteractWith.collectible;
-                break;
-            case interactable.Type.chest:
-                interactWith = InteractWith.chest;
-                break;
-            case interactable.Type.bookcase:
-                interactWith = InteractWith.bookcase;
-                break;
-            case interactable.Type.npc:
-                interactWith = InteractWith.npc;
-                break;
         }
 
         target = closest;

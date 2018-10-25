@@ -350,9 +350,10 @@ public class playerMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "fall" && !respawn)
-        {
             StartCoroutine(Fall(1f, tempPos));
-        }
+
+        if (other.gameObject.tag == "enemysword" && !hurt)
+            StartCoroutine(Hurt(other.gameObject.GetComponent<enemyAttack>().dmg));
     }
 
     private void OnCollisionEnter(Collision collision)

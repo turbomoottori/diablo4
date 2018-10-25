@@ -35,7 +35,7 @@ public class enemy : MonoBehaviour {
 
     protected virtual void Start()
     {
-        player = GameObject.FindGameObjectWithTag("player");
+        player = GameObject.Find("Player");
         rb = GetComponent<Rigidbody>();
         enemyHealth = maxHP;
         hostile = false;
@@ -64,11 +64,11 @@ public class enemy : MonoBehaviour {
         //ATTACK PLAYER
         if (hostile)
         {
-            /*
             //disables interaction
-            if (GetComponent<npcSpeech>() != null) {
-                GetComponent<npcSpeech>().wantsToTalk = false;
-            }*/
+            if (GetComponent<interactable>() != null) {
+                GetComponent<interactable>().HideE();
+                Destroy(GetComponent<interactable>());
+            }
 
             //follows player
             if(agent.isOnNavMesh)
@@ -278,10 +278,11 @@ public class enemy : MonoBehaviour {
     {
         if (other.gameObject.tag == "sword")
         {
+            bool battery = items.batteryOn();
             if (attack.attackNum == 1)
-                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon, false)); // BATTERY STUFF HERE INSTEAD OF FALSE
+                StartCoroutine(Attacked(other.gameObject.transform.parent.position, attack.activeWeapon, battery));
             else if (attack.attackNum == 2)
-                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon, false)); // BATTERY STUFF HERE INSTEAD OF FALSE
+                StartCoroutine(AttackStun(other.gameObject.transform.parent.position, attack.activeWeapon, battery));
         }
     }
 

@@ -18,14 +18,45 @@ public class attack : MonoBehaviour {
 
     int damage, bullets;
     float speed, rlSpeed, range;
-    string type, special;
+    string type;
     GunType activeType;
 
-    void Start () {
+    Vector3 bulletPosition;
+    Quaternion bulletRotation;
+    Vector3[] shotgunBulletPositions;
+    Quaternion[] shotgunBulletRotations;
+
+    void Start() {
         sword = Resources.Load<GameObject>("sword");
+        gameControl.shotgunAmmo = 50;
+        SetBulletPositions();
     }
-	
-	void Update () {
+
+    void SetBulletPositions()
+    {
+        bulletPosition = transform.position + transform.forward;
+        bulletRotation = transform.rotation;
+
+        shotgunBulletPositions = new Vector3[]
+        {
+            bulletPosition,
+            bulletPosition + transform.right * 0.5f,
+            bulletPosition + transform.right * -0.5f,
+            bulletPosition + transform.right * 1f,
+            bulletPosition + transform.right * -1f,
+        };
+
+        shotgunBulletRotations = new Quaternion[]
+        {
+            bulletRotation,
+            bulletRotation *= Quaternion.Euler(Vector3.up * 45),
+            bulletRotation *= Quaternion.Euler(Vector3.up * -45),
+            bulletRotation *= Quaternion.Euler(Vector3.up * -60),
+            bulletRotation *= Quaternion.Euler(Vector3.up * 60)
+        };
+    }
+
+    void Update() {
 
         if (!playerMovement.paused)
         {
@@ -60,15 +91,16 @@ public class attack : MonoBehaviour {
 
                 //ready to shoot
                 case Shoot.Ready:
+
                     if (activeWeapon == 1)
                         WeaponChange(1);
                     else
                         WeaponChange(2);
-                        
+
                     if (Input.GetKeyDown(KeyCode.R) && bulletCount != 0)
                         shoot = Shoot.Reload;
 
-                    if ((activeType==GunType.basic && gameControl.basicAmmo <= 0) || (activeType==GunType.shotgun && gameControl.shotgunAmmo <= 0) || (activeType==GunType.rapid && gameControl.rapidAmmo <= 0))
+                    if ((activeType == GunType.basic && gameControl.basicAmmo <= 0) || (activeType == GunType.shotgun && gameControl.shotgunAmmo <= 0) || (activeType == GunType.rapid && gameControl.rapidAmmo <= 0))
                         shoot = Shoot.OutOfAmmo;
 
                     break;
@@ -76,10 +108,9 @@ public class attack : MonoBehaviour {
                 //normal shooting
                 case Shoot.Shooting:
                     attacking = true;
-                    
-                    Vector3 bPos = transform.position + transform.forward;
+                    SetBulletPositions();
                     GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
-                    b.transform.position = bPos;
+                    b.transform.position = bulletPosition;
                     b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
                     b.GetComponent<bullet>().maxRange = range;
                     b.GetComponent<bullet>().dmg = damage;
@@ -103,37 +134,19 @@ public class attack : MonoBehaviour {
                         shoot = Shoot.Cooldown;
                         CancelInvoke("RapidFire");
                     }
-                    
+
                     break;
 
                 //shotgun
                 case Shoot.Shotgun:
                     attacking = true;
+                    SetBulletPositions();
 
-                    bPos = transform.position + transform.forward;
-                    Quaternion bRot = transform.rotation;
-
-                    //position for each bullet
-                    Vector3[] posB = new Vector3[] {
-                        bPos,
-                        bPos + transform.right * 0.5f,
-                        bPos + transform.right * -0.5f,
-                        bPos + transform.right * 1f,
-                        bPos + transform.right * -1f };
-
-                    //rotation for each bullet
-                    Quaternion[] rotB= new Quaternion[] {
-                        bRot,
-                        bRot *= Quaternion.Euler(Vector3.up * 45),
-                        bRot *= Quaternion.Euler(Vector3.up * -45),
-                        bRot *= Quaternion.Euler(Vector3.up * -60),
-                        bRot *= Quaternion.Euler(Vector3.up * 60) };
-
-                    for(int i = 0; i < rotB.Length; i++)
+                    for (int i = 0; i < shotgunBulletRotations.Length; i++)
                     {
                         b = Instantiate(Resources.Load<GameObject>("bullet"));
-                        b.transform.position = posB[i];
-                        b.transform.rotation = rotB[i];
+                        b.transform.position = shotgunBulletPositions[i];
+                        b.transform.rotation = shotgunBulletRotations[i];
                         b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
                         b.GetComponent<bullet>().maxRange = range;
                         b.GetComponent<bullet>().dmg = damage;
@@ -147,109 +160,72 @@ public class attack : MonoBehaviour {
 
                 //special gun attacks
                 case Shoot.Special:
-                    //"big bullet", 4 times damage, long cooldown
-                    if (special == "big")
+                    switch (activeType)
                     {
-                        attacking = true;
-                        bPos = transform.position + transform.forward;
-                        b = Instantiate(Resources.Load<GameObject>("bullet"));
-                        b.transform.position = bPos;
-                        b.transform.localScale *= 2;
-                        b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-                        b.GetComponent<bullet>().maxRange = range;
-                        b.GetComponent<bullet>().dmg = damage * 4;
-
-                        bulletCount += bullets;
-                        gameControl.basicAmmo -= 2;
-
-                        shootcd *= 2f;
-                        shoot = Shoot.Cooldown;
-                    }
-                    //unlimited ammo for 3 seconds, long cooldown
-                    if (special == "unlimited")
-                    {
-                        specialTimer += Time.deltaTime;
-
-                        if (Input.GetButton("Fire2"))
-                            RapidFireUnlimited();
-
-                        if (specialTimer >= 3f)
-                        {
-                            specialTimer = 0;
-                            shootcd *= 6;
-                            shoot = Shoot.Cooldown;
-                        }
-                    }
-                    //shoots shotgun ammo 3 times
-                    if (special == "multi")
-                    {
-                        attacking = true;
-                        bPos = transform.position + transform.forward;
-                        bRot = transform.rotation;
-                        Vector3 bPos2 = transform.position + transform.forward + transform.up;
-                        Vector3 bPos3 = transform.position + transform.forward + (transform.up * 2);
-
-                        //position for each bullet
-                        posB = new Vector3[] {
-                                bPos,
-                                bPos + transform.right * 0.5f,
-                                bPos + transform.right * -0.5f,
-                                bPos + transform.right * 1f,
-                                bPos + transform.right * -1f };
-
-                        Vector3[] posB2 = new Vector3[] {
-                                bPos2,
-                                bPos2 + transform.right * 0.5f,
-                                bPos2 + transform.right * -0.5f,
-                                bPos2 + transform.right * 1f,
-                                bPos2 + transform.right * -1f };
-
-                        Vector3[] posB3 = new Vector3[] {
-                                bPos3,
-                                bPos3 + transform.right * 0.5f,
-                                bPos3 + transform.right * -0.5f,
-                                bPos3 + transform.right * 1f,
-                                bPos3 + transform.right * -1f };
-
-                        //rotation for each bullet
-                        rotB = new Quaternion[] {
-                                bRot,
-                                bRot *= Quaternion.Euler(Vector3.up * 45),
-                                bRot *= Quaternion.Euler(Vector3.up * -45),
-                                bRot *= Quaternion.Euler(Vector3.up * -60),
-                                bRot *= Quaternion.Euler(Vector3.up * 60) };
-
-                        for (int i = 0; i < rotB.Length; i++)
-                        {
+                        case GunType.basic:
+                            attacking = true;
+                            SetBulletPositions();
                             b = Instantiate(Resources.Load<GameObject>("bullet"));
-                            b.transform.position = posB[i];
-                            b.transform.rotation = rotB[i];
+                            b.transform.position = bulletPosition;
+                            b.transform.localScale *= 2;
                             b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
                             b.GetComponent<bullet>().maxRange = range;
-                            b.GetComponent<bullet>().dmg = damage;
+                            b.GetComponent<bullet>().dmg = damage * 4;
 
-                            GameObject b2 = Instantiate(Resources.Load<GameObject>("bullet"));
-                            b2.transform.position = posB2[i];
-                            b2.transform.rotation = rotB[i];
-                            b2.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-                            b2.GetComponent<bullet>().maxRange = range;
-                            b2.GetComponent<bullet>().dmg = damage;
+                            bulletCount += bullets;
+                            gameControl.basicAmmo -= 2;
 
-                            GameObject b3 = Instantiate(Resources.Load<GameObject>("bullet"));
-                            b3.transform.position = posB3[i];
-                            b3.transform.rotation = rotB[i];
-                            b3.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
-                            b3.GetComponent<bullet>().maxRange = range;
-                            b3.GetComponent<bullet>().dmg = damage;
-                        }
+                            shootcd *= 2f;
+                            shoot = Shoot.Cooldown;
+                            break;
+                        case GunType.rapid:
+                            specialTimer += Time.deltaTime;
 
-                        bulletCount += bullets;
-                        gameControl.shotgunAmmo -= 2;
+                            if (Input.GetButton("Fire2"))
+                                RapidFireUnlimited();
 
-                        shootcd *= 3f;
-                        shoot = Shoot.Cooldown;
+                            if (specialTimer >= 3f)
+                            {
+                                specialTimer = 0;
+                                shootcd *= 6;
+                                shoot = Shoot.Cooldown;
+                            }
+                            break;
+                        case GunType.shotgun:
+                            attacking = true;
+                            SetBulletPositions();
+
+                            for (int i = 0; i < shotgunBulletRotations.Length; i++)
+                            {
+                                b = Instantiate(Resources.Load<GameObject>("bullet"));
+                                b.transform.position = shotgunBulletPositions[i];
+                                b.transform.rotation = shotgunBulletRotations[i];
+                                b.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                                b.GetComponent<bullet>().maxRange = range;
+                                b.GetComponent<bullet>().dmg = damage;
+
+                                GameObject b2 = Instantiate(Resources.Load<GameObject>("bullet"));
+                                b2.transform.position = shotgunBulletPositions[i] + Vector3.up;
+                                b2.transform.rotation = shotgunBulletRotations[i];
+                                b2.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                                b2.GetComponent<bullet>().maxRange = range;
+                                b2.GetComponent<bullet>().dmg = damage;
+
+                                GameObject b3 = Instantiate(Resources.Load<GameObject>("bullet"));
+                                b3.transform.position = shotgunBulletPositions[i] + (Vector3.up * 2);
+                                b3.transform.rotation = shotgunBulletRotations[i];
+                                b3.GetComponent<Rigidbody>().AddForce(transform.forward * 500 * speed);
+                                b3.GetComponent<bullet>().maxRange = range;
+                                b3.GetComponent<bullet>().dmg = damage;
+                            }
+
+                            bulletCount += bullets;
+                            gameControl.shotgunAmmo -= 2;
+
+                            shootcd *= 3f;
+                            shoot = Shoot.Cooldown;
+                            break;
                     }
-
                     break;
 
                 //reloading
@@ -284,7 +260,7 @@ public class attack : MonoBehaviour {
                         bulletCount = 0;
                         shoot = Shoot.Ready;
                     }
-                    
+
                     break;
                 case Shoot.OutOfAmmo:
                     if ((activeType == GunType.basic && gameControl.basicAmmo > 0) || (activeType == GunType.shotgun && gameControl.shotgunAmmo > 0) || (activeType == GunType.rapid && gameControl.rapidAmmo > 0))
@@ -294,76 +270,61 @@ public class attack : MonoBehaviour {
         }
     }
 
+    //changes currently equipped weapon
     void WeaponChange(int active)
     {
-        //change weapon variables
         if (active == 1)
         {
             activeWeapon = 1;
-            damage = items.equippedOne.damage;
-            speed = items.equippedOne.speed;
-            if(items.equippedOne is Gun)
+            if (items.equippedOne != null)
             {
-                Gun g = items.equippedOne as Gun;
-                range = g.range;
-                activeType = g.type;
-
-                if (g.type == GunType.basic)
+                damage = items.equippedOne.damage;
+                speed = items.equippedOne.speed;
+                if (items.equippedOne is Gun)
                 {
-                    rlSpeed = 2f;
-                    shootcd = 2f;
-                    special = "big";
-                    bullets = 5;
-                }
-                else if (g.type == GunType.rapid)
-                {
-                    rlSpeed = 3f;
-                    shootcd = 3f;
-                    special = "unlimited";
-                    bullets = 10;
-                }
-                else
-                {
-                    rlSpeed = 4f;
-                    shootcd = 4f;
-                    special = "multi";
-                    bullets = 2;
+                    Gun g = items.equippedOne as Gun;
+                    SetGunProperties(g);
                 }
             }
         }
         else
         {
             activeWeapon = 2;
-            damage = items.equippedTwo.damage;
-            speed = items.equippedTwo.speed;
-            if (items.equippedTwo is Gun)
+            if (items.equippedTwo != null)
             {
-                Gun g = items.equippedTwo as Gun;
-                range = g.range;
-                activeType = g.type;
-
-                if (g.type == GunType.basic)
+                damage = items.equippedTwo.damage;
+                speed = items.equippedTwo.speed;
+                if (items.equippedTwo is Gun)
                 {
-                    rlSpeed = 2f;
-                    shootcd = 2f;
-                    special = "big";
-                    bullets = 5;
-                }
-                else if (g.type == GunType.rapid)
-                {
-                    rlSpeed = 3f;
-                    shootcd = 3f;
-                    special = "unlimited";
-                    bullets = 10;
-                }
-                else
-                {
-                    rlSpeed = 4f;
-                    shootcd = 4f;
-                    special = "multi";
-                    bullets = 2;
+                    Gun g = items.equippedTwo as Gun;
+                    SetGunProperties(g);
                 }
             }
+        }
+    }
+
+    void SetGunProperties(Gun g)
+    {
+        range = g.range;
+        activeType = g.type;
+
+        if (g.type == GunType.basic)
+        {
+            rlSpeed = 0.5f;
+            shootcd = 0.5f;
+            bullets = 5;
+        }
+        else if (g.type == GunType.rapid)
+        {
+            rlSpeed = 0.75f;
+            shootcd = 0.75f;
+            bullets = 10;
+        }
+        else
+        {
+            rlSpeed = 1f;
+            shootcd = 1f;
+            bullets = 2;
         }
     }
 
