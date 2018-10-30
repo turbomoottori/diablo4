@@ -34,6 +34,11 @@ public class items : MonoBehaviour {
                 inUse.isEmpty = true;
                 if (gameControl.control.autoBattery)
                     CheckBatteries();
+                else
+                {
+                    inUse.energy = 0;
+                    inUse = null;
+                }
             }
         }
     }

@@ -23,6 +23,8 @@ public class interactable : MonoBehaviour {
     public void ShowE()
     {
         e.SetActive(true);
+        if (type == Type.merchant)
+            GetComponent<merchant>().ChangeItems();
     }
 
     public void HideE()

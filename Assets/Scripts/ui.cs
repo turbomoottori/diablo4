@@ -10,13 +10,15 @@ using System.Runtime.Serialization.Formatters.Binary;
 public class ui : MonoBehaviour {
 
     Transform canv;
-    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem;
+    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup;
     GameObject itemContainer, chest_itemContainer, chest_storedContainer, merchant_owned, merchant_selling, dNpc, dPl;
     Text merchant_playerMoney;
     GameObject[] pauseWindows, answers, books;
     KeyCode keyInventory, keyInteract;
     public static bool anyOpen;
-    bool choice, bookReading;
+    bool choice, bookReading, hoverOn;
+    string buttonName = "";
+    int tempInt = 0;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
     public static Dialogue[] npcDialogue;
@@ -50,6 +52,9 @@ public class ui : MonoBehaviour {
             hp.transform.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = (float)gameControl.control.hp / (float)gameControl.control.maxhp;
             tempHp = gameControl.control.hp;
         }
+
+        if (hoverOn)
+            HoverOnItem(buttonName, tempInt);
 
         switch (anyOpen)
         {
@@ -266,10 +271,40 @@ public class ui : MonoBehaviour {
     //adds items to lists
     void AddItem(Item itemToAdd, GameObject container, buttonScript.buttonType type)
     {
-        GameObject i = Instantiate(Resources.Load("ui/inventory/item2") as GameObject, container.transform, false);
+        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, container.transform, false);
         i.name = itemToAdd.name + itemToAdd.id.ToString();
-        i.transform.Find("name").GetComponent<Text>().text = itemToAdd.name;
+        if (!itemToAdd.stackable)
+            i.transform.Find("amount").gameObject.SetActive(false);
         i.GetComponent<buttonScript>().type = type;
+    }
+
+    //adds quests to list
+    void AddQuest(string name, string desc)
+    {
+        GameObject q = Instantiate(Resources.Load("ui/inventory/questblock") as GameObject, inv.transform.Find("quests").transform, false);
+        q.name = "quest" + name;
+        q.transform.Find("Title").GetComponent<Text>().text = name;
+        q.transform.Find("Title").name = name;
+        q.transform.Find("Desc").GetComponent<Text>().text = desc;
+        q.transform.Find("Desc").name = name + "desc";
+    }
+
+    //checks if quest is finished
+    void CheckQuests()
+    {
+        foreach (Quest activeQuest in quests.questList)
+            if (!inv.transform.Find("quests").transform.Find("quest" + activeQuest.questName))
+                AddQuest(activeQuest.questName, activeQuest.questDesc);
+
+
+        string completedText = "DONE";
+        foreach (Quest quest in quests.questList)
+        {
+            if (quest.completed)
+            {
+                inv.transform.Find("quests").transform.Find("quest" + quest.questName).transform.Find(quest.questName + "desc").GetComponent<Text>().text = completedText;
+            }
+        }
     }
 
     //shows every item in list and checks duplicates
@@ -298,9 +333,14 @@ public class ui : MonoBehaviour {
             if (t != null && t.stackable)
             {
                 List<Item> tempList = l.FindAll(i => i.name + i.id.ToString() == child.name);
-                string stacks = " (" + tempList.Count.ToString() + ")";
-                child.transform.Find("name").GetComponent<Text>().text = t.name + stacks;
+                child.transform.Find("amount").GetComponent<Text>().text = tempList.Count.ToString();
             }
+
+            if (t != null && (t == items.equippedOne || t == items.equippedTwo || t == items.inUse))
+                child.GetComponent<Image>().color = Color.gray;
+            else
+                child.GetComponent<Image>().color = Color.white;
+
             if (t == null)
                 Destroy(child.gameObject);
         }
@@ -389,6 +429,7 @@ public class ui : MonoBehaviour {
     {
         windowToClose.SetActive(false);
         anyOpen = false;
+        StopHover();
         TogglePause();
     }
 
@@ -493,14 +534,29 @@ public class ui : MonoBehaviour {
                     }
                     else if(t is Battery)
                     {
-                        print("is battery");
+                        Battery b = t as Battery;
+                        if (!b.isEmpty)
+                        {
+                            if (items.inUse != null)
+                            {
+                                if (items.inUse != b)
+                                    items.inUse = b;
+                                else
+                                    print("this battery is already in use");
+                            }
+                            else
+                                items.inUse = b;
+                        }
+                        else
+                            print("this battery is empty");
                     }
                 }
-
+                ShowItems(itemContainer, items.ownedItems, buttonScript.buttonType.inventoryItem);
                 ShowEquips();
                 break;
 
             case buttonScript.buttonType.readyToBuy:
+                StopHover();
                 Item tempItem = merchantItems.FirstOrDefault(i => i.name + i.id == name);
                 if (tempItem != null)
                 {
@@ -516,10 +572,13 @@ public class ui : MonoBehaviour {
                         if (!merchant_owned.transform.Find(inventoryItem.name + inventoryItem.id))
                             AddItem(inventoryItem, merchant_owned, buttonScript.buttonType.readyToSell);
                 }
+                ShowItems(merchant_owned, items.ownedItems, buttonScript.buttonType.readyToSell);
+                ShowItems(merchant_selling, merchantItems, buttonScript.buttonType.readyToBuy);
                 CheckValuesAndEquips();
                 break;
 
             case buttonScript.buttonType.readyToSell:
+                StopHover();
                 tempItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
                 if (tempItem != null)
                 {
@@ -542,8 +601,9 @@ public class ui : MonoBehaviour {
 
             case buttonScript.buttonType.readyToStore:
                 tempItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
-                if (tempItem != null)
+                if (tempItem != null && tempItem != items.equippedOne && tempItem != items.equippedTwo && tempItem != items.inUse)
                 {
+                    StopHover();
                     items.ownedItems.Remove(tempItem);
                     items.storedItems.Add(tempItem);
                     ShowItems(chest_itemContainer, items.ownedItems, buttonScript.buttonType.readyToStore);
@@ -552,6 +612,7 @@ public class ui : MonoBehaviour {
                 break;
 
             case buttonScript.buttonType.readyToTake:
+                StopHover();
                 tempItem = items.storedItems.FirstOrDefault(i => i.name + i.id == name);
                 if (tempItem != null)
                 {
@@ -668,6 +729,50 @@ public class ui : MonoBehaviour {
             gameControl.control.autoBattery = false;
     }
 
+    //shows item info on popup
+    public void HoverOnItem(string btnName, int listNum)
+    {
+        buttonName = btnName;
+        tempInt = listNum;
+        hoverOn = true;
+        Item hoveredItem = new Item();
+
+        switch (listNum)
+        {
+            case 1:
+                hoveredItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == btnName);
+                break;
+            case 2:
+                hoveredItem = items.storedItems.FirstOrDefault(i => i.name + i.id == btnName);
+                break;
+            case 3:
+                hoveredItem = merchantItems.FirstOrDefault(i => i.name + i.id == btnName);
+                break;
+        }
+
+        popup.SetActive(true);
+        popup.transform.Find("valwt").GetComponent<Text>().text = "value " + hoveredItem.baseValue.ToString() + "    wt." + hoveredItem.weight.ToString();
+
+        if (hoveredItem is Battery)
+        {
+            Battery b = hoveredItem as Battery;
+            popup.transform.Find("name").GetComponent<Text>().text = "Battery " + ((b.energy / 1) * 100).ToString("F0") + "%";
+        }
+        else
+            popup.transform.Find("name").GetComponent<Text>().text = hoveredItem.name;
+
+        Vector3 offset = new Vector3(-50, 25, 0);
+        Vector3 newPos = Input.mousePosition + offset;
+        popup.transform.position = newPos;
+    }
+
+    //closes popup window
+    public void StopHover()
+    {
+        hoverOn = false;
+        popup.SetActive(false);
+    }
+
     void CloseAllPauseMenusExcept(int num)
     {
         for (int i = 0; i < pauseWindows.Length; i++)
@@ -700,6 +805,8 @@ public class ui : MonoBehaviour {
             inv.transform.Find("active").Find("battery").Find("Toggle").GetComponent<Toggle>().isOn = gameControl.control.autoBattery;
             inv.transform.Find("active").Find("battery").Find("Toggle").GetComponent<Toggle>().onValueChanged.AddListener(BtrToggle);
             inv.SetActive(false);
+            popup = Instantiate(Resources.Load("ui/inventory/popup") as GameObject, canv, false);
+            popup.SetActive(false);
         }
         if (pausemenu == null)
         {
@@ -770,6 +877,7 @@ public class ui : MonoBehaviour {
             newItem = Instantiate(Resources.Load("ui/collected") as GameObject, canv, false);
             newItem.SetActive(false);
         }
+        popup.transform.SetAsLastSibling();
     }
 
     //find children by name

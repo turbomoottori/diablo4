@@ -2105,6 +2105,154 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 039b2d03c7c4b824e9627251b8ed2337,
     type: 3}
   m_PrefabInternal: {fileID: 196869338}
+--- !u!1 &196942570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 1854599146704390, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 196942576}
+  - component: {fileID: 196942575}
+  - component: {fileID: 196942574}
+  - component: {fileID: 196942573}
+  - component: {fileID: 196942572}
+  - component: {fileID: 196942571}
+  m_Layer: 0
+  m_Name: Collectible (10)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &196942571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196942570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245683ca959af7146991595a7c82c22e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0
+  item:
+    name: gggggggggg
+    id: 22
+    baseValue: 2
+    weight: 2
+    stackable: 1
+  weapon:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+  gun:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    damage: 0
+    speed: 0
+    type: 0
+    range: 0
+  book:
+    name: 
+    id: 0
+    baseValue: 0
+    weight: 0
+    stackable: 0
+    text: 
+  batteryEnergy: 0
+--- !u!65 &196942572
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 65653566676049220, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196942570}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &196942573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196942570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d2235b3dffdae48831ae9563ec833b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
+--- !u!23 &196942574
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 23028314432469748, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196942570}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &196942575
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 33378860715679084, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196942570}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &196942576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4601610282405100, guid: f071e0353effd3341b09e2261c96bd0e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 196942570}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 375.34, y: 8.9, z: 87.17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 50
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &197854231
 GameObject:
   m_ObjectHideFlags: 0
@@ -4432,7 +4580,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 482930423}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 376.52, y: 8.9, z: 83.21}
+  m_LocalPosition: {x: 375.37, y: 8.9, z: 84.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -5573,6 +5721,7 @@ GameObject:
   - component: {fileID: 589307884}
   - component: {fileID: 589307883}
   - component: {fileID: 589307882}
+  - component: {fileID: 589307881}
   - component: {fileID: 589307880}
   - component: {fileID: 589307879}
   m_Layer: 9
@@ -5628,17 +5777,83 @@ MonoBehaviour:
       reactionToAnswer: AAAAAAAAAAAAAAAAA
       consequenceToAnswer:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 589307881}
+            m_MethodName: CheckQuest
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
         m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
     - answer: toimiiiiiko saatana
       reactionToAnswer: no viTTU JOO
       consequenceToAnswer:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 1148378811}
+            m_MethodName: TurnHostile
+            m_Mode: 2
+            m_Arguments:
+              m_ObjectArgument: {fileID: 589307878}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
         m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
   cycleText: 0
+--- !u!114 &589307881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 589307878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72f49250d38c7a943ae3bd30c5695e05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questToStart:
+    questName: get things
+    questDesc: just get sum things this is a work in progress
+    completed: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 300
+    rewardItem:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
+    howMany: 3
+    what: thing
 --- !u!54 &589307882
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10574,6 +10789,7 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
+    - {fileID: 114326822406895136, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: f071e0353effd3341b09e2261c96bd0e, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1001 &1140697218

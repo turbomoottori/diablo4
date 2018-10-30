@@ -5,7 +5,6 @@ using UnityEngine;
 public class interact : MonoBehaviour {
 
     InteractWith interactWith;
-    GameObject target;
 	
 	// Update is called once per frame
 	void Update () {
@@ -61,7 +60,6 @@ public class interact : MonoBehaviour {
             }
         }
 
-        target = closest;
         ui.interactableObject = closest;
     }
 
