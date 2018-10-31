@@ -132,7 +132,7 @@ public class enemy : MonoBehaviour {
     //dashed
     public IEnumerator Thrown(Vector3 playerPos)
     {
-        if (isThrown)
+        if (isThrown || dying)
             yield break;
         isThrown = true;
         hostile = true;

@@ -14,7 +14,7 @@ public class quests : MonoBehaviour {
         switch (q.reward)
         {
             case Reward.item:
-                gameControl.invItems.Add(q.rewardItem);
+                items.ownedItems.Add(q.rewardItem);
                 break;
 
             case Reward.ability:
@@ -38,11 +38,11 @@ public class quests : MonoBehaviour {
                 break;
 
             case Reward.weapon:
-                gameControl.invItems.Add(q.rewardWeapon);
+                items.ownedItems.Add(q.rewardWeapon);
                 break;
 
             case Reward.gun:
-                gameControl.invItems.Add(q.rewardGun);
+                items.ownedItems.Add(q.rewardGun);
                 break;
         }
     }
@@ -53,12 +53,12 @@ public class quests : MonoBehaviour {
         if(q is FetchQuest)
         {
             FetchQuest fq = q as FetchQuest;
-            List<Item> tempList = gameControl.invItems.FindAll(i => i.name.Equals(fq.what));
+            List<Item> tempList = items.ownedItems.FindAll(i => i.name.Equals(fq.what));
             if (tempList.Count >= fq.howMany)
             {
                 for (int i = 0; i < tempList.Count; i++)
                 {
-                    gameControl.invItems.Remove(tempList[i]);
+                    items.ownedItems.Remove(tempList[i]);
                 }
 
                 return true;

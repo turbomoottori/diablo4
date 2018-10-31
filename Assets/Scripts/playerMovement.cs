@@ -32,7 +32,7 @@ public class playerMovement : MonoBehaviour
 
     //money variables
     int moneyValue = 10;
-    Text moneyui;
+    GameObject moneyui;
     bool uiActive = false;
 
     Transform canv;
@@ -275,8 +275,8 @@ public class playerMovement : MonoBehaviour
         //creates money ui if it doesn't exist yet
         if (moneyui == null)
         {
-            moneyui = Instantiate(Resources.Load("ui/money") as GameObject, canv).GetComponent<Text>();
-            moneyui.text = gameControl.control.money.ToString();
+            moneyui = Instantiate(Resources.Load("ui/money") as GameObject, canv, false);
+            moneyui.transform.GetChild(0).GetComponent<Text>().text = gameControl.control.money.ToString();
         } else
         {
             moneyui.gameObject.SetActive(true);
@@ -286,10 +286,10 @@ public class playerMovement : MonoBehaviour
         while (t < time)
         {
             t += Time.deltaTime;
-            moneyui.text = tempMoney.ToString() + " + " + (gameControl.control.money - tempMoney).ToString();
+            moneyui.transform.GetChild(0).GetComponent<Text>().text = tempMoney.ToString() + " + " + (gameControl.control.money - tempMoney).ToString();
             yield return null;
         }
-        moneyui.text = gameControl.control.money.ToString();
+        moneyui.transform.GetChild(0).GetComponent<Text>().text = gameControl.control.money.ToString();
         yield return new WaitForSeconds(2f);
         moneyui.gameObject.SetActive(false);
         uiActive = false;

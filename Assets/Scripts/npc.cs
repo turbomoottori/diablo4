@@ -5,24 +5,48 @@ using UnityEngine.Events;
 
 public class npc : MonoBehaviour {
 
-    public Dialogue[] dialogue;
+    //public Dialogue[] dialogue;
+    public DialogueTree[] dialogues;
     public bool cycleText;
-    int currentDialogue;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public int currentDialogue;
+    bool qCompleted;
 	
 	public void Interact()
     {
+        if (GetComponent<fetchQuest>() != null)
+        {
+            if (qCompleted && currentDialogue == 2)
+                currentDialogue = 3;
+
+            bool questCompleted = quests.CheckIfCompleted(GetComponent<fetchQuest>().questToStart.questName);
+            if (questCompleted)
+            {
+                quests.QuestCompleted(GetComponent<fetchQuest>().questToStart.questName);
+                qCompleted = true;
+                if (currentDialogue < 2)
+                    currentDialogue += 1;
+            }
+        }
+
         if (cycleText)
         {
             currentDialogue += 1;
-            if (currentDialogue > dialogue.Length)
+            if (currentDialogue > dialogues.Length)
                 currentDialogue = 1;
         }
     }
+
+    public void NextConvo()
+    {
+        if (currentDialogue < dialogues.Length)
+            currentDialogue += 1;
+    }
+}
+
+[System.Serializable]
+public class DialogueTree
+{
+    public Dialogue[] dialogue;
 }
 
 [System.Serializable]

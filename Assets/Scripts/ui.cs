@@ -16,12 +16,13 @@ public class ui : MonoBehaviour {
     GameObject[] pauseWindows, answers, books;
     KeyCode keyInventory, keyInteract;
     public static bool anyOpen;
-    bool choice, bookReading, hoverOn;
+    bool choice, bookReading, hoverOn, eHoverOn;
     string buttonName = "";
     int tempInt = 0;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
     public static Dialogue[] npcDialogue;
+    public static Dialogue[] currentConvo;
     int currentPage;
     float showItemTimer = 0f;
     int tempHp;
@@ -39,8 +40,8 @@ public class ui : MonoBehaviour {
         keyInventory = KeyCode.Tab;
         keyInteract = KeyCode.E;
     }
-	
-	void Update () {
+
+    void Update () {
 
         if (showItemTimer < 2f)
             showItemTimer += Time.deltaTime;
@@ -55,6 +56,8 @@ public class ui : MonoBehaviour {
 
         if (hoverOn)
             HoverOnItem(buttonName, tempInt);
+        if (eHoverOn)
+            HoverEquip(tempInt);
 
         switch (anyOpen)
         {
@@ -136,10 +139,11 @@ public class ui : MonoBehaviour {
                                 OpenChestWindow();
                                 break;
                             case interactable.Type.npc:
-                                npcDialogue = interactableObject.GetComponent<npc>().dialogue;
+                                interactableObject.GetComponent<npc>().Interact();
+                                //npcDialogue = interactableObject.GetComponent<npc>().dialogue;
+                                currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
                                 currentPage = 0;
                                 Dialogue();
-                                interactableObject.GetComponent<npc>().Interact();
                                 break;
                             case interactable.Type.bookcase:
                                 OpenBookcase();
@@ -157,6 +161,7 @@ public class ui : MonoBehaviour {
         inv.SetActive(true);
         TogglePause();
         ShowItems(itemContainer, items.ownedItems, buttonScript.buttonType.inventoryItem);
+        CheckQuests();
         ShowEquips();
     }
 
@@ -219,7 +224,7 @@ public class ui : MonoBehaviour {
 
     void Dialogue()
     {
-        int maxPages = npcDialogue.Length;
+        int maxPages = currentConvo.Length;
 
         if (currentPage < maxPages)
         {
@@ -231,14 +236,14 @@ public class ui : MonoBehaviour {
             }
 
             //npc talks
-            if (npcDialogue[currentPage].who == who.npc)
+            if (currentConvo[currentPage].who == who.npc)
             {
                 dPl.SetActive(false);
                 dNpc.SetActive(true);
-                dNpc.transform.Find("txt").GetComponent<Text>().text = npcDialogue[currentPage].npc.talk;
+                dNpc.transform.Find("txt").GetComponent<Text>().text = currentConvo[currentPage].npc.talk;
 
-                if (npcDialogue[currentPage].npc.consequenseWithoutAction != null)
-                    npcDialogue[currentPage].npc.consequenseWithoutAction.Invoke();
+                if (currentConvo[currentPage].npc.consequenseWithoutAction != null)
+                    currentConvo[currentPage].npc.consequenseWithoutAction.Invoke();
 
                 currentPage += 1;
             }
@@ -249,14 +254,14 @@ public class ui : MonoBehaviour {
                 dNpc.SetActive(false);
                 choice = true;
 
-                for(int i = 0; i < answers.Length; i++)
+                for (int i = 0; i < answers.Length; i++)
                 {
-                    if (i < npcDialogue[currentPage].player.Length)
+                    if (i < currentConvo[currentPage].player.Length)
                     {
                         answers[i].SetActive(true);
-                        answers[i].transform.GetChild(0).GetComponent<Text>().text = npcDialogue[currentPage].player[i].answer;
+                        answers[i].transform.GetChild(0).GetComponent<Text>().text = currentConvo[currentPage].player[i].answer;
                     }
-                    else if (i >= npcDialogue[currentPage].player.Length)
+                    else if (i >= currentConvo[currentPage].player.Length)
                         answers[i].SetActive(false);
                 }
             }
@@ -474,7 +479,7 @@ public class ui : MonoBehaviour {
                     if(t is Weapon)
                     {
                         Weapon w = t as Weapon;
-
+                        //equipping a weapon in slot 1
                         if (leftClick)
                         {
                             //if some item is already equipped on slot 1
@@ -503,6 +508,7 @@ public class ui : MonoBehaviour {
                                 items.equippedOne = w;
                             }
                         }
+                        //equipping a weapon in slot 2
                         else if (!leftClick)
                         {
                             //if some item is already equipped in slot 2
@@ -532,6 +538,7 @@ public class ui : MonoBehaviour {
                             }
                         }
                     }
+                    //equipping a battery
                     else if(t is Battery)
                     {
                         Battery b = t as Battery;
@@ -694,14 +701,14 @@ public class ui : MonoBehaviour {
     void ClickAnswer()
     {
         string ans = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text;
-        for(int i = 0; i < npcDialogue[currentPage].player.Length; i++)
+        for(int i = 0; i < currentConvo[currentPage].player.Length; i++)
         {
-            if (ans == npcDialogue[currentPage].player[i].answer)
+            if (ans == currentConvo[currentPage].player[i].answer)
             {
                 dPl.SetActive(false);
                 dNpc.SetActive(true);
-                dNpc.transform.Find("txt").GetComponent<Text>().text = npcDialogue[currentPage].player[i].reactionToAnswer;
-                npcDialogue[currentPage].player[i].consequenceToAnswer.Invoke();
+                dNpc.transform.Find("txt").GetComponent<Text>().text = currentConvo[currentPage].player[i].reactionToAnswer;
+                currentConvo[currentPage].player[i].consequenceToAnswer.Invoke();
             }
         }
         currentPage += 1;
@@ -715,6 +722,24 @@ public class ui : MonoBehaviour {
         bookcase.transform.Find("bookText").gameObject.SetActive(true);
         bookReading = true;
         bookcase.transform.Find("bookText").GetChild(0).GetComponent<Text>().text = tBook.text;
+    }
+
+    public void ClickEquip(int equipNum)
+    {
+        switch (equipNum)
+        {
+            case 1:
+                items.equippedOne = null;
+                break;
+            case 2:
+                items.equippedTwo = null;
+                break;
+            case 3:
+                items.inUse = null;
+                break;
+        }
+        ShowItems(itemContainer, items.ownedItems, buttonScript.buttonType.inventoryItem);
+        ShowEquips();
     }
 
     void BtrToggle(bool toggleOn)
@@ -766,10 +791,53 @@ public class ui : MonoBehaviour {
         popup.transform.position = newPos;
     }
 
+    //shows equipped item's info
+    public void HoverEquip(int equipNum)
+    {
+        switch (equipNum)
+        {
+            case 1:
+                if (items.equippedOne != null)
+                {
+                    popup.SetActive(true);
+                    eHoverOn = true;
+                    tempInt = equipNum;
+                    popup.transform.Find("name").GetComponent<Text>().text = items.equippedOne.name;
+                    popup.transform.Find("valwt").GetComponent<Text>().text = "value " + items.equippedOne.baseValue.ToString() + "    wt." + items.equippedOne.weight.ToString();
+                }
+                break;
+            case 2:
+                if (items.equippedTwo != null)
+                {
+                    popup.SetActive(true);
+                    eHoverOn = true;
+                    tempInt = equipNum;
+                    popup.transform.Find("name").GetComponent<Text>().text = items.equippedTwo.name;
+                    popup.transform.Find("valwt").GetComponent<Text>().text = "value " + items.equippedTwo.baseValue.ToString() + "    wt." + items.equippedTwo.weight.ToString();
+                }
+                break;
+            case 3:
+                if (items.inUse != null)
+                {
+                    popup.SetActive(true);
+                    eHoverOn = true;
+                    tempInt = equipNum;
+                    popup.transform.Find("name").GetComponent<Text>().text = "Battery " + ((items.inUse.energy / 1) * 100).ToString("F0") + "%";
+                    popup.transform.Find("valwt").GetComponent<Text>().text = "value " + items.inUse.baseValue.ToString() + "    wt." + items.inUse.weight.ToString();
+                }
+                break;
+        }
+
+        Vector3 offset = new Vector3(-50, 25, 0);
+        Vector3 newPos = Input.mousePosition + offset;
+        popup.transform.position = newPos;
+    }
+
     //closes popup window
     public void StopHover()
     {
         hoverOn = false;
+        eHoverOn = false;
         popup.SetActive(false);
     }
 
@@ -782,6 +850,9 @@ public class ui : MonoBehaviour {
             else
                 pauseWindows[i].SetActive(true);
         }
+
+        if (num == 1)
+            gameControl.control.SaveOptions();
 
         if (num == 0)
             savecaution.SetActive(false);
