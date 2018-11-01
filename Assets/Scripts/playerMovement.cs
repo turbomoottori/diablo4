@@ -13,7 +13,7 @@ public class playerMovement : MonoBehaviour
 
     private Rigidbody rb;
     Vector3 refVelocity;
-    RaycastHit hit;
+    //RaycastHit hit;
 
     //dash variables
     public static DashState dashState;

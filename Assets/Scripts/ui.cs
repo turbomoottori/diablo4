@@ -395,7 +395,22 @@ public class ui : MonoBehaviour {
         {
             e1.transform.Find("title").GetComponent<Text>().text = items.equippedOne.name;
             if (items.equippedOne is Gun)
+            {
                 e1.transform.Find("ammo").gameObject.SetActive(true);
+                Gun g = items.equippedOne as Gun;
+                switch (g.type)
+                {
+                    case GunType.basic:
+                        e1.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
+                        break;
+                    case GunType.rapid:
+                        e1.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
+                        break;
+                    case GunType.shotgun:
+                        e1.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
+                        break;
+                }
+            }
             else
                 e1.transform.Find("ammo").gameObject.SetActive(false);
         }
@@ -409,7 +424,22 @@ public class ui : MonoBehaviour {
         {
             e2.transform.Find("title").GetComponent<Text>().text = items.equippedTwo.name;
             if (items.equippedTwo is Gun)
+            {
                 e2.transform.Find("ammo").gameObject.SetActive(true);
+                Gun g = items.equippedTwo as Gun;
+                switch (g.type)
+                {
+                    case GunType.basic:
+                        e2.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
+                        break;
+                    case GunType.rapid:
+                        e2.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
+                        break;
+                    case GunType.shotgun:
+                        e2.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
+                        break;
+                }
+            }
             else
                 e2.transform.Find("ammo").gameObject.SetActive(false);
         }

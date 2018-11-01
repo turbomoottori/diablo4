@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4601610282405100}
   - component: {fileID: 33378860715679084}
   - component: {fileID: 23028314432469748}
-  - component: {fileID: 114758042601636168}
   - component: {fileID: 65653566676049220}
+  - component: {fileID: 114758042601636168}
   - component: {fileID: 114326822406895136}
   m_Layer: 0
   m_Name: collectible
@@ -37,13 +37,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1854599146704390}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 397.4, y: 8.9, z: 78.67}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 393.23, y: 8.9, z: 77.48}
+  m_LocalScale: {x: 12.132398, y: 110.6325, z: 2.7808263}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!23 &23028314432469748
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -59,7 +59,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b9b6780fc79db774b959758627693d76, type: 2}
+  - {fileID: 2100000, guid: 9dc9bd3c5d9bb0f40a894e395280d5d9, type: 2}
+  - {fileID: 2100000, guid: 9dc9bd3c5d9bb0f40a894e395280d5d9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,7 +87,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1854599146704390}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: 065d97a7b5096e4499fb28d0f626541a, type: 3}
 --- !u!65 &65653566676049220
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -96,8 +98,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.117818095, y: 0.020953942, z: 0.2093247}
+  m_Center: {x: -0.047765505, y: -0.000025321264, z: -0.08552053}
 --- !u!114 &114326822406895136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,14 +143,7 @@ MonoBehaviour:
     weight: 0
     stackable: 0
     text: 
-  battery:
-    name: 
-    id: 0
-    baseValue: 0
-    weight: 0
-    stackable: 0
-    energy: 0
-    isEmpty: 0
+  batteryEnergy: 0
 --- !u!114 &114758042601636168
 MonoBehaviour:
   m_ObjectHideFlags: 1

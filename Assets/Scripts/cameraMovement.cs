@@ -43,5 +43,9 @@ public class cameraMovement : MonoBehaviour {
             Camera.main.fieldOfView += 5;
         if(Input.GetKeyDown(KeyCode.K) && Camera.main.fieldOfView > minFov)
             Camera.main.fieldOfView -= 5;
-	}
+
+        RaycastHit hit;
+        Debug.DrawRay(transform.position, targetPos-transform.position, Color.yellow);
+        //hide houses script here
+    }
 }
