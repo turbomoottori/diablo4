@@ -5,6 +5,7 @@ using System.Linq;
 
 public class merchant : MonoBehaviour {
 
+    public float priceMultiplier;
     GameObject globals;
     public List<Item> items;
     public List<Weapon> swords;
@@ -54,6 +55,7 @@ public class merchant : MonoBehaviour {
     public void ChangeItems()
     {
         ui.merchantItems = items;
+        ui.priceMultiplier = priceMultiplier;
     }
 
     // Update is called once per frame

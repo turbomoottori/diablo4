@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine.SceneManagement;
 
 public class ui : MonoBehaviour {
 
@@ -25,6 +26,7 @@ public class ui : MonoBehaviour {
     public static Dialogue[] currentConvo;
     int currentPage;
     float showItemTimer = 0f;
+    public static float priceMultiplier;
     int tempHp;
 
 	void Start () {
@@ -42,7 +44,6 @@ public class ui : MonoBehaviour {
     }
 
     void Update () {
-
         if (showItemTimer < 2f)
             showItemTimer += Time.deltaTime;
         if (showItemTimer > 2f)
@@ -133,6 +134,7 @@ public class ui : MonoBehaviour {
                                 OpenMerchantWindow();
                                 break;
                             case interactable.Type.collectible:
+                                interactableObject.GetComponent<interactable>().HideE();
                                 interactableObject.GetComponent<newCollectible>().PickUp();
                                 break;
                             case interactable.Type.chest:
@@ -140,13 +142,29 @@ public class ui : MonoBehaviour {
                                 break;
                             case interactable.Type.npc:
                                 interactableObject.GetComponent<npc>().Interact();
-                                //npcDialogue = interactableObject.GetComponent<npc>().dialogue;
                                 currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
                                 currentPage = 0;
                                 Dialogue();
                                 break;
                             case interactable.Type.bookcase:
                                 OpenBookcase();
+                                break;
+                            case interactable.Type.door:
+                                SceneManager.LoadScene(interactableObject.GetComponent<interactable>().levelToLoad);
+                                break;
+                            case interactable.Type.deliveryLocation:
+                                DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
+                                for(int i = 0; i < dq.whereToDeliver.Length; i++)
+                                {
+                                    if (dq.whereToDeliver[i] == interactableObject && dq.delivered[i] == false)
+                                    {
+                                        dq.delivered[i] = true;
+                                        items.ownedItems.Remove(dq.itemToDeliver);
+                                        ShowCollectedItem(dq.itemToDeliver.name + " delivered");
+                                        interactableObject.GetComponent<interactable>().HideE();
+                                        Destroy(interactableObject.GetComponent<interactable>());
+                                    }
+                                }
                                 break;
                         }
                     }
@@ -370,7 +388,7 @@ public class ui : MonoBehaviour {
 
         foreach (Item i in merchantItems)
         {
-            if (i.baseValue > gameControl.control.money)
+            if (NewValue(i) > gameControl.control.money)
             {
                 merchant_selling.transform.Find(i.name + i.id).GetComponent<Image>().color = Color.gray;
                 merchant_selling.transform.Find(i.name + i.id).GetComponent<buttonScript>().type = buttonScript.buttonType.cantBuy;
@@ -806,7 +824,10 @@ public class ui : MonoBehaviour {
         }
 
         popup.SetActive(true);
-        popup.transform.Find("valwt").GetComponent<Text>().text = "value " + hoveredItem.baseValue.ToString() + "    wt." + hoveredItem.weight.ToString();
+        if (listNum == 3)
+            popup.transform.Find("valwt").GetComponent<Text>().text = "cost " + NewValue(hoveredItem).ToString() + "    wt." + hoveredItem.weight.ToString();
+        else 
+            popup.transform.Find("valwt").GetComponent<Text>().text = "value " + hoveredItem.baseValue.ToString() + "    wt." + hoveredItem.weight.ToString();
 
         if (hoveredItem is Battery)
         {
@@ -979,6 +1000,12 @@ public class ui : MonoBehaviour {
             newItem.SetActive(false);
         }
         popup.transform.SetAsLastSibling();
+    }
+
+    public int NewValue(Item item)
+    {
+        float tempValue = item.baseValue * priceMultiplier;
+        return (int)tempValue;
     }
 
     //find children by name

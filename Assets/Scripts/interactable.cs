@@ -6,6 +6,10 @@ public class interactable : MonoBehaviour {
 
     GameObject e;
     public Type type;
+    [Tooltip("use only if type is door")]
+    public string levelToLoad;
+    [Tooltip("use only if this object is delivery location")]
+    public string deliveryQuest;
 
     private void Start()
     {
@@ -39,5 +43,7 @@ public class interactable : MonoBehaviour {
         chest,
         bookcase,
         npc,
+        door,
+        deliveryLocation
     }
 }

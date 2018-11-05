@@ -64,7 +64,24 @@ public class quests : MonoBehaviour {
                 return true;
             }
         }
+        else if(q is DeliveryQuest)
+        {
+            DeliveryQuest dq = q as DeliveryQuest;
+            if (AllDelivered(dq))
+                return true;
+        }
         return false;
+    }
+
+    public static bool AllDelivered(DeliveryQuest dq)
+    {
+        for(int i = 0; i < dq.whereToDeliver.Length; i++)
+        {
+            if (dq.delivered[i] == false)
+                return false;
+        }
+
+        return true;
     }
 }
 
@@ -93,8 +110,11 @@ public class FetchQuest: Quest
 [System.Serializable]
 public class DeliveryQuest : Quest
 {
-    //public QuestItem[] itemsToDeliver;
+    public Item itemToDeliver;
+    [Tooltip("location must have collider")]
     public GameObject[] whereToDeliver;
+    [Tooltip("must be same size as 'where to deliver'")]
+    public bool[] delivered;
 }
 
 public enum Reward

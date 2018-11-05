@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class interact : MonoBehaviour {
 
-    InteractWith interactWith;
+    GameObject lastClosest = null;
 	
 	// Update is called once per frame
 	void Update () {
@@ -52,13 +52,16 @@ public class interact : MonoBehaviour {
 
         for (int j = 0; j < hitColliders.Length; j++)
         {
-            if (hitColliders[j].gameObject == closest)
+            if (hitColliders[j].gameObject == closest && lastClosest != closest)
                 hitColliders[j].gameObject.GetComponent<interactable>().ShowE();
             else if (hitColliders[j].gameObject != closest && hitColliders[j].gameObject.GetComponent<interactable>() != null)
             {
                 hitColliders[j].gameObject.GetComponent<interactable>().HideE();
             }
         }
+
+        if (lastClosest != closest)
+            lastClosest = closest;
 
         ui.interactableObject = closest;
     }
@@ -67,15 +70,5 @@ public class interact : MonoBehaviour {
     {
         if (other.gameObject.GetComponent<interactable>() != null)
             other.gameObject.GetComponent<interactable>().HideE();
-    }
-
-    enum InteractWith
-    {
-        merchant,
-        collectible,
-        chest,
-        bookcase,
-        npc,
-        nobody
     }
 }

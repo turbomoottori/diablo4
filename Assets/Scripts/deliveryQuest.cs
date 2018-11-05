@@ -6,6 +6,22 @@ using System.Linq;
 public class deliveryQuest : MonoBehaviour {
 
     public DeliveryQuest questToStart;
+    int howMany = 0;
+
+    private void Start()
+    {
+        questToStart.itemToDeliver.stackable = true;
+
+        foreach(GameObject location in questToStart.whereToDeliver)
+        {
+            if (location.GetComponent<interactable>() == null)
+                location.AddComponent<interactable>();
+
+            location.GetComponent<interactable>().type = interactable.Type.deliveryLocation;
+            location.GetComponent<interactable>().deliveryQuest = questToStart.questName;
+            howMany += 1;
+        }
+    }
 
     //checks if quest is already started
     public void CheckQuest()
@@ -15,7 +31,11 @@ public class deliveryQuest : MonoBehaviour {
             Quest q = quests.questList.FirstOrDefault(i => i.questName == questToStart.questName);
 
             if (q == null)
+            {
                 quests.questList.Add(questToStart);
+                for(int i = 0; i < howMany; i++)
+                    items.ownedItems.Add(questToStart.itemToDeliver);
+            }
         }
         else
         {

@@ -26,6 +26,7 @@ public class gameControl : MonoBehaviour
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
+    public string currentScene;
 
     void Awake()
     {
@@ -50,8 +51,10 @@ public class gameControl : MonoBehaviour
         if (enemies == null)
             enemies = new List<EnemyList>();
 
+        //delete later
         basicAmmo = 5;
         rapidAmmo = 20;
+        shotgunAmmo = 50;
     }
 
     private void OnEnable()
@@ -101,6 +104,9 @@ public class gameControl : MonoBehaviour
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
 
+        Scene cScene = SceneManager.GetActiveScene();
+        data.currentScene = cScene.name;
+
         //serializes and closes file
         bf.Serialize(file, data);
         file.Close();
@@ -136,6 +142,9 @@ public class gameControl : MonoBehaviour
         data.rapidAmmo = rapidAmmo;
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
+
+        Scene cScene = SceneManager.GetActiveScene();
+        data.currentScene = cScene.name;
 
         //serializes and closes file
         bf.Serialize(file, data);
@@ -174,6 +183,9 @@ public class gameControl : MonoBehaviour
             rapidAmmo = data.rapidAmmo;
             autoBattery = data.autoBattery;
             batteryId = data.batteryId;
+            currentScene = data.currentScene;
+
+            SceneManager.LoadScene(data.currentScene);
         }
     }
 
@@ -209,6 +221,9 @@ public class gameControl : MonoBehaviour
             rapidAmmo = data.rapidAmmo;
             autoBattery = data.autoBattery;
             batteryId = data.batteryId;
+            currentScene = data.currentScene;
+
+            SceneManager.LoadScene(data.currentScene);
         }
     }
 
@@ -252,6 +267,7 @@ class PlayerData
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
     public List<Book> bookcaseBooks;
+    public string currentScene;
 }
 
 [System.Serializable]

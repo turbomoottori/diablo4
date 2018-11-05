@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class npc : MonoBehaviour {
 
-    //public Dialogue[] dialogue;
+    [Tooltip("how many different dialogue scenarios there are in total")]
     public DialogueTree[] dialogues;
     public bool cycleText;
     public int currentDialogue;
@@ -28,6 +28,17 @@ public class npc : MonoBehaviour {
             }
         }
 
+        if(GetComponent<deliveryQuest>() != null)
+        {
+            bool questCompleted = quests.CheckIfCompleted(GetComponent<deliveryQuest>().questToStart.questName);
+            if (questCompleted && !qCompleted)
+            {
+                quests.QuestCompleted(GetComponent<deliveryQuest>().questToStart.questName);
+                qCompleted = true;
+                currentDialogue += 1;
+            }
+        }
+
         if (cycleText)
         {
             currentDialogue += 1;
@@ -46,6 +57,7 @@ public class npc : MonoBehaviour {
 [System.Serializable]
 public class DialogueTree
 {
+    [Tooltip("how long the current conversation will take")]
     public Dialogue[] dialogue;
 }
 
@@ -54,6 +66,7 @@ public class Dialogue
 {
     public who who;
     public npcDialogue npc;
+    [Tooltip("how many answer options does the player have")]
     public playerDialogue[] player;
 }
 
@@ -69,6 +82,7 @@ public class npcDialogue
 public class playerDialogue
 {
     public string answer;
+    [Tooltip("npc's reaction to said answer")]
     public string reactionToAnswer;
     public UnityEvent consequenceToAnswer;
 }

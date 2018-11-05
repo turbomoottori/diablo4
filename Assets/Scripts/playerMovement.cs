@@ -120,7 +120,7 @@ public class playerMovement : MonoBehaviour
 
             if (Input.GetButtonDown("Jump"))
             {
-                canJump = (Physics.Raycast(transform.position, Vector3.down, 3f));
+                canJump = (Physics.Raycast(transform.position+Vector3.down, Vector3.down, 2f));
 
                 if (canJump)
                 {

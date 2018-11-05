@@ -28,7 +28,6 @@ public class attack : MonoBehaviour {
 
     void Start() {
         sword = Resources.Load<GameObject>("sword");
-        gameControl.shotgunAmmo = 50;
         SetBulletPositions();
     }
 
