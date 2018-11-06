@@ -11,9 +11,8 @@ using UnityEngine.SceneManagement;
 public class ui : MonoBehaviour {
 
     Transform canv;
-    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup;
+    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup;
     GameObject itemContainer, chest_itemContainer, chest_storedContainer, merchant_owned, merchant_selling, dNpc, dPl;
-    Text merchant_playerMoney;
     GameObject[] pauseWindows, answers, books;
     KeyCode keyInventory, keyInteract;
     public static bool anyOpen;
@@ -24,10 +23,11 @@ public class ui : MonoBehaviour {
     public static List<Item> merchantItems;
     public static Dialogue[] npcDialogue;
     public static Dialogue[] currentConvo;
+    public static int merchantAmmoB, merchantAmmoR, merchantAmmoS;
     int currentPage;
     float showItemTimer = 0f;
     public static float priceMultiplier;
-    int tempHp;
+    int tempHp, ammoBuyMode, tempAmmoAmount, finalValue;
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
@@ -74,7 +74,7 @@ public class ui : MonoBehaviour {
                         Close(pausemenu);
                     if (chest.activeInHierarchy)
                         Close(chest);
-                    if (merchant.activeInHierarchy)
+                    if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
                         Close(merchant);
                     if (dBox.activeInHierarchy && !choice)
                         Dialogue();
@@ -82,13 +82,15 @@ public class ui : MonoBehaviour {
                         Close(bookcase);
                     if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
                         bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
+                    if (merchant_popup.activeInHierarchy)
+                        merchant_popup.SetActive(false);
                 }
 
                 if (Input.GetKeyDown(keyInventory) || Input.GetKeyDown(keyInteract))
                 {
                     if(inv.activeInHierarchy)
                         Close(inv);
-                    if (merchant.activeInHierarchy)
+                    if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
                         Close(merchant);
                     if (chest.activeInHierarchy)
                         Close(chest);
@@ -101,6 +103,8 @@ public class ui : MonoBehaviour {
                         bookcase.transform.Find("bookText").gameObject.SetActive(false);
                         bookReading = false;
                     }
+                    if (merchant_popup.activeInHierarchy)
+                        merchant_popup.SetActive(false);
                 }
 
                 if ((dBox.activeInHierarchy && !choice) && (Input.GetKeyDown(keyInteract) || Input.GetMouseButtonDown(0)))
@@ -291,6 +295,13 @@ public class ui : MonoBehaviour {
         }
     }
 
+    void AddAmmoIcons(string ammoType)
+    {
+        GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, merchant_selling.transform, false);
+        i.name = "ammo_" + ammoType;
+        i.GetComponent<buttonScript>().type = buttonScript.buttonType.ammo;
+    }
+
     //adds items to lists
     void AddItem(Item itemToAdd, GameObject container, buttonScript.buttonType type)
     {
@@ -333,6 +344,16 @@ public class ui : MonoBehaviour {
     //shows every item in list and checks duplicates
     void ShowItems(GameObject g, List<Item> l, buttonScript.buttonType type)
     {
+        if (g == merchant_selling)
+        {
+            if (merchantAmmoB != 0)
+                AddAmmoIcons("basic");
+            if (merchantAmmoR != 0)
+                AddAmmoIcons("rapid");
+            if (merchantAmmoS != 0)
+                AddAmmoIcons("shotgun");
+        }
+
         if (l != null)
         {
             foreach (Item i in l)
@@ -342,9 +363,7 @@ public class ui : MonoBehaviour {
 
         foreach(Transform child in g.transform)
         {
-            Item t = l.FirstOrDefault(i => i.name + i.id.ToString() == child.name);
             Transform[] duplicateCheck = FindChildren(g.transform, child.name);
-
             if (duplicateCheck.Length > 1)
             {
                 for (int i = 0; i < duplicateCheck.Length; i++)
@@ -352,26 +371,60 @@ public class ui : MonoBehaviour {
                         Destroy(duplicateCheck[i].gameObject);
             }
 
-            //display amount if item is stackable
-            if (t != null && t.stackable)
+            if (child.name.Contains("ammo_"))
             {
-                List<Item> tempList = l.FindAll(i => i.name + i.id.ToString() == child.name);
-                child.transform.Find("amount").GetComponent<Text>().text = tempList.Count.ToString();
+                switch (child.name)
+                {
+                    case "ammo_basic":
+                        if (merchantAmmoB == 0)
+                            Destroy(child.gameObject);
+                        else
+                            child.transform.Find("amount").GetComponent<Text>().text = merchantAmmoB.ToString();
+                        break;
+                    case "ammo_rapid":
+                        if (merchantAmmoR == 0)
+                            Destroy(child.gameObject);
+                        else
+                            child.transform.Find("amount").GetComponent<Text>().text = merchantAmmoR.ToString();
+                        break;
+                    case "ammo_shotgun":
+                        if (merchantAmmoS == 0)
+                            Destroy(child.gameObject);
+                        else
+                            child.transform.Find("amount").GetComponent<Text>().text = merchantAmmoS.ToString();
+                        break;
+                }
             }
-
-            if (t != null && (t == items.equippedOne || t == items.equippedTwo || t == items.inUse))
-                child.GetComponent<Image>().color = Color.gray;
             else
-                child.GetComponent<Image>().color = Color.white;
+            {
+                Item t = l.FirstOrDefault(i => i.name + i.id.ToString() == child.name);
 
-            if (t == null)
-                Destroy(child.gameObject);
+                //display amount if item is stackable
+                if (t != null && t.stackable)
+                {
+                    List<Item> tempList = l.FindAll(i => i.name + i.id.ToString() == child.name);
+                    child.transform.Find("amount").GetComponent<Text>().text = tempList.Count.ToString();
+                }
+
+                if (t != null && (t == items.equippedOne || t == items.equippedTwo || t == items.inUse))
+                    child.GetComponent<Image>().color = Color.gray;
+                else
+                    child.GetComponent<Image>().color = Color.white;
+
+                if (t == null)
+                    Destroy(child.gameObject);
+            }
         }
     }
 
     //checks merchant prices and equips
     void CheckValuesAndEquips()
     {
+        merchant.transform.Find("moneyammo").Find("playerMoney").Find("amount").GetComponent<Text>().text = gameControl.control.money.ToString();
+        merchant.transform.Find("moneyammo").Find("basicAmmo").Find("amount").GetComponent<Text>().text = gameControl.basicAmmo.ToString();
+        merchant.transform.Find("moneyammo").Find("rapidAmmo").Find("amount").GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
+        merchant.transform.Find("moneyammo").Find("shotgunAmmo").Find("amount").GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
+
         foreach (Item i in items.ownedItems)
         {
             if (i == items.equippedOne || i == items.equippedTwo)
@@ -404,10 +457,17 @@ public class ui : MonoBehaviour {
     //shows equipped items
     void ShowEquips()
     {
-        GameObject e1, e2, b;
+        GameObject e1, e2, b, a1, a2, a3;
         e1 = inv.transform.Find("active").Find("equip1").gameObject;
         e2 = inv.transform.Find("active").Find("equip2").gameObject;
         b = inv.transform.Find("active").Find("battery").gameObject;
+        a1 = inv.transform.Find("active").Find("ammoBasic").GetChild(0).gameObject;
+        a2 = inv.transform.Find("active").Find("ammoRapid").GetChild(0).gameObject;
+        a3 = inv.transform.Find("active").Find("ammoShotgun").GetChild(0).gameObject;
+
+        a1.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
+        a2.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
+        a3.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
 
         if (items.equippedOne != null)
         {
@@ -419,13 +479,13 @@ public class ui : MonoBehaviour {
                 switch (g.type)
                 {
                     case GunType.basic:
-                        e1.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
+                        //change sprite
                         break;
                     case GunType.rapid:
-                        e1.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
+                        //change sprite
                         break;
                     case GunType.shotgun:
-                        e1.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
+                        //change sprite
                         break;
                 }
             }
@@ -448,13 +508,13 @@ public class ui : MonoBehaviour {
                 switch (g.type)
                 {
                     case GunType.basic:
-                        e2.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
+                        //change sprite
                         break;
                     case GunType.rapid:
-                        e2.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
+                        //change sprite
                         break;
                     case GunType.shotgun:
-                        e2.transform.Find("ammo").gameObject.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
+                        //change sprite
                         break;
                 }
             }
@@ -677,6 +737,20 @@ public class ui : MonoBehaviour {
                     ShowItems(chest_storedContainer, items.storedItems, buttonScript.buttonType.readyToTake);
                 }
                 break;
+            case buttonScript.buttonType.ammo:
+                StopHover();
+                merchant_popup.SetActive(true);
+                tempAmmoAmount = 0;
+
+                if (name == "ammo_basic")
+                    ammoBuyMode = 1;
+                else if (name == "ammo_rapid")
+                    ammoBuyMode = 2;
+                else
+                    ammoBuyMode = 3;
+
+                merchant_popup.transform.Find("container").Find("amount").GetComponent<Text>().text = "0 (costs 0)";
+                break;
         }
     }
 
@@ -788,6 +862,85 @@ public class ui : MonoBehaviour {
         }
         ShowItems(itemContainer, items.ownedItems, buttonScript.buttonType.inventoryItem);
         ShowEquips();
+    }
+
+    public void MerchantAmmoClicks()
+    {
+        string buttonName = EventSystem.current.currentSelectedGameObject.name;
+        int maxAmount = 0;
+        int ammoBaseValue = 0;
+
+        switch (ammoBuyMode)
+        {
+            case 1:
+                maxAmount = merchantAmmoB;
+                ammoBaseValue = items.ammoValueB;
+                break;
+            case 2:
+                maxAmount = merchantAmmoR;
+                ammoBaseValue = items.ammoValueR;
+                break;
+            case 3:
+                maxAmount = merchantAmmoS;
+                ammoBaseValue = items.ammoValueS;
+                break;
+        }
+
+        switch (buttonName)
+        {
+            case "more":
+                if (tempAmmoAmount < maxAmount && CanAffordNextAmmo(ammoBuyMode))
+                    tempAmmoAmount += 1;
+                break;
+            case "less":
+                if (tempAmmoAmount > 0)
+                    tempAmmoAmount -= 1;
+                break;
+            case "confirm":
+                if (ammoBuyMode == 1)
+                {
+                    merchantAmmoB -= tempAmmoAmount;
+                    gameControl.basicAmmo += tempAmmoAmount;
+                    gameControl.control.money -= finalValue;
+                    merchant_popup.SetActive(false);
+                    ShowItems(merchant_selling, merchantItems, buttonScript.buttonType.readyToBuy);
+                    CheckValuesAndEquips();
+                    interactableObject.GetComponent<merchant>().basicAmmo = merchantAmmoB;
+                    interactableObject.GetComponent<merchant>().rapidAmmo = merchantAmmoR;
+                    interactableObject.GetComponent<merchant>().shotgunAmmo = merchantAmmoS;
+                }
+                break;
+        }
+
+        ammoBaseValue = (int)(ammoBaseValue * priceMultiplier);
+        finalValue = ammoBaseValue * tempAmmoAmount;
+        merchant_popup.transform.Find("container").Find("amount").GetComponent<Text>().text = tempAmmoAmount.ToString() + " (costs " + finalValue.ToString() + ")";
+    }
+
+    public bool CanAffordNextAmmo(int ammoType)
+    {
+        int newValue, nextValue = 0;
+
+        switch (ammoType)
+        {
+            case 1:
+                newValue = (int)(items.ammoValueB * priceMultiplier);
+                nextValue = newValue * (tempAmmoAmount + 1);
+                break;
+            case 2:
+                newValue = (int)(items.ammoValueR * priceMultiplier);
+                nextValue = newValue * (tempAmmoAmount + 1);
+                break;
+            case 3:
+                newValue = (int)(items.ammoValueS * priceMultiplier);
+                nextValue = newValue * (tempAmmoAmount + 1);
+                break;
+        }
+
+        if (nextValue > gameControl.control.money)
+            return false;
+        else
+            return true;
     }
 
     void BtrToggle(bool toggleOn)
@@ -959,8 +1112,12 @@ public class ui : MonoBehaviour {
             merchant = Instantiate(Resources.Load("ui/inventory/merchantWindow") as GameObject, canv, false);
             merchant_owned = merchant.transform.Find("items").GetChild(0).gameObject;
             merchant_selling = merchant.transform.Find("selling").GetChild(0).gameObject;
-            merchant_playerMoney = merchant.transform.Find("playerMoney").GetComponent<Text>();
-            merchant_playerMoney.text = gameControl.control.money.ToString();
+            merchant.transform.Find("moneyammo").Find("playerMoney").Find("amount").GetComponent<Text>().text = gameControl.control.money.ToString();
+            merchant_popup = merchant.transform.Find("howManyWindow").gameObject;
+            merchant_popup.transform.Find("container").Find("more").GetComponent<Button>().onClick.AddListener(MerchantAmmoClicks);
+            merchant_popup.transform.Find("container").Find("less").GetComponent<Button>().onClick.AddListener(MerchantAmmoClicks);
+            merchant_popup.transform.Find("container").Find("confirm").GetComponent<Button>().onClick.AddListener(MerchantAmmoClicks);
+            merchant_popup.SetActive(false);
             merchant.SetActive(false);
         }
         if (dBox == null)

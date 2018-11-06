@@ -55,6 +55,7 @@ public class gameControl : MonoBehaviour
         basicAmmo = 5;
         rapidAmmo = 20;
         shotgunAmmo = 50;
+        money = 100;
     }
 
     private void OnEnable()
@@ -274,6 +275,7 @@ class PlayerData
 public class MerchantData
 {
     public string merchantName;
+    public int basicAmmo, rapidAmmo, shotgunAmmo;
     public List<Item> merchantItems;
 }
 

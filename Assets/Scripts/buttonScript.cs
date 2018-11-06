@@ -48,6 +48,9 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
             case buttonType.readyToTake:
                 g.GetComponent<ui>().HoverOnItem(gameObject.name, 2);
                 break;
+            case buttonType.ammo:
+                g.GetComponent<ui>().HoverOnItem(gameObject.name, 4);
+                break;
         }
     }
 
@@ -64,6 +67,7 @@ public class buttonScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
         cantSell,
         cantBuy,
         readyToStore,
-        readyToTake
+        readyToTake,
+        ammo
     }
 }
