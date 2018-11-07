@@ -69,7 +69,7 @@ Shader "Hidden/EdgeDetectionShader"
 				
 				//nykyisen pikselin kohdalta normal- ja depth-arvot ylös
                 fixed4 orValue = getNormalsAndDepth(i.uv);
-                float2 offsets[8] =
+				float2 offsets[8] =
 				{
                     float2(-0.5, -0.5),
                     float2(-1.0,  0.0),

@@ -17,6 +17,7 @@ TagManager:
   - enemyBullet
   - interactzone
   - fall
+  - House
   layers:
   - Default
   - TransparentFX
