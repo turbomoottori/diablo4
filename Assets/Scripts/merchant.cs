@@ -7,6 +7,7 @@ public class merchant : MonoBehaviour {
 
     public float priceMultiplier;
     GameObject globals;
+    public int basicAmmo, rapidAmmo, shotgunAmmo;
     public List<Item> items;
     public List<Weapon> swords;
     public List<Gun> guns;
@@ -54,6 +55,9 @@ public class merchant : MonoBehaviour {
 
     public void ChangeItems()
     {
+        ui.merchantAmmoB = basicAmmo;
+        ui.merchantAmmoR = rapidAmmo;
+        ui.merchantAmmoS = shotgunAmmo;
         ui.merchantItems = items;
         ui.priceMultiplier = priceMultiplier;
     }

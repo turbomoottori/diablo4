@@ -12,6 +12,9 @@ public class items : MonoBehaviour {
     public static int nextBatteryId;
     float energyDrain = 0.2f;
     public static List<Battery> batteriesToUse;
+    public static int ammoValueB = 2;
+    public static int ammoValueR = 1;
+    public static int ammoValueS = 3;
 
 	void Start () {
         if (ownedItems == null)

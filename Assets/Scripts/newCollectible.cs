@@ -18,6 +18,7 @@ public class newCollectible : MonoBehaviour
     public float batteryEnergy;
     //public Battery battery;
     string collectibleName = " ";
+    public int ammoAmount;
 
     void Start()
     {
@@ -38,8 +39,18 @@ public class newCollectible : MonoBehaviour
             case Type.Battery:
                 collectibleName = "Battery";
                 break;
+            case Type.BasicAmmo:
+                collectibleName = "+ " +ammoAmount.ToString() + " basic ammo";
+                break;
+            case Type.RapidAmmo:
+                collectibleName = "+ " + ammoAmount.ToString() + " rapid ammo";
+                break;
+            case Type.ShotgunAmmo:
+                collectibleName = "+ " + ammoAmount.ToString() + " shotgun ammo";
+                break;
         }
-                foreach (Collectibles c in gameControl.control.collectibles)
+
+        foreach (Collectibles c in gameControl.control.collectibles)
             if (c.cName == collectibleName && c.posX == transform.position.x && c.posZ == transform.position.z)
                 Destroy(gameObject);
     }
@@ -76,6 +87,15 @@ public class newCollectible : MonoBehaviour
                     weight = 1
                 });
                 break;
+            case Type.BasicAmmo:
+                gameControl.basicAmmo += ammoAmount;
+                break;
+            case Type.RapidAmmo:
+                gameControl.rapidAmmo += ammoAmount;
+                break;
+            case Type.ShotgunAmmo:
+                gameControl.shotgunAmmo += ammoAmount;
+                break;
         }
     }
 
@@ -105,7 +125,10 @@ public class newCollectible : MonoBehaviour
         Weapon,
         Gun,
         Book,
-        Battery
+        Battery,
+        BasicAmmo,
+        RapidAmmo,
+        ShotgunAmmo
     }
 }
 

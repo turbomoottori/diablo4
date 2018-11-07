@@ -11,7 +11,22 @@ ModelImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: Cube.018
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: b9b6780fc79db774b959758627693d76, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: d2b9188b97a15d44e9f5bcaa82d72d7e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: d2b9188b97a15d44e9f5bcaa82d72d7e, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -83,7 +98,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
