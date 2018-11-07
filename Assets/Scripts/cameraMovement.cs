@@ -10,6 +10,8 @@ public class cameraMovement : MonoBehaviour {
     float min, max, angle;
     float minFov, maxFov;
 
+    GameObject hidden;
+
 	void Start () {
         offset = transform.position - player.position;
 
@@ -45,7 +47,33 @@ public class cameraMovement : MonoBehaviour {
             Camera.main.fieldOfView -= 5;
 
         RaycastHit hit;
-        Debug.DrawRay(transform.position, targetPos-transform.position, Color.yellow);
+        RaycastHit h;
+
         //hide houses script here
+        if (Physics.Linecast(transform.position, targetPos - transform.position, out hit) && Physics.Linecast(targetPos, transform.position, out h))
+        {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
+                Fadeout(hit.collider.gameObject);
+            if (h.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
+                Fadeout(h.collider.gameObject);
+
+        }
+    }
+
+
+    void Fadeout(GameObject g)
+    {
+        if (g.transform.parent != hidden && hidden != null)
+            hidden.GetComponentInChildren<Animator>().SetTrigger("fadein");
+
+        if (g.transform.parent != null)
+        {
+            hidden = g.transform.parent.gameObject;
+
+            if (g.transform.parent.GetComponent<Animator>() != null)
+                g.GetComponent<Animator>().SetTrigger("fadeout");
+            else
+                g.transform.parent.GetComponentInChildren<Animator>().SetTrigger("fadeout");
+        }
     }
 }

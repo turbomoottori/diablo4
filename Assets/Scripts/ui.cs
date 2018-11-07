@@ -457,14 +457,16 @@ public class ui : MonoBehaviour {
     //shows equipped items
     void ShowEquips()
     {
-        GameObject e1, e2, b, a1, a2, a3;
+        GameObject e1, e2, b, a1, a2, a3, m;
         e1 = inv.transform.Find("active").Find("equip1").gameObject;
         e2 = inv.transform.Find("active").Find("equip2").gameObject;
         b = inv.transform.Find("active").Find("battery").gameObject;
+        m = inv.transform.Find("active").Find("playerMoney").GetChild(0).gameObject;
         a1 = inv.transform.Find("active").Find("ammoBasic").GetChild(0).gameObject;
         a2 = inv.transform.Find("active").Find("ammoRapid").GetChild(0).gameObject;
         a3 = inv.transform.Find("active").Find("ammoShotgun").GetChild(0).gameObject;
 
+        m.GetComponent<Text>().text = gameControl.control.money.ToString();
         a1.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
         a2.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
         a3.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();

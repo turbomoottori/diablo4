@@ -14,6 +14,9 @@ public class interact : MonoBehaviour {
             CheckObjects();
         else
             ui.interactableObject = null;
+
+        if (ui.anyOpen)
+            lastClosest = null;
     }
 
     public bool CanInteract()
@@ -40,11 +43,17 @@ public class interact : MonoBehaviour {
         {
             if (hitColliders[i].gameObject.GetComponent<interactable>() != null)
             {
-                float dist = Vector3.Distance(hitColliders[i].transform.position, transform.position);
-                if (dist < minDist)
+                Vector3 colliderDirection = hitColliders[i].transform.position - transform.position;
+                float angleToObject = Vector3.Angle(colliderDirection, transform.forward);
+
+                if (angleToObject >= -70 && angleToObject <= 70)
                 {
-                    closest = hitColliders[i].gameObject;
-                    minDist = dist;
+                    float dist = Vector3.Distance(hitColliders[i].transform.position, transform.position);
+                    if (dist < minDist)
+                    {
+                        closest = hitColliders[i].gameObject;
+                        minDist = dist;
+                    }
                 }
             }
             i++;
@@ -70,5 +79,8 @@ public class interact : MonoBehaviour {
     {
         if (other.gameObject.GetComponent<interactable>() != null)
             other.gameObject.GetComponent<interactable>().HideE();
+
+        if (other.gameObject == lastClosest)
+            lastClosest = null;
     }
 }

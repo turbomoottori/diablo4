@@ -72,6 +72,7 @@ public class gameControl : MonoBehaviour
     {
         if (scene.name != "mainmenu")
             AutoSave();
+        currentScene = scene.name;
     }
 
     public void SaveGame(int saveFile)
@@ -270,6 +271,7 @@ class PlayerData
     public List<Book> bookcaseBooks;
     public string currentScene;
 }
+
 
 [System.Serializable]
 public class MerchantData
