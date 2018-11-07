@@ -55,7 +55,8 @@ Shader "Unlit/Custom/feidi"
          {
            v2f o;      
            o.worldPos =  mul(unity_ObjectToWorld, v.vertex);
-           o.pos = UnityObjectToClipPos (v.vertex); //o.pos = 0 ==> no Depth
+           //o.pos = UnityObjectToClipPos (v.vertex); //o.pos = 0 ==> no Depth
+		   o.pos = UnityObjectToClipPos (v.vertex); //o.pos = 0 ==> no Depth
            return o;
          }
          half4 frag (v2f i) : COLOR
@@ -151,11 +152,13 @@ Shader "Unlit/Custom/feidi"
            }
          
 		   fixed4 col = tex2D(_MainTex, IN.uv_MainTex);
-		  
-           o.Albedo = _Color * col;
+		   col.a = 1.0f;
+		   
+           o.Albedo = col;
            o.Metallic = _Metallic;
            o.Smoothness = _Glossiness;
-           o.Alpha = _Color.a;  
+           o.Alpha = _Color.a;
+			//o.Alpha = 1.0f;		   
  
          }
           ENDCG    
