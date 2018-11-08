@@ -10,8 +10,6 @@ public class cameraMovement : MonoBehaviour {
     float min, max, angle;
     float minFov, maxFov;
 
-    GameObject hidden;
-
 	void Start () {
         offset = transform.position - player.position;
 
@@ -46,34 +44,98 @@ public class cameraMovement : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.K) && Camera.main.fieldOfView > minFov)
             Camera.main.fieldOfView -= 5;
 
-        RaycastHit hit;
-        RaycastHit h;
-
-        //hide houses script here
+        //hides objects that are too close to camera
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 0.02f);
+        foreach(Collider c in hitColliders)
+        {
+            if (c.gameObject.layer == LayerMask.NameToLayer("CanHide"))
+                StartCoroutine(FadeOut(FindHideableGameObject(c.gameObject).gameObject, c.gameObject));
+        }
+        
+        //hides objects between camera and player
+        RaycastHit hit, h;
         if (Physics.Linecast(transform.position, targetPos - transform.position, out hit) && Physics.Linecast(targetPos, transform.position, out h))
         {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
-                Fadeout(hit.collider.gameObject);
+                StartCoroutine(FadeOut(FindHideableGameObject(hit.collider.gameObject).gameObject, hit.collider.gameObject));
             if (h.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
-                Fadeout(h.collider.gameObject);
+                StartCoroutine(FadeOut(FindHideableGameObject(h.collider.gameObject).gameObject, h.collider.gameObject));
+        }
+    
+    }
 
+    //fades gameobject out
+    IEnumerator FadeOut(GameObject g, GameObject objectWithCollider)
+    {
+        if (g.GetComponent<Animator>().GetBool("fade") == true)
+            yield return null;
+        else
+        {
+            g.GetComponent<Animator>().SetBool("fade", true);
+            yield return new WaitUntil(() => IsSeen(objectWithCollider) == false);
+            g.GetComponent<Animator>().SetBool("fade", false);
         }
     }
 
-
-    void Fadeout(GameObject g)
+    //checks if object is seen by raycast from camera to player
+    bool SeenByRaycast1(GameObject g)
     {
-        if (g.transform.parent != hidden && hidden != null)
-            hidden.GetComponentInChildren<Animator>().SetTrigger("fadein");
+        RaycastHit[] cameraToPlayer = Physics.RaycastAll(transform.position, player.transform.position - transform.position, Vector3.Distance(player.transform.position, transform.position));
+        for (int i = 0; i < cameraToPlayer.Length; i++)
+        {
+            if (cameraToPlayer[i].collider.gameObject == g)
+                return true;
+        }
+        return false;
+    }
 
+    //checks if object is seen by raycast from player to camera
+    bool SeenByRaycast2(GameObject g)
+    {
+        RaycastHit[] playerToCamera = Physics.RaycastAll(player.transform.position, transform.position - player.transform.position, Vector3.Distance(player.transform.position,transform.position));
+        for(int i = 0; i < playerToCamera.Length; i++)
+        {
+            if (playerToCamera[i].collider.gameObject == g)
+                return true;
+        }
+        return false;
+    }
+
+    //checks if object is seen by either raycast or if object is too close to camera
+    bool IsSeen(GameObject g)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 0.02f);
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (FindHideableGameObject(hitColliders[i].gameObject))
+                return true;
+        }
+
+        if (!SeenByRaycast1(g) && !SeenByRaycast2(g))
+            return false;
+
+        return true;
+    }
+
+    //finds gameobject with house tag
+    Transform FindHideableGameObject(GameObject g)
+    {
         if (g.transform.parent != null)
         {
-            hidden = g.transform.parent.gameObject;
-
-            if (g.transform.parent.GetComponent<Animator>() != null)
-                g.GetComponent<Animator>().SetTrigger("fadeout");
-            else
-                g.transform.parent.GetComponentInChildren<Animator>().SetTrigger("fadeout");
+            foreach (Transform child in g.transform.parent)
+                if (child.tag == "House")
+                    return child;
         }
+        else if (g.transform.parent == null)
+        {
+            if (g.tag == "House")
+                return g.transform;
+
+            foreach (Transform child in g.transform)
+                if (child.tag == "House")
+                    return child;
+        }
+
+        return null;
     }
 }
