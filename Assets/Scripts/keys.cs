@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class keys : MonoBehaviour {
 
     //WIP
-    public static KeyCode key_interact, key_inventory, key_dash;
+    public static SavedKeys savedKeys;
+
 
 	// Use this for initialization
 	void Start () {
@@ -15,13 +16,27 @@ public class keys : MonoBehaviour {
 
     public static void DefaultKeys()
     {
-        key_dash = KeyCode.LeftShift;
-        key_interact = KeyCode.E;
-        key_inventory = KeyCode.Tab;
+        savedKeys = new SavedKeys() {
+            interactKey = KeyCode.E,
+            inventoryKey = KeyCode.Tab,
+            dashKey = KeyCode.LeftShift,
+            slowmoKey = KeyCode.Alpha1,
+        };
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public static bool AcceptNewKey(KeyCode newKey)
+    {
+        if (newKey == KeyCode.Escape || newKey == KeyCode.Space)
+            return false;
+        if (newKey == savedKeys.interactKey || newKey == savedKeys.inventoryKey || newKey == savedKeys.dashKey || newKey == savedKeys.slowmoKey)
+            return false;
+
+        return true;
+    }
+}
+
+[System.Serializable]
+public class SavedKeys
+{
+    public KeyCode interactKey, inventoryKey, dashKey, slowmoKey;
 }

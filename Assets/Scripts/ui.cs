@@ -16,7 +16,8 @@ public class ui : MonoBehaviour {
     GameObject[] pauseWindows, answers, books;
     KeyCode keyInventory, keyInteract;
     public static bool anyOpen;
-    bool choice, bookReading, hoverOn, eHoverOn;
+    bool choice, bookReading, hoverOn, eHoverOn, changeKeys;
+    string keyToChange = "";
     string buttonName = "";
     int tempInt = 0;
     public static GameObject interactableObject;
@@ -31,16 +32,23 @@ public class ui : MonoBehaviour {
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
-        DefaultKeys();
+        GetKeys();
         LoadUI();
         tempHp = gameControl.control.hp;
 	}
 
     //sets default keys
-    void DefaultKeys()
+    void GetKeys()
     {
-        keyInventory = KeyCode.Tab;
-        keyInteract = KeyCode.E;
+        keys.DefaultKeys();
+        keyInventory = keys.savedKeys.inventoryKey;
+        keyInteract = keys.savedKeys.interactKey;
+    }
+
+    private void OnGUI()
+    {
+        if (changeKeys && Input.anyKeyDown)
+            ChangeKeys(keyToChange, Event.current.keyCode);
     }
 
     void Update () {
@@ -86,7 +94,7 @@ public class ui : MonoBehaviour {
                         merchant_popup.SetActive(false);
                 }
 
-                if (Input.GetKeyDown(keyInventory) || Input.GetKeyDown(keyInteract))
+                if (Input.GetKeyDown(keys.savedKeys.inventoryKey) || Input.GetKeyDown(keyInteract))
                 {
                     if(inv.activeInHierarchy)
                         Close(inv);
@@ -124,7 +132,7 @@ public class ui : MonoBehaviour {
                 break;
             case false:
 
-                if (Input.GetKeyDown(keyInventory))
+                if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
                     OpenInventory();
                 if (Input.GetKeyDown(KeyCode.Escape))
                     OpenPauseMenu();
@@ -772,13 +780,23 @@ public class ui : MonoBehaviour {
             CloseAllPauseMenusExcept(2);
         else if (btn == "savequit")
             CloseAllPauseMenusExcept(3);
+        else if (btn == "keybinds")
+            CloseAllPauseMenusExcept(4);
         else if (btn == "backButton")
             CloseAllPauseMenusExcept(0);
+        else if (btn.Contains("changekey_"))
+        {
+            string end = btn.Replace("changekey_", "");
+
+            changeKeys = true;
+            keyToChange = end;
+            print(keyToChange);
+        }
         else if (btn.Contains("saveslot"))
         {
             if (btn == "saveslot1")
             {
-                if (File.Exists(Application.persistentDataPath + "/save1.dat") && lastButton!=btn)
+                if (File.Exists(Application.persistentDataPath + "/save1.dat") && lastButton != btn)
                 {
                     savecaution.SetActive(true);
                 }
@@ -820,6 +838,31 @@ public class ui : MonoBehaviour {
             }
         }
         lastButton = btn;
+    }
+
+    void ChangeKeys(string keyToChange, KeyCode newKey)
+    {
+        changeKeys = false;
+
+        if (keys.AcceptNewKey(newKey))
+        {
+            switch (keyToChange)
+            {
+                case "inventory":
+                    keys.savedKeys.inventoryKey = newKey;
+                    break;
+                case "interact":
+                    keys.savedKeys.interactKey = newKey;
+                    break;
+                case "dash":
+                    keys.savedKeys.dashKey = newKey;
+                    break;
+                case "slowtime":
+                    keys.savedKeys.slowmoKey = newKey;
+                    break;
+            }
+            pauseWindows[4].transform.Find("changekey_" + keyToChange).Find("keycode").GetComponent<Text>().text = newKey.ToString();
+        }
     }
 
     void ClickAnswer()
@@ -1047,6 +1090,7 @@ public class ui : MonoBehaviour {
         popup.SetActive(false);
     }
 
+    //controls pause menu
     void CloseAllPauseMenusExcept(int num)
     {
         for (int i = 0; i < pauseWindows.Length; i++)
@@ -1059,6 +1103,24 @@ public class ui : MonoBehaviour {
 
         if (num == 1)
             gameControl.control.SaveOptions();
+
+        if (num == 2)
+        {
+            if (File.Exists(Application.persistentDataPath + "/save1.dat"))
+                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = Color.gray;
+            else
+                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = Color.white;
+
+            if (File.Exists(Application.persistentDataPath + "/save2.dat"))
+                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = Color.gray;
+            else
+                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = Color.white;
+
+            if (File.Exists(Application.persistentDataPath + "/save3.dat"))
+                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.gray;
+            else
+                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.white;
+        }
 
         if (num == 0)
             savecaution.SetActive(false);
@@ -1088,11 +1150,12 @@ public class ui : MonoBehaviour {
         if (pausemenu == null)
         {
             pausemenu = Instantiate(Resources.Load("ui/pauseWindow") as GameObject, canv, false);
-            pauseWindows = new GameObject[4];
+            pauseWindows = new GameObject[5];
             pauseWindows[0] = pausemenu.transform.Find("general").gameObject;
             pauseWindows[1] = pausemenu.transform.Find("options").gameObject;
             pauseWindows[2] = pausemenu.transform.Find("saves").gameObject;
             pauseWindows[3] = pausemenu.transform.Find("exit").gameObject;
+            pauseWindows[4] = pausemenu.transform.Find("keys").gameObject;
             Button[] tempArray;
             tempArray = pausemenu.GetComponentsInChildren<Button>().ToArray();
             for (int i = 0; i < tempArray.Length; i++)

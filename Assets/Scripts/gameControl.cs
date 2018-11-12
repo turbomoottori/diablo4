@@ -237,6 +237,7 @@ public class gameControl : MonoBehaviour
         file = File.Create(Application.persistentDataPath + "/options.dat");
         OptionsData data = new OptionsData();
         data.volume = volume;
+        data.savedKeys = keys.savedKeys;
 
         bf.Serialize(file, data);
         file.Close();
@@ -253,6 +254,7 @@ public class gameControl : MonoBehaviour
             file.Close();
 
             volume = data.volume;
+            keys.savedKeys = data.savedKeys;
         }
     }
 }
@@ -285,6 +287,7 @@ public class MerchantData
 class OptionsData
 {
     public int volume;
+    public SavedKeys savedKeys;
 }
 
 [System.Serializable]
