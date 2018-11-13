@@ -14,11 +14,9 @@ public class ui : MonoBehaviour {
     GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup;
     GameObject itemContainer, chest_itemContainer, chest_storedContainer, merchant_owned, merchant_selling, dNpc, dPl;
     GameObject[] pauseWindows, answers, books;
-    KeyCode keyInventory, keyInteract;
     public static bool anyOpen;
     bool choice, bookReading, hoverOn, eHoverOn, changeKeys;
-    string keyToChange = "";
-    string buttonName = "";
+    string keyToChange, buttonName, lastButton = "";
     int tempInt = 0;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
@@ -32,23 +30,23 @@ public class ui : MonoBehaviour {
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
-        GetKeys();
         LoadUI();
         tempHp = gameControl.control.hp;
 	}
 
-    //sets default keys
-    void GetKeys()
-    {
-        keys.DefaultKeys();
-        keyInventory = keys.savedKeys.inventoryKey;
-        keyInteract = keys.savedKeys.interactKey;
-    }
-
     private void OnGUI()
     {
         if (changeKeys && Input.anyKeyDown)
-            ChangeKeys(keyToChange, Event.current.keyCode);
+        {
+            if (Event.current.isKey)
+                ChangeKeys(keyToChange, Event.current.keyCode);
+            else if (Event.current.isMouse)
+            {
+                string mouseKeyText = "Mouse" + Event.current.button.ToString();
+                KeyCode mouseKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), mouseKeyText);
+                ChangeKeys(keyToChange, mouseKey);
+            }
+        }
     }
 
     void Update () {
@@ -92,9 +90,16 @@ public class ui : MonoBehaviour {
                         bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
                     if (merchant_popup.activeInHierarchy)
                         merchant_popup.SetActive(false);
+                    if (pauseWindows[4].activeInHierarchy)
+                    {
+                        if (changeKeys)
+                            changeKeys = false;
+                        else
+                            CloseAllPauseMenusExcept(1);
+                    }
                 }
 
-                if (Input.GetKeyDown(keys.savedKeys.inventoryKey) || Input.GetKeyDown(keyInteract))
+                if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
                 {
                     if(inv.activeInHierarchy)
                         Close(inv);
@@ -115,7 +120,7 @@ public class ui : MonoBehaviour {
                         merchant_popup.SetActive(false);
                 }
 
-                if ((dBox.activeInHierarchy && !choice) && (Input.GetKeyDown(keyInteract) || Input.GetMouseButtonDown(0)))
+                if ((dBox.activeInHierarchy && !choice) && (Input.GetKeyDown(keys.savedKeys.interactKey) || Input.GetMouseButtonDown(0)))
                     Dialogue();
 
                 if (bookcase.activeInHierarchy && Input.GetMouseButtonDown(0))
@@ -136,7 +141,7 @@ public class ui : MonoBehaviour {
                     OpenInventory();
                 if (Input.GetKeyDown(KeyCode.Escape))
                     OpenPauseMenu();
-                if (Input.GetKeyDown(keyInteract))
+                if (Input.GetKeyDown(keys.savedKeys.interactKey))
                 {
                     if (interactableObject != null)
                     {
@@ -303,6 +308,7 @@ public class ui : MonoBehaviour {
         }
     }
 
+    //adds ammo as "item" in merchant's list
     void AddAmmoIcons(string ammoType)
     {
         GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, merchant_selling.transform, false);
@@ -433,6 +439,7 @@ public class ui : MonoBehaviour {
         merchant.transform.Find("moneyammo").Find("rapidAmmo").Find("amount").GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
         merchant.transform.Find("moneyammo").Find("shotgunAmmo").Find("amount").GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
 
+        //changes color of the items that can't be sold
         foreach (Item i in items.ownedItems)
         {
             if (i == items.equippedOne || i == items.equippedTwo)
@@ -447,6 +454,7 @@ public class ui : MonoBehaviour {
             }
         }
 
+        //changes color of the items that can't be bought
         foreach (Item i in merchantItems)
         {
             if (NewValue(i) > gameControl.control.money)
@@ -479,6 +487,7 @@ public class ui : MonoBehaviour {
         a2.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
         a3.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
 
+        //displays equip 1
         if (items.equippedOne != null)
         {
             e1.transform.Find("title").GetComponent<Text>().text = items.equippedOne.name;
@@ -508,6 +517,7 @@ public class ui : MonoBehaviour {
             e1.transform.Find("ammo").gameObject.SetActive(false);
         }
 
+        //displays equip 2
         if (items.equippedTwo != null)
         {
             e2.transform.Find("title").GetComponent<Text>().text = items.equippedTwo.name;
@@ -537,6 +547,7 @@ public class ui : MonoBehaviour {
             e2.transform.Find("ammo").gameObject.SetActive(false);
         }
 
+        //displays battery in use
         if (items.inUse != null)
         {
             b.transform.Find("slot").Find("BatteryHpContainer").GetChild(0).GetComponent<Image>().fillAmount = items.inUse.energy;
@@ -585,10 +596,12 @@ public class ui : MonoBehaviour {
         }
     }
 
+    //clicking any item
     public void ClickedItem(bool leftClick, buttonScript.buttonType type, string name)
     {
         switch (type)
         {
+            //item is in inventory
             case buttonScript.buttonType.inventoryItem:
                 Item t = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
                 if (t != null)
@@ -600,7 +613,7 @@ public class ui : MonoBehaviour {
                         //equipping a weapon in slot 1
                         if (leftClick)
                         {
-                            //if some item is already equipped on slot 1
+                            //some item is already equipped on slot 1
                             if (items.equippedOne != null)
                             {
                                 if (items.equippedOne.name + items.equippedOne.id != name)
@@ -629,7 +642,7 @@ public class ui : MonoBehaviour {
                         //equipping a weapon in slot 2
                         else if (!leftClick)
                         {
-                            //if some item is already equipped in slot 2
+                            //ome item is already equipped in slot 2
                             if (items.equippedTwo != null)
                             {
                                 if (items.equippedTwo.name + items.equippedTwo.id != name)
@@ -680,6 +693,7 @@ public class ui : MonoBehaviour {
                 ShowEquips();
                 break;
 
+            //buy item
             case buttonScript.buttonType.readyToBuy:
                 StopHover();
                 Item tempItem = merchantItems.FirstOrDefault(i => i.name + i.id == name);
@@ -702,6 +716,7 @@ public class ui : MonoBehaviour {
                 CheckValuesAndEquips();
                 break;
 
+            //sell item
             case buttonScript.buttonType.readyToSell:
                 StopHover();
                 tempItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
@@ -716,14 +731,17 @@ public class ui : MonoBehaviour {
                 CheckValuesAndEquips();
                 break;
 
+            //can't buy item
             case buttonScript.buttonType.cantBuy:
                 print("can't buy");
                 break;
 
+            //can't sell item
             case buttonScript.buttonType.cantSell:
                 print("can't sell");
                 break;
 
+            //store item in chest
             case buttonScript.buttonType.readyToStore:
                 tempItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
                 if (tempItem != null && tempItem != items.equippedOne && tempItem != items.equippedTwo && tempItem != items.inUse)
@@ -736,6 +754,7 @@ public class ui : MonoBehaviour {
                 }
                 break;
 
+            //take item from chest
             case buttonScript.buttonType.readyToTake:
                 StopHover();
                 tempItem = items.storedItems.FirstOrDefault(i => i.name + i.id == name);
@@ -747,6 +766,8 @@ public class ui : MonoBehaviour {
                     ShowItems(chest_storedContainer, items.storedItems, buttonScript.buttonType.readyToTake);
                 }
                 break;
+
+            //buy ammo
             case buttonScript.buttonType.ammo:
                 StopHover();
                 merchant_popup.SetActive(true);
@@ -764,10 +785,10 @@ public class ui : MonoBehaviour {
         }
     }
 
+    //click a button in pause menu
     void PauseClickListener()
     {
         string btn = EventSystem.current.currentSelectedGameObject.name;
-        string lastButton = "";
 
         if (!btn.Contains("saveslot"))
             savecaution.SetActive(false);
@@ -787,62 +808,37 @@ public class ui : MonoBehaviour {
         else if (btn.Contains("changekey_"))
         {
             string end = btn.Replace("changekey_", "");
-
+            GameObject.Find(btn).GetComponent<Button>().image.color = Color.gray;
             changeKeys = true;
             keyToChange = end;
-            print(keyToChange);
+        }
+        else if (btn == "defaults")
+        {
+            keys.DefaultKeys();
+            ShowKeyBinds();
         }
         else if (btn.Contains("saveslot"))
         {
-            if (btn == "saveslot1")
+            int num = int.Parse(btn.Replace("saveslot", ""));
+            if (File.Exists(Application.persistentDataPath + "/save" + num.ToString() + ".dat") && lastButton != btn)
             {
-                if (File.Exists(Application.persistentDataPath + "/save1.dat") && lastButton != btn)
-                {
-                    savecaution.SetActive(true);
-                }
-                else
-                {
-                    gameControl.control.SaveGame(1);
-                    savecaution.SetActive(false);
-                    if (pauseWindows[3].activeInHierarchy)
-                        print("exitgame");
-                }
+                savecaution.SetActive(true);
             }
-            else if (btn == "saveslot2")
+            else
             {
-                if (File.Exists(Application.persistentDataPath + "/save2.dat") && lastButton != btn)
-                {
-                    savecaution.SetActive(true);
-                }
-                else
-                {
-                    gameControl.control.SaveGame(2);
-                    savecaution.SetActive(false);
-                    if (pauseWindows[3].activeInHierarchy)
-                        print("exitgame");
-                }
-            }
-            else if (btn == "saveslot3")
-            {
-                if (File.Exists(Application.persistentDataPath + "/save3.dat") && lastButton != btn)
-                {
-                    savecaution.SetActive(true);
-                }
-                else
-                {
-                    gameControl.control.SaveGame(3);
-                    savecaution.SetActive(false);
-                    if (pauseWindows[3].activeInHierarchy)
-                        print("exitgame");
-                }
+                gameControl.control.SaveGame(num);
+                savecaution.SetActive(false);
+                if (pauseWindows[3].activeInHierarchy)
+                    print("exítgame");
             }
         }
         lastButton = btn;
     }
 
+    //change keybinds
     void ChangeKeys(string keyToChange, KeyCode newKey)
     {
-        changeKeys = false;
+        GameObject.Find("changekey_" + keyToChange).GetComponent<Button>().image.color = Color.white;
 
         if (keys.AcceptNewKey(newKey))
         {
@@ -858,13 +854,23 @@ public class ui : MonoBehaviour {
                     keys.savedKeys.dashKey = newKey;
                     break;
                 case "slowtime":
-                    keys.savedKeys.slowmoKey = newKey;
+                    keys.savedKeys.slowtimeKey = newKey;
+                    break;
+                case "attack":
+                    keys.savedKeys.attackKey = newKey;
+                    break;
+                case "spAttack":
+                    keys.savedKeys.spAttackKey = newKey;
                     break;
             }
             pauseWindows[4].transform.Find("changekey_" + keyToChange).Find("keycode").GetComponent<Text>().text = newKey.ToString();
         }
+
+        if(newKey != KeyCode.Escape)
+            changeKeys = false;
     }
 
+    //choose an answer in dialogue
     void ClickAnswer()
     {
         string ans = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text;
@@ -882,6 +888,7 @@ public class ui : MonoBehaviour {
         choice = false;
     }
 
+    //open a book
     void ClickBook()
     {
         string b = EventSystem.current.currentSelectedGameObject.name;
@@ -891,6 +898,7 @@ public class ui : MonoBehaviour {
         bookcase.transform.Find("bookText").GetChild(0).GetComponent<Text>().text = tBook.text;
     }
 
+    //unequip a weapon or battery
     public void ClickEquip(int equipNum)
     {
         switch (equipNum)
@@ -909,6 +917,7 @@ public class ui : MonoBehaviour {
         ShowEquips();
     }
 
+    //buying ammo
     public void MerchantAmmoClicks()
     {
         string buttonName = EventSystem.current.currentSelectedGameObject.name;
@@ -962,6 +971,7 @@ public class ui : MonoBehaviour {
         merchant_popup.transform.Find("container").Find("amount").GetComponent<Text>().text = tempAmmoAmount.ToString() + " (costs " + finalValue.ToString() + ")";
     }
 
+    //checks if the next piece of ammo is affordable or not
     public bool CanAffordNextAmmo(int ammoType)
     {
         int newValue, nextValue = 0;
@@ -988,6 +998,7 @@ public class ui : MonoBehaviour {
             return true;
     }
 
+    //toggle auto battery
     void BtrToggle(bool toggleOn)
     {
         if (toggleOn)
@@ -998,6 +1009,40 @@ public class ui : MonoBehaviour {
         }
         else
             gameControl.control.autoBattery = false;
+    }
+
+    //displays key binds
+    void ShowKeyBinds()
+    {
+        foreach(Transform t in pauseWindows[4].transform)
+        {
+            if (t.name.Contains("changekey_"))
+            {
+                string keyToCheck = t.name.Replace("changekey_", "");
+                switch (keyToCheck)
+                {
+                    case "inventory":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.inventoryKey.ToString();
+                        break;
+                    case "interact":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.interactKey.ToString();
+                        break;
+                    case "dash":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.dashKey.ToString();
+                        break;
+                    case "slowtime":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.slowtimeKey.ToString();
+                        break;
+                    case "attack":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.attackKey.ToString();
+                        break;
+                    case "spAttack":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.spAttackKey.ToString();
+                        break;
+                }
+                t.GetComponent<Button>().image.color = Color.white;
+            }
+        }
     }
 
     //shows item info on popup
@@ -1101,6 +1146,9 @@ public class ui : MonoBehaviour {
                 pauseWindows[i].SetActive(true);
         }
 
+        if (num == 0)
+            savecaution.SetActive(false);
+
         if (num == 1)
             gameControl.control.SaveOptions();
 
@@ -1122,10 +1170,11 @@ public class ui : MonoBehaviour {
                 pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.white;
         }
 
-        if (num == 0)
-            savecaution.SetActive(false);
+        if (num == 4)
+            ShowKeyBinds();
     }
 
+    //displays name and image of recently collected item
     public void ShowCollectedItem(string itemName)
     {
         showItemTimer = 0;
@@ -1133,6 +1182,7 @@ public class ui : MonoBehaviour {
         newItem.transform.Find("collectedName").GetComponent<Text>().text = itemName;
     }
 
+    //loads every element in ui
     void LoadUI()
     {
         if (hp == null)
@@ -1224,6 +1274,7 @@ public class ui : MonoBehaviour {
         popup.transform.SetAsLastSibling();
     }
 
+    //calculates the price merchant will sell an item
     public int NewValue(Item item)
     {
         float tempValue = item.baseValue * priceMultiplier;

@@ -72,10 +72,10 @@ public class attack : MonoBehaviour {
             }
             //ATTACKING
 
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetKeyDown(keys.savedKeys.attackKey))
                 BasicAttack();
 
-            if (Input.GetButtonDown("Fire2"))
+            if (Input.GetKeyDown(keys.savedKeys.spAttackKey))
                 SpecialAttack();
 
             switch (shoot)
