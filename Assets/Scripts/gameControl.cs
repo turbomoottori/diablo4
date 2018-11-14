@@ -302,3 +302,11 @@ public class EnemyList
 {
     public float posX, posZ, posY;
 }
+
+
+//WIP, REMEMBER TO DO SMTH ABOUT THIS
+[System.Serializable]
+public class PlayerPos
+{
+    public float x, y, z;
+}

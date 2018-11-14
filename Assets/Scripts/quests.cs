@@ -6,6 +6,23 @@ using System.Linq;
 public class quests : MonoBehaviour {
 
     public static List<Quest> questList = new List<Quest>();
+    public static int workbenchStage = 0;
+
+    private void Start()
+    {
+        string mainQuestName = "Main quest";
+        string mainQuestDesc = "win lol";
+
+        if (questList.FirstOrDefault(q => q.questName == mainQuestName) == null)
+        {
+            questList.Add(new Quest() {
+                questName = mainQuestName,
+                isMainQuest = true,
+                completed = false,
+                questDesc = mainQuestDesc
+            });
+        }
+    }
 
     public static void QuestCompleted(string qName)
     {
@@ -92,6 +109,7 @@ public class Quest
     [TextArea]
     public string questDesc;
     public bool completed;
+    public bool isMainQuest;
     public Reward reward;
     public Ability rewardAbility;
     public int rewardMoney;

@@ -86,7 +86,7 @@ public class Item
 {
     public string name;
     public int id, baseValue, weight;
-    public bool stackable;
+    public bool stackable, questItem;
 }
 
 [System.Serializable]

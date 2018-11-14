@@ -44,6 +44,7 @@ public class interactable : MonoBehaviour {
         bookcase,
         npc,
         door,
-        deliveryLocation
+        deliveryLocation,
+        workbench
     }
 }

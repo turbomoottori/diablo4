@@ -38,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1854599146704390}
   m_LocalRotation: {x: -0.68286616, y: 0.1835589, z: 0.18355885, w: 0.68286616}
-  m_LocalPosition: {x: 379.01053, y: 8.9, z: 71.82981}
+  m_LocalPosition: {x: 388.25, y: -2.0406127, z: 115.79}
   m_LocalScale: {x: 12.132398, y: 110.6325, z: 2.7808263}
   m_Children: []
   m_Father: {fileID: 0}
@@ -111,19 +111,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 245683ca959af7146991595a7c82c22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 3
+  itemType: 0
   item:
     name: 
     id: 0
     baseValue: 0
     weight: 0
     stackable: 0
+    questItem: 0
   weapon:
     name: 
     id: 0
     baseValue: 0
     weight: 0
     stackable: 0
+    questItem: 0
     damage: 0
     speed: 0
   gun:
@@ -132,20 +134,21 @@ MonoBehaviour:
     baseValue: 0
     weight: 0
     stackable: 0
+    questItem: 0
     damage: 0
     speed: 0
     type: 0
     range: 0
   book:
-    name: a book
+    name: 
     id: 0
     baseValue: 0
     weight: 0
     stackable: 0
-    text: 'A BOOK
-
-      what a wonderful title to this wonderful book'
+    questItem: 0
+    text: 
   batteryEnergy: 0
+  ammoAmount: 0
 --- !u!114 &114758042601636168
 MonoBehaviour:
   m_ObjectHideFlags: 1

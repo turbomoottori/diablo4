@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class ui : MonoBehaviour {
 
     Transform canv;
-    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup;
+    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup, tBox;
     GameObject itemContainer, chest_itemContainer, chest_storedContainer, merchant_owned, merchant_selling, dNpc, dPl;
     GameObject[] pauseWindows, answers, books;
     public static bool anyOpen;
@@ -69,126 +69,135 @@ public class ui : MonoBehaviour {
         switch (anyOpen)
         {
             case true:
+                //closing active windows
+                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(keys.savedKeys.inventoryKey))
+                    Esc();
 
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(keys.savedKeys.interactKey))
                 {
-                    if (inv.activeInHierarchy)
-                        Close(inv);
-                    if (pauseWindows[1].activeInHierarchy || pauseWindows[2].activeInHierarchy || pauseWindows[3].activeInHierarchy)
-                        CloseAllPauseMenusExcept(0);
-                    if (pauseWindows[0].activeInHierarchy)
-                        Close(pausemenu);
-                    if (chest.activeInHierarchy)
-                        Close(chest);
-                    if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
-                        Close(merchant);
+                    if (bookcase.activeInHierarchy)
+                    {
+                        if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+                            bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
+                        if (bookReading)
+                        {
+                            bookcase.transform.Find("bookText").gameObject.SetActive(false);
+                            bookReading = false;
+                        }
+                    }
                     if (dBox.activeInHierarchy && !choice)
                         Dialogue();
-                    if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        Close(bookcase);
-                    if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                    if (merchant_popup.activeInHierarchy)
-                        merchant_popup.SetActive(false);
-                    if (pauseWindows[4].activeInHierarchy)
-                    {
-                        if (changeKeys)
-                            changeKeys = false;
-                        else
-                            CloseAllPauseMenusExcept(1);
-                    }
+                    if (tBox.activeInHierarchy)
+                        Close(tBox);
                 }
-
-                if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
-                {
-                    if(inv.activeInHierarchy)
-                        Close(inv);
-                    if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
-                        Close(merchant);
-                    if (chest.activeInHierarchy)
-                        Close(chest);
-                    if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        Close(bookcase);
-                    if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                    if (bookReading)
-                    {
-                        bookcase.transform.Find("bookText").gameObject.SetActive(false);
-                        bookReading = false;
-                    }
-                    if (merchant_popup.activeInHierarchy)
-                        merchant_popup.SetActive(false);
-                }
-
-                if ((dBox.activeInHierarchy && !choice) && (Input.GetKeyDown(keys.savedKeys.interactKey) || Input.GetMouseButtonDown(0)))
-                    Dialogue();
-
-                if (bookcase.activeInHierarchy && Input.GetMouseButtonDown(0))
-                {
-                    if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                    if (bookReading)
-                    {
-                        bookcase.transform.Find("bookText").gameObject.SetActive(false);
-                        bookReading = false;
-                    }
-                }
-
                 break;
             case false:
-
                 if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
                     OpenInventory();
                 if (Input.GetKeyDown(KeyCode.Escape))
                     OpenPauseMenu();
-                if (Input.GetKeyDown(keys.savedKeys.interactKey))
+
+                //interacting
+                if (Input.GetKeyDown(keys.savedKeys.interactKey) && interactableObject != null)
                 {
-                    if (interactableObject != null)
+                    switch (interactableObject.gameObject.GetComponent<interactable>().type)
                     {
-                        switch (interactableObject.gameObject.GetComponent<interactable>().type)
-                        {
-                            case interactable.Type.merchant:
-                                OpenMerchantWindow();
-                                break;
-                            case interactable.Type.collectible:
-                                interactableObject.GetComponent<interactable>().HideE();
-                                interactableObject.GetComponent<newCollectible>().PickUp();
-                                break;
-                            case interactable.Type.chest:
-                                OpenChestWindow();
-                                break;
-                            case interactable.Type.npc:
-                                interactableObject.GetComponent<npc>().Interact();
-                                currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
-                                currentPage = 0;
-                                Dialogue();
-                                break;
-                            case interactable.Type.bookcase:
-                                OpenBookcase();
-                                break;
-                            case interactable.Type.door:
-                                SceneManager.LoadScene(interactableObject.GetComponent<interactable>().levelToLoad);
-                                break;
-                            case interactable.Type.deliveryLocation:
-                                DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
-                                for(int i = 0; i < dq.whereToDeliver.Length; i++)
+                        case interactable.Type.merchant:
+                            OpenMerchantWindow();
+                            break;
+                        case interactable.Type.collectible:
+                            interactableObject.GetComponent<interactable>().HideE();
+                            interactableObject.GetComponent<newCollectible>().PickUp();
+                            break;
+                        case interactable.Type.chest:
+                            OpenChestWindow();
+                            break;
+                        case interactable.Type.npc:
+                            interactableObject.GetComponent<npc>().Interact();
+                            currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
+                            currentPage = 0;
+                            Dialogue();
+                            break;
+                        case interactable.Type.bookcase:
+                            OpenBookcase();
+                            break;
+                        case interactable.Type.door:
+                            SceneManager.LoadScene(interactableObject.GetComponent<interactable>().levelToLoad);
+                            break;
+                        case interactable.Type.deliveryLocation:
+                            DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
+                            for (int i = 0; i < dq.whereToDeliver.Length; i++)
+                            {
+                                if (dq.whereToDeliver[i] == interactableObject && dq.delivered[i] == false)
                                 {
-                                    if (dq.whereToDeliver[i] == interactableObject && dq.delivered[i] == false)
-                                    {
-                                        dq.delivered[i] = true;
-                                        items.ownedItems.Remove(dq.itemToDeliver);
-                                        ShowCollectedItem(dq.itemToDeliver.name + " delivered");
-                                        interactableObject.GetComponent<interactable>().HideE();
-                                        Destroy(interactableObject.GetComponent<interactable>());
-                                    }
+                                    dq.delivered[i] = true;
+                                    items.ownedItems.Remove(dq.itemToDeliver);
+                                    ShowCollectedItem(dq.itemToDeliver.name + " delivered");
+                                    interactableObject.GetComponent<interactable>().HideE();
+                                    Destroy(interactableObject.GetComponent<interactable>());
                                 }
-                                break;
-                        }
+                            }
+                            break;
+                        case interactable.Type.workbench:
+                            switch (quests.workbenchStage)
+                            {
+                                case 0:
+                                    OpenThought("It's my workbench. I don't need it right now");
+                                    break;
+                                case 1:
+                                    //here we should have some animations or sounds or whatever
+                                    //indicating that the player has built a dash backpack thing
+                                    //also after the cutscene or whatever it's gonna be
+                                    //you should remember to change the dash variable thing to true
+                                    //because u know, it doesn't work if you don't do it
+                                    break;
+                                case 2:
+                                    OpenThought("You already know what tf this is and I'm damn sure I already used it so gtfo");
+                                    break;
+                            }
+                            break;
                     }
                 }
                 break;
         }
 	}
+
+    //check which window to close
+    void Esc()
+    {
+        if (inv.activeInHierarchy)
+            Close(inv);
+        if (pauseWindows[1].activeInHierarchy || pauseWindows[2].activeInHierarchy || pauseWindows[3].activeInHierarchy)
+            CloseAllPauseMenusExcept(0);
+        if (pauseWindows[0].activeInHierarchy)
+            Close(pausemenu);
+        if (chest.activeInHierarchy)
+            Close(chest);
+        if (dBox.activeInHierarchy && !choice)
+            Dialogue();
+        if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
+            Close(merchant);
+        if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+            Close(bookcase);
+        if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+            bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
+        if (bookReading)
+        {
+            bookcase.transform.Find("bookText").gameObject.SetActive(false);
+            bookReading = false;
+        }
+        if (merchant_popup.activeInHierarchy)
+            merchant_popup.SetActive(false);
+        if (pauseWindows[4].activeInHierarchy)
+        {
+            if (changeKeys)
+                changeKeys = false;
+            else
+                CloseAllPauseMenusExcept(1);
+        }
+        if (tBox.activeInHierarchy)
+            Close(tBox);
+    }
 
     void OpenInventory()
     {
@@ -257,6 +266,14 @@ public class ui : MonoBehaviour {
         }
     }
 
+    void OpenThought(string thought)
+    {
+        anyOpen = true;
+        TogglePause();
+        tBox.SetActive(true);
+        tBox.transform.Find("Text").GetComponent<Text>().text = thought;
+    }
+
     void Dialogue()
     {
         int maxPages = currentConvo.Length;
@@ -301,6 +318,7 @@ public class ui : MonoBehaviour {
                 }
             }
         }
+        //end dialogue
         else
         {
             currentPage = 0;
@@ -344,14 +362,17 @@ public class ui : MonoBehaviour {
             if (!inv.transform.Find("quests").transform.Find("quest" + activeQuest.questName))
                 AddQuest(activeQuest.questName, activeQuest.questDesc);
 
-
         string completedText = "DONE";
         foreach (Quest quest in quests.questList)
         {
             if (quest.completed)
             {
                 inv.transform.Find("quests").transform.Find("quest" + quest.questName).transform.Find(quest.questName + "desc").GetComponent<Text>().text = completedText;
+                inv.transform.Find("quests").transform.Find("quest" + quest.questName).SetAsLastSibling();
             }
+
+            if (quest.isMainQuest && !quest.completed)
+                inv.transform.Find("quests").transform.Find("quest" + quest.questName).SetAsFirstSibling();
         }
     }
 
@@ -442,7 +463,7 @@ public class ui : MonoBehaviour {
         //changes color of the items that can't be sold
         foreach (Item i in items.ownedItems)
         {
-            if (i == items.equippedOne || i == items.equippedTwo)
+            if (i == items.equippedOne || i == items.equippedTwo || i.questItem)
             {
                 merchant_owned.transform.Find(i.name + i.id).GetComponent<Image>().color = Color.gray;
                 merchant_owned.transform.Find(i.name + i.id).GetComponent<buttonScript>().type = buttonScript.buttonType.cantSell;
@@ -1187,6 +1208,11 @@ public class ui : MonoBehaviour {
     {
         if (hp == null)
             hp = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv, false);
+        if (tBox == null)
+        {
+            tBox = Instantiate(Resources.Load("ui/thoughtbox") as GameObject, canv, false);
+            tBox.SetActive(false);
+        }
         if (inv == null)
         {
             inv = Instantiate(Resources.Load("ui/inventory/inv") as GameObject, canv, false);
