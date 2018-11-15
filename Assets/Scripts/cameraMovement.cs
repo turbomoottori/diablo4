@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class cameraMovement : MonoBehaviour {
 
+    private Vector3 savedOffset;
     public Transform player;
     public float camSpeed;
     Vector3 offset, target;
@@ -11,6 +12,9 @@ public class cameraMovement : MonoBehaviour {
     float minFov, maxFov;
 
 	void Start () {
+        savedOffset = new Vector3(0, 9.5f, -7.9f);
+        transform.position = player.position + savedOffset;
+
         offset = transform.position - player.position;
 
         min = 7f;

@@ -2,21 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class spawns : MonoBehaviour {
 
     public static List<SpawnPoint> spawnPoints;
+    public static SpawnPoint nextSpawn;
+    public static string nextSpawnName;
+    public static PlayerPos loadPos;
 
-    //WIP, MAKE SPAWN POSITION LIST FOR EACH LEVEL
-
-	// Use this for initialization
-	void Start () {
+    void Start () {
         if (spawnPoints == null)
             spawnPoints = new List<SpawnPoint>();
 
         CheckSpawnPoints();
+
+        nextSpawn = spawnPoints.FirstOrDefault(s => s.spawnName == nextSpawnName);
+        if (nextSpawn != null)
+        {
+            Vector3 spawnPos = new Vector3(nextSpawn.position.x, nextSpawn.position.y, nextSpawn.position.z);
+            GameObject.Find("Player").transform.position = spawnPos;
+            gameControl.control.playerPos = nextSpawn.position;
+        }
+        else if (loadPos != null)
+        {
+            Vector3 pos = new Vector3(loadPos.x, loadPos.y, loadPos.z);
+            GameObject.Find("Player").transform.position=pos;
+        }
+        
 	}
 
+    //finds every spawn point and saves their position
     void CheckSpawnPoints()
     {
         GameObject[] t = GameObject.FindGameObjectsWithTag("spawn");
@@ -37,11 +53,12 @@ public class spawns : MonoBehaviour {
             }
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public static void LoadLevel(string levelName, string spawnName)
+    {
+        nextSpawnName = spawnName;
+        SceneManager.LoadScene(levelName);
+    }
 }
 
 public class SpawnPoint

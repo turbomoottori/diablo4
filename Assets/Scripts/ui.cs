@@ -122,13 +122,13 @@ public class ui : MonoBehaviour {
                             OpenBookcase();
                             break;
                         case interactable.Type.door:
-                            SceneManager.LoadScene(interactableObject.GetComponent<interactable>().levelToLoad);
+                            spawns.LoadLevel(interactableObject.GetComponent<interactable>().levelToLoad, interactableObject.GetComponent<interactable>().nextPositionName);
                             break;
                         case interactable.Type.deliveryLocation:
                             DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
                             for (int i = 0; i < dq.whereToDeliver.Length; i++)
                             {
-                                if (dq.whereToDeliver[i] == interactableObject && dq.delivered[i] == false)
+                                if (GameObject.Find(dq.whereToDeliver[i]) == interactableObject && dq.delivered[i] == false)
                                 {
                                     dq.delivered[i] = true;
                                     items.ownedItems.Remove(dq.itemToDeliver);
@@ -983,6 +983,7 @@ public class ui : MonoBehaviour {
                     interactableObject.GetComponent<merchant>().basicAmmo = merchantAmmoB;
                     interactableObject.GetComponent<merchant>().rapidAmmo = merchantAmmoR;
                     interactableObject.GetComponent<merchant>().shotgunAmmo = merchantAmmoS;
+                    interactableObject.GetComponent<merchant>().SaveAmmoAmont();
                 }
                 break;
         }

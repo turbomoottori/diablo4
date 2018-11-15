@@ -22,6 +22,9 @@ public class merchant : MonoBehaviour {
         {
             items = new List<Item>();
             items = m.merchantItems;
+            basicAmmo = m.basicAmmo;
+            rapidAmmo = m.rapidAmmo;
+            shotgunAmmo = m.shotgunAmmo;
         }
         else if (m == null)
         {
@@ -40,9 +43,20 @@ public class merchant : MonoBehaviour {
             gameControl.control.merchs.Add(new MerchantData()
             {
                 merchantName = gameObject.name,
+                basicAmmo = basicAmmo,
+                rapidAmmo = rapidAmmo,
+                shotgunAmmo = shotgunAmmo,
                 merchantItems = items
             });
         }
+    }
+
+    public void SaveAmmoAmont()
+    {
+        MerchantData m = gameControl.control.merchs.FirstOrDefault(i => i.merchantName == gameObject.name);
+        m.basicAmmo = basicAmmo;
+        m.rapidAmmo = rapidAmmo;
+        m.shotgunAmmo = shotgunAmmo;
     }
 
     //removes items player already owns

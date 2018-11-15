@@ -129,8 +129,8 @@ public class FetchQuest: Quest
 public class DeliveryQuest : Quest
 {
     public Item itemToDeliver;
-    [Tooltip("location must have collider")]
-    public GameObject[] whereToDeliver;
+    [Tooltip("location must have collider and have unique name")]
+    public string[] whereToDeliver;
     [Tooltip("must be same size as 'where to deliver'")]
     public bool[] delivered;
 }

@@ -27,6 +27,7 @@ public class gameControl : MonoBehaviour
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
     public string currentScene;
+    public PlayerPos playerPos;
 
     void Awake()
     {
@@ -105,6 +106,7 @@ public class gameControl : MonoBehaviour
         data.rapidAmmo = rapidAmmo;
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
+        data.playerPos = new PlayerPos() { x = playerMovement.savedPos.x, y = playerMovement.savedPos.y, z = playerMovement.savedPos.z };
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -144,6 +146,8 @@ public class gameControl : MonoBehaviour
         data.rapidAmmo = rapidAmmo;
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
+        if(spawns.nextSpawn!=null)
+            data.playerPos = spawns.nextSpawn.position;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -186,6 +190,8 @@ public class gameControl : MonoBehaviour
             autoBattery = data.autoBattery;
             batteryId = data.batteryId;
             currentScene = data.currentScene;
+            playerPos = data.playerPos;
+            spawns.loadPos = playerPos;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -224,6 +230,7 @@ public class gameControl : MonoBehaviour
             autoBattery = data.autoBattery;
             batteryId = data.batteryId;
             currentScene = data.currentScene;
+            playerPos = data.playerPos;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -272,6 +279,7 @@ class PlayerData
     public List<EnemyList> enemies;
     public List<Book> bookcaseBooks;
     public string currentScene;
+    public PlayerPos playerPos;
 }
 
 
@@ -303,8 +311,6 @@ public class EnemyList
     public float posX, posZ, posY;
 }
 
-
-//WIP, REMEMBER TO DO SMTH ABOUT THIS
 [System.Serializable]
 public class PlayerPos
 {

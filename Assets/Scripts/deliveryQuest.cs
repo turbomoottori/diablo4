@@ -12,10 +12,11 @@ public class deliveryQuest : MonoBehaviour {
     {
         questToStart.itemToDeliver.stackable = true;
 
-        foreach(GameObject location in questToStart.whereToDeliver)
+        foreach(string locationName in questToStart.whereToDeliver)
         {
-            if (location.GetComponent<interactable>() == null)
-                location.AddComponent<interactable>();
+            GameObject location = GameObject.Find(locationName);
+            if (location.gameObject.GetComponent<interactable>() == null)
+                location.gameObject.AddComponent<interactable>();
 
             location.GetComponent<interactable>().type = interactable.Type.deliveryLocation;
             location.GetComponent<interactable>().deliveryQuest = questToStart.questName;
