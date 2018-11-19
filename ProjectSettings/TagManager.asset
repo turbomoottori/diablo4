@@ -19,6 +19,7 @@ TagManager:
   - fall
   - House
   - spawn
+  - minigameButton
   layers:
   - Default
   - TransparentFX

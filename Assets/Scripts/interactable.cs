@@ -12,6 +12,8 @@ public class interactable : MonoBehaviour {
     public string nextPositionName;
     [Tooltip("use only if this object is delivery location")]
     public string deliveryQuest;
+    [Tooltip("use only if type is inspectable")]
+    public string thought;
 
     private void Start()
     {
@@ -48,6 +50,7 @@ public class interactable : MonoBehaviour {
         npc,
         door,
         deliveryLocation,
-        workbench
+        workbench,
+        inspectable
     }
 }

@@ -156,6 +156,9 @@ public class ui : MonoBehaviour {
                                     break;
                             }
                             break;
+                        case interactable.Type.inspectable:
+                            OpenThought(interactableObject.GetComponent<interactable>().thought);
+                            break;
                     }
                 }
                 break;
