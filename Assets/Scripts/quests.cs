@@ -7,6 +7,7 @@ public class quests : MonoBehaviour {
 
     public static List<Quest> questList = new List<Quest>();
     public static int workbenchStage = 0;
+    public static List<Minigame> minigames;
 
     private void Start()
     {
@@ -22,6 +23,9 @@ public class quests : MonoBehaviour {
                 questDesc = mainQuestDesc
             });
         }
+
+        if (minigames == null)
+            minigames = new List<Minigame>();
     }
 
     public static void QuestCompleted(string qName)

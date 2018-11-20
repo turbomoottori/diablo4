@@ -27,6 +27,7 @@ public class ui : MonoBehaviour {
     float showItemTimer = 0f;
     public static float priceMultiplier;
     int tempHp, ammoBuyMode, tempAmmoAmount, finalValue;
+    public static bool minigame = false;
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
@@ -66,102 +67,105 @@ public class ui : MonoBehaviour {
         if (eHoverOn)
             HoverEquip(tempInt);
 
-        switch (anyOpen)
+        if (!minigame)
         {
-            case true:
-                //closing active windows
-                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(keys.savedKeys.inventoryKey))
-                    Esc();
+            switch (anyOpen)
+            {
+                case true:
+                    //closing active windows
+                    if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(keys.savedKeys.inventoryKey))
+                        Esc();
 
-                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(keys.savedKeys.interactKey))
-                {
-                    if (bookcase.activeInHierarchy)
+                    if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(keys.savedKeys.interactKey))
                     {
-                        if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                            bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                        if (bookReading)
+                        if (bookcase.activeInHierarchy)
                         {
-                            bookcase.transform.Find("bookText").gameObject.SetActive(false);
-                            bookReading = false;
+                            if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+                                bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
+                            if (bookReading)
+                            {
+                                bookcase.transform.Find("bookText").gameObject.SetActive(false);
+                                bookReading = false;
+                            }
+                        }
+                        if (dBox.activeInHierarchy && !choice)
+                            Dialogue();
+                        if (tBox.activeInHierarchy)
+                            Close(tBox);
+                    }
+                    break;
+                case false:
+                    if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
+                        OpenInventory();
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                        OpenPauseMenu();
+
+                    //interacting
+                    if (Input.GetKeyDown(keys.savedKeys.interactKey) && interactableObject != null)
+                    {
+                        switch (interactableObject.gameObject.GetComponent<interactable>().type)
+                        {
+                            case interactable.Type.merchant:
+                                OpenMerchantWindow();
+                                break;
+                            case interactable.Type.collectible:
+                                interactableObject.GetComponent<interactable>().HideE();
+                                interactableObject.GetComponent<newCollectible>().PickUp();
+                                break;
+                            case interactable.Type.chest:
+                                OpenChestWindow();
+                                break;
+                            case interactable.Type.npc:
+                                interactableObject.GetComponent<npc>().Interact();
+                                currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
+                                currentPage = 0;
+                                Dialogue();
+                                break;
+                            case interactable.Type.bookcase:
+                                OpenBookcase();
+                                break;
+                            case interactable.Type.door:
+                                spawns.LoadLevel(interactableObject.GetComponent<interactable>().levelToLoad, interactableObject.GetComponent<interactable>().nextPositionName);
+                                break;
+                            case interactable.Type.deliveryLocation:
+                                DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
+                                for (int i = 0; i < dq.whereToDeliver.Length; i++)
+                                {
+                                    if (GameObject.Find(dq.whereToDeliver[i]) == interactableObject && dq.delivered[i] == false)
+                                    {
+                                        dq.delivered[i] = true;
+                                        items.ownedItems.Remove(dq.itemToDeliver);
+                                        ShowCollectedItem(dq.itemToDeliver.name + " delivered");
+                                        interactableObject.GetComponent<interactable>().HideE();
+                                        Destroy(interactableObject.GetComponent<interactable>());
+                                    }
+                                }
+                                break;
+                            case interactable.Type.workbench:
+                                switch (quests.workbenchStage)
+                                {
+                                    case 0:
+                                        OpenThought("It's my workbench. I don't need it right now");
+                                        break;
+                                    case 1:
+                                        //here we should have some animations or sounds or whatever
+                                        //indicating that the player has built a dash backpack thing
+                                        //also after the cutscene or whatever it's gonna be
+                                        //you should remember to change the dash variable thing to true
+                                        //because u know, it doesn't work if you don't do it
+                                        break;
+                                    case 2:
+                                        OpenThought("You already know what tf this is and I'm damn sure I already used it so gtfo");
+                                        break;
+                                }
+                                break;
+                            case interactable.Type.inspectable:
+                                OpenThought(interactableObject.GetComponent<interactable>().thought);
+                                break;
                         }
                     }
-                    if (dBox.activeInHierarchy && !choice)
-                        Dialogue();
-                    if (tBox.activeInHierarchy)
-                        Close(tBox);
-                }
-                break;
-            case false:
-                if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
-                    OpenInventory();
-                if (Input.GetKeyDown(KeyCode.Escape))
-                    OpenPauseMenu();
-
-                //interacting
-                if (Input.GetKeyDown(keys.savedKeys.interactKey) && interactableObject != null)
-                {
-                    switch (interactableObject.gameObject.GetComponent<interactable>().type)
-                    {
-                        case interactable.Type.merchant:
-                            OpenMerchantWindow();
-                            break;
-                        case interactable.Type.collectible:
-                            interactableObject.GetComponent<interactable>().HideE();
-                            interactableObject.GetComponent<newCollectible>().PickUp();
-                            break;
-                        case interactable.Type.chest:
-                            OpenChestWindow();
-                            break;
-                        case interactable.Type.npc:
-                            interactableObject.GetComponent<npc>().Interact();
-                            currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
-                            currentPage = 0;
-                            Dialogue();
-                            break;
-                        case interactable.Type.bookcase:
-                            OpenBookcase();
-                            break;
-                        case interactable.Type.door:
-                            spawns.LoadLevel(interactableObject.GetComponent<interactable>().levelToLoad, interactableObject.GetComponent<interactable>().nextPositionName);
-                            break;
-                        case interactable.Type.deliveryLocation:
-                            DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
-                            for (int i = 0; i < dq.whereToDeliver.Length; i++)
-                            {
-                                if (GameObject.Find(dq.whereToDeliver[i]) == interactableObject && dq.delivered[i] == false)
-                                {
-                                    dq.delivered[i] = true;
-                                    items.ownedItems.Remove(dq.itemToDeliver);
-                                    ShowCollectedItem(dq.itemToDeliver.name + " delivered");
-                                    interactableObject.GetComponent<interactable>().HideE();
-                                    Destroy(interactableObject.GetComponent<interactable>());
-                                }
-                            }
-                            break;
-                        case interactable.Type.workbench:
-                            switch (quests.workbenchStage)
-                            {
-                                case 0:
-                                    OpenThought("It's my workbench. I don't need it right now");
-                                    break;
-                                case 1:
-                                    //here we should have some animations or sounds or whatever
-                                    //indicating that the player has built a dash backpack thing
-                                    //also after the cutscene or whatever it's gonna be
-                                    //you should remember to change the dash variable thing to true
-                                    //because u know, it doesn't work if you don't do it
-                                    break;
-                                case 2:
-                                    OpenThought("You already know what tf this is and I'm damn sure I already used it so gtfo");
-                                    break;
-                            }
-                            break;
-                        case interactable.Type.inspectable:
-                            OpenThought(interactableObject.GetComponent<interactable>().thought);
-                            break;
-                    }
-                }
-                break;
+                    break;
+            }
         }
 	}
 
@@ -592,7 +596,7 @@ public class ui : MonoBehaviour {
     }
 
     //toggles pause
-    void TogglePause()
+    public static void TogglePause()
     {
         switch (playerMovement.paused)
         {

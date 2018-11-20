@@ -1320,10 +1320,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91199bf6baaa214c82db4ca410ed4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minigameName: watchmakerGame
   minigameCam: {fileID: 1410928401}
-  level: 5
-  currentPos: 01000000030000000000000004000000
-  finalPos: 03000000030000000300000003000000
+  level: 4
+  currentPos: 01000000020000000000000003000000
+  finalPos: 02000000020000000200000002000000
   parts:
   - {fileID: 571587182}
   - {fileID: 1458895251}

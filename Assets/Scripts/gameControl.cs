@@ -107,6 +107,7 @@ public class gameControl : MonoBehaviour
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
         data.playerPos = new PlayerPos() { x = playerMovement.savedPos.x, y = playerMovement.savedPos.y, z = playerMovement.savedPos.z };
+        data.minigames = quests.minigames;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -148,6 +149,7 @@ public class gameControl : MonoBehaviour
         data.batteryId = batteryId;
         if(spawns.nextSpawn!=null)
             data.playerPos = spawns.nextSpawn.position;
+        data.minigames = quests.minigames;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -192,6 +194,7 @@ public class gameControl : MonoBehaviour
             currentScene = data.currentScene;
             playerPos = data.playerPos;
             spawns.loadPos = playerPos;
+            quests.minigames = data.minigames;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -231,6 +234,7 @@ public class gameControl : MonoBehaviour
             batteryId = data.batteryId;
             currentScene = data.currentScene;
             playerPos = data.playerPos;
+            quests.minigames = data.minigames;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -280,6 +284,7 @@ class PlayerData
     public List<Book> bookcaseBooks;
     public string currentScene;
     public PlayerPos playerPos;
+    public List<Minigame> minigames;
 }
 
 
@@ -315,4 +320,11 @@ public class EnemyList
 public class PlayerPos
 {
     public float x, y, z;
+}
+
+[System.Serializable]
+public class Minigame
+{
+    public string name;
+    public bool completed;
 }
