@@ -53,7 +53,7 @@ public class ui : MonoBehaviour {
     void Update () {
         if (showItemTimer < 2f)
             showItemTimer += Time.deltaTime;
-        if (showItemTimer > 2f)
+        if (showItemTimer > 2f || anyOpen)
             newItem.SetActive(false);
 
         if (gameControl.control.hp != tempHp)
@@ -142,6 +142,7 @@ public class ui : MonoBehaviour {
                                 }
                                 break;
                             case interactable.Type.workbench:
+                                quests.workbenchUse();
                                 switch (quests.workbenchStage)
                                 {
                                     case 0:
@@ -715,6 +716,17 @@ public class ui : MonoBehaviour {
                         }
                         else
                             print("this battery is empty");
+                    }
+                    else if(t is Consumable)
+                    {
+                        Consumable c = t as Consumable;
+                        if (gameControl.control.hp + c.healAmount <= gameControl.control.maxhp)
+                            gameControl.control.hp += c.healAmount;
+                        else if (gameControl.control.hp + c.healAmount > gameControl.control.maxhp)
+                            gameControl.control.hp = gameControl.control.maxhp;
+
+                        StopHover();
+                        items.ownedItems.Remove(c);
                     }
                 }
                 ShowItems(itemContainer, items.ownedItems, buttonScript.buttonType.inventoryItem);

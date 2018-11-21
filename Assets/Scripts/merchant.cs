@@ -28,14 +28,17 @@ public class merchant : MonoBehaviour {
         }
         else if (m == null)
         {
-            foreach (Weapon w in swords)
-                items.Add(w);
+            if (swords != null)
+                foreach (Weapon w in swords)
+                    items.Add(w);
 
-            foreach (Gun g in guns)
-                items.Add(g);
+            if (guns != null)
+                foreach (Gun g in guns)
+                    items.Add(g);
 
-            foreach (Book b in books)
-                items.Add(b);
+            if (books != null)
+                foreach (Book b in books)
+                    items.Add(b);
 
             foreach (Item i in gameControl.invItems)
                 CheckItemDuplicates(i.name);

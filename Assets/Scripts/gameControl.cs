@@ -26,6 +26,7 @@ public class gameControl : MonoBehaviour
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
+    public List<QuestGivers> questGivers;
     public string currentScene;
     public PlayerPos playerPos;
 
@@ -51,6 +52,8 @@ public class gameControl : MonoBehaviour
             collectibles = new List<Collectibles>();
         if (enemies == null)
             enemies = new List<EnemyList>();
+        if (questGivers == null)
+            questGivers = new List<QuestGivers>();
 
         //delete later
         basicAmmo = 5;
@@ -108,6 +111,7 @@ public class gameControl : MonoBehaviour
         data.batteryId = batteryId;
         data.playerPos = new PlayerPos() { x = playerMovement.savedPos.x, y = playerMovement.savedPos.y, z = playerMovement.savedPos.z };
         data.minigames = quests.minigames;
+        data.questGivers = questGivers;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -150,6 +154,7 @@ public class gameControl : MonoBehaviour
         if(spawns.nextSpawn!=null)
             data.playerPos = spawns.nextSpawn.position;
         data.minigames = quests.minigames;
+        data.questGivers = questGivers;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -195,6 +200,7 @@ public class gameControl : MonoBehaviour
             playerPos = data.playerPos;
             spawns.loadPos = playerPos;
             quests.minigames = data.minigames;
+            questGivers = data.questGivers;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -235,6 +241,7 @@ public class gameControl : MonoBehaviour
             currentScene = data.currentScene;
             playerPos = data.playerPos;
             quests.minigames = data.minigames;
+            questGivers = data.questGivers;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -281,6 +288,7 @@ class PlayerData
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
+    public List<QuestGivers> questGivers;
     public List<Book> bookcaseBooks;
     public string currentScene;
     public PlayerPos playerPos;
@@ -314,6 +322,13 @@ public class Collectibles
 public class EnemyList
 {
     public float posX, posZ, posY;
+}
+
+[System.Serializable]
+public class QuestGivers
+{
+    public string name;
+    public int questStage;
 }
 
 [System.Serializable]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Linq;
 
 public class npc : MonoBehaviour {
 
@@ -10,9 +11,25 @@ public class npc : MonoBehaviour {
     public bool cycleText;
     public int currentDialogue;
     bool qCompleted;
-	
-	public void Interact()
+
+    private void Start()
     {
+        QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
+        if (q == null)
+            gameControl.control.questGivers.Add(new QuestGivers() { name = this.name, questStage = currentDialogue });
+        else if (q != null)
+            currentDialogue = q.questStage;
+    }
+
+    public void Interact()
+    {
+        if (name == "metalthingdude")
+        {
+            Quest a = quests.questList.FirstOrDefault(x => x.questName == "Help blacksmith");
+            if (a != null && !a.completed)
+                GetComponent<npc>().NextConvo();
+        }
+
         if (GetComponent<fetchQuest>() != null)
         {
             if (qCompleted && currentDialogue == 2)
@@ -45,12 +62,18 @@ public class npc : MonoBehaviour {
             if (currentDialogue > dialogues.Length)
                 currentDialogue = 1;
         }
+
+        QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
+        q.questStage = currentDialogue;
     }
 
     public void NextConvo()
     {
         if (currentDialogue < dialogues.Length)
             currentDialogue += 1;
+
+        QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
+        q.questStage = currentDialogue;
     }
 }
 

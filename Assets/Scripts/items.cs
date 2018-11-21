@@ -117,6 +117,12 @@ public class Battery : Item
     public bool isEmpty;
 }
 
+[System.Serializable]
+public class Consumable : Item
+{
+    public int healAmount;
+}
+
 public enum GunType
 {
     basic,

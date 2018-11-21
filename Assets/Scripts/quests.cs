@@ -28,6 +28,15 @@ public class quests : MonoBehaviour {
             minigames = new List<Minigame>();
     }
 
+    public static void workbenchUse()
+    {
+        Item[] questItems = items.ownedItems.FindAll(i => i.name == "part").ToArray();
+        if (questItems.Length == 3 && !gameControl.control.knowsDash)
+            workbenchStage = 1;
+        if (gameControl.control.knowsDash)
+            workbenchStage = 2;
+    }
+
     public static void QuestCompleted(string qName)
     {
         Quest q = questList.FirstOrDefault(i => i.questName == qName);
