@@ -2166,6 +2166,10 @@ Prefab:
       propertyPath: dialogues.Array.data[2].dialogue.Array.data[1].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 1889652403}
+    - target: {fileID: 1933849017525502, guid: 800c194556ce28a4b99de8ed0830bcd8, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 800c194556ce28a4b99de8ed0830bcd8, type: 2}
   m_IsPrefabAsset: 0

@@ -23,10 +23,11 @@ public class npc : MonoBehaviour {
 
     public void Interact()
     {
+        GetComponent<interactable>().HideE();
         if (name == "metalthingdude")
         {
             Quest a = quests.questList.FirstOrDefault(x => x.questName == "Help blacksmith");
-            if (a != null && !a.completed)
+            if (a != null && !a.completed && GetComponent<npc>().currentDialogue == 0)
                 GetComponent<npc>().NextConvo();
         }
 
@@ -72,6 +73,13 @@ public class npc : MonoBehaviour {
         if (currentDialogue < dialogues.Length)
             currentDialogue += 1;
 
+        QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
+        q.questStage = currentDialogue;
+    }
+
+    public void SpecificConvoNumber(int number)
+    {
+        currentDialogue = number;
         QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
         q.questStage = currentDialogue;
     }

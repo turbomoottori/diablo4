@@ -6,10 +6,10 @@ using System.Linq;
 public class attack : MonoBehaviour {
 
     public Animator anim;
-    GameObject sword;
+    //GameObject sword;
     public static float swordTime = 0.2f;
     public static float swordSpinTime = 0.5f;
-    bool swordActive, attacking;
+    bool attacking;
     public static int attackNum;
     public static int activeWeapon = 1;
     public Shoot shoot;
@@ -27,7 +27,7 @@ public class attack : MonoBehaviour {
     Quaternion[] shotgunBulletRotations;
 
     void Start() {
-        sword = Resources.Load<GameObject>("sword");
+        //sword = Resources.Load<GameObject>("sword");
         SetBulletPositions();
     }
 
@@ -56,7 +56,6 @@ public class attack : MonoBehaviour {
     }
 
     void Update() {
-
         if (!playerMovement.paused)
         {
             //CHANGE ACTIVE WEAPON
@@ -445,29 +444,30 @@ public class attack : MonoBehaviour {
     //basic attack
     IEnumerator Attack(Vector3 axis, float angle, float time)
     {
+        //FIX FIX FIX FIX FIX 
+        if (attacking)
+            yield break;
         attacking = true;
         anim.SetTrigger("attack");
-        if (swordActive)
-            yield break;
-        swordActive = true;
         attackNum = 1;
-        GameObject sw;
-        sw = Instantiate(sword, transform.position, transform.rotation);
-        sw.transform.parent = transform;
+        GameObject sw = Instantiate(Resources.Load("sword") as GameObject, transform.Find("hero_test").Find("Cube.008").transform);
+        sw.transform.localPosition = Vector3.zero;
+        sw.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        /*
+        GameObject sw = Instantiate(Resources.Load("sword") as GameObject, transform.position+Vector3.up, transform.rotation, transform);
+        
         sw.transform.Rotate(0, -45, 0, Space.Self);
         Quaternion from = sw.transform.rotation;
-        Quaternion to = sw.transform.rotation;
-        to *= Quaternion.Euler(axis * angle);
+        Quaternion to = sw.transform.rotation * Quaternion.Euler(axis * 90);
         float t = 0f;
         while (t < time)
         {
             sw.transform.rotation = Quaternion.Slerp(from, to, t / time);
             t += Time.deltaTime;
-            yield return null;
         }
-        sw.transform.rotation = to;
+        sw.transform.rotation = to;*/
+        yield return new WaitForSeconds(1);
         Destroy(sw);
-        swordActive = false;
         attacking = false;
         yield return null;
     }
@@ -475,15 +475,12 @@ public class attack : MonoBehaviour {
     //spin attack
     IEnumerator AttackTwo(Vector3 axis, float time)
     {
-        attacking = true;
-
-        if (swordActive)
+        if (attacking)
             yield break;
-        swordActive = true;
+        attacking = true;
         attackNum = 2;
         GameObject sw;
-        sw = Instantiate(sword, transform.position, transform.rotation);
-        sw.transform.parent = transform;
+        sw = Instantiate(Resources.Load("sword") as GameObject, transform.position+Vector3.up, transform.rotation, transform);
         float from = transform.eulerAngles.y;
         float to = from + 360f;
         float t = 0f;
@@ -495,7 +492,6 @@ public class attack : MonoBehaviour {
             yield return null;
         }
         Destroy(sw);
-        swordActive = false;
         attacking = false;
         yield return null;
     }

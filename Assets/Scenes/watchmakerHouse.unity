@@ -1332,6 +1332,22 @@ MonoBehaviour:
   - {fileID: 1376812412}
   minPos: -1
   maxPos: 1
+  winning:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1411967512}
+        m_MethodName: SpecificConvoNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1001 &648465804
 Prefab:
   m_ObjectHideFlags: 0
@@ -2211,6 +2227,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -24.62, z: 0}
+--- !u!114 &1028492102 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114150327927435422, guid: 800c194556ce28a4b99de8ed0830bcd8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1411967511}
+  m_Script: {fileID: 11500000, guid: c7d2235b3dffdae48831ae9563ec833b, type: 3}
 --- !u!1 &1101994025
 GameObject:
   m_ObjectHideFlags: 0
@@ -2844,6 +2866,86 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4839012149971916, guid: 800c194556ce28a4b99de8ed0830bcd8, type: 2}
       propertyPath: m_LocalPosition.x
       value: 384.7661
@@ -2876,9 +2978,532 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].npc.consequenseWithoutAction.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].npc.consequenseWithoutAction.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].npc.talk
+      value: my robot is not working, can you help me fix it
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].answer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].reactionToAnswer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].answer
+      value: no
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].reactionToAnswer
+      value: F I N E
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[0].npc.consequenseWithoutAction.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].npc.consequenseWithoutAction.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].npc.talk
+      value: did you come back to help me or what
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].answer
+      value: yes i will help
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].reactionToAnswer
+      value: thank god
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[1].answer
+      value: no i won't help
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[1].reactionToAnswer
+      value: well fuck you then
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 608659319}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartMiniGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1411967512}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextConvo
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 608659319}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartMiniGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.talk
+      value: thanks for helping me, here's a thing
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1994881556}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1994881556}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StartRobotMinigameQuest
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[0].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1994881556}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StartRobotMinigameQuest
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[1].who
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].who
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].answer
+      value: yes
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].reactionToAnswer
+      value: great!!
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].answer
+      value: no
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].reactionToAnswer
+      value: 'ok then i''ll be waiting here '
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1994881556}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartRobotMinigameQuest
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 608659319}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StartMiniGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1028492102}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: HideE
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[0].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QuestCompleted
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: Fix robot
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1411967512}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: NextConvo
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[2].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.talk
+      value: yay robot works now
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1994881557}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QuestCompleted
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: Fix robot
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1411967512}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: NextConvo
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[3].dialogue.Array.data[0].npc.consequenseWithoutAction.m_TypeName
+      value: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: cycleText
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1411967512}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextConvo
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[0].dialogue.Array.data[1].player.Array.data[1].consequenceToAnswer.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+        type: 2}
+      propertyPath: dialogues.Array.data[1].dialogue.Array.data[0].npc.talk
+      value: well are you gonna help me or what
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 800c194556ce28a4b99de8ed0830bcd8, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &1411967512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
+    type: 2}
+  m_PrefabInternal: {fileID: 1411967511}
+  m_Script: {fileID: 11500000, guid: 6b96babd5144bcc4b8e851e1b466e0c3, type: 3}
 --- !u!1 &1458895251
 GameObject:
   m_ObjectHideFlags: 0
@@ -4464,9 +5089,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114514971983134546, guid: a91fcd8f07744724bada5ea02d7bd308,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a91fcd8f07744724bada5ea02d7bd308, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &1994881556 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114906127736105656, guid: a91fcd8f07744724bada5ea02d7bd308,
+    type: 2}
+  m_PrefabInternal: {fileID: 1994881555}
+  m_Script: {fileID: 11500000, guid: c99209a331aa1ba49b7c9f7fb47675d9, type: 3}
+--- !u!114 &1994881557 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114514971983134546, guid: a91fcd8f07744724bada5ea02d7bd308,
+    type: 2}
+  m_PrefabInternal: {fileID: 1994881555}
+  m_Script: {fileID: 11500000, guid: ddc7ce9585f521d4b9c728a591832c20, type: 3}
 --- !u!1 &2020364653
 GameObject:
   m_ObjectHideFlags: 0

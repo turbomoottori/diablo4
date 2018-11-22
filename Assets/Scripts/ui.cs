@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class ui : MonoBehaviour {
 
@@ -28,6 +29,8 @@ public class ui : MonoBehaviour {
     public static float priceMultiplier;
     int tempHp, ammoBuyMode, tempAmmoAmount, finalValue;
     public static bool minigame = false;
+    bool consequence = false;
+    UnityEvent tempEvent;
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
@@ -293,6 +296,7 @@ public class ui : MonoBehaviour {
                 anyOpen = true;
                 dBox.SetActive(true);
                 TogglePause();
+                tempEvent = null;
             }
 
             //npc talks
@@ -329,6 +333,9 @@ public class ui : MonoBehaviour {
         //end dialogue
         else
         {
+            if (tempEvent != null)
+                tempEvent.Invoke();
+
             currentPage = 0;
             Close(dBox);
         }
@@ -921,7 +928,8 @@ public class ui : MonoBehaviour {
                 dPl.SetActive(false);
                 dNpc.SetActive(true);
                 dNpc.transform.Find("txt").GetComponent<Text>().text = currentConvo[currentPage].player[i].reactionToAnswer;
-                currentConvo[currentPage].player[i].consequenceToAnswer.Invoke();
+                tempEvent = currentConvo[currentPage].player[i].consequenceToAnswer;
+                //currentConvo[currentPage].player[i].consequenceToAnswer.Invoke();
             }
         }
         currentPage += 1;

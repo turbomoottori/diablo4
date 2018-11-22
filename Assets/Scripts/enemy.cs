@@ -260,6 +260,9 @@ public class enemy : MonoBehaviour {
             coin.GetComponent<Rigidbody>().AddForce(Vector3.up, ForceMode.Impulse);
         }
 
+        if (GetComponent<dropItem>() != null)
+            GetComponent<dropItem>().SpawnItem();
+
         float t = 0f;
         while (t < time)
         {

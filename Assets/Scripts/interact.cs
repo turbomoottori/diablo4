@@ -21,6 +21,9 @@ public class interact : MonoBehaviour {
 
     public bool CanInteract()
     {
+        if (ui.minigame == true)
+            return false;
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2.12f);
         int i = 0;
         while (i < hitColliders.Length)

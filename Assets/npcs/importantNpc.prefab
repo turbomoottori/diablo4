@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 195459473894977688}
   m_Layer: 9
   m_Name: importantNpc
-  m_TagString: enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -745,7 +745,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1933849017525502}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 384.7661, y: -1.36, z: 100.66959}
+  m_LocalPosition: {x: 387.6721, y: -2.5694785, z: 99.757675}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4886115651271400}

@@ -67,7 +67,27 @@ public class consequences : MonoBehaviour {
                 stackable = false,
                 weight = 10
             });
+
+            Destroy(self.GetComponent<dropItem>());
+            self.GetComponent<npc>().NextConvo();
         }
+    }
+
+    public void StartRobotMinigameQuest()
+    {
+        Quest q = quests.questList.FirstOrDefault(quest => quest.questName == "Fix robot");
+        if (q == null)
+            quests.questList.Add(new Quest() {
+                questName = "Fix robot",
+                questDesc = "help watchmaker fix the robot",
+                completed = false,
+                reward = Reward.item,
+                rewardItem = new Item() {
+                    name = "part",
+                    stackable = true,
+                    questItem = true
+                }
+            });
     }
 
     //QUEST PROGRESS STUFF
@@ -75,6 +95,46 @@ public class consequences : MonoBehaviour {
     public void QuestName(string name)
     {
         questName = name;
+    }
+
+    public void QuestCompleted(string qName)
+    {
+        Quest q = quests.questList.FirstOrDefault(i => i.questName == qName);
+        q.completed = true;
+        switch (q.reward)
+        {
+            case Reward.item:
+                items.ownedItems.Add(q.rewardItem);
+                break;
+
+            case Reward.ability:
+                switch (q.rewardAbility)
+                {
+                    case Ability.dash:
+                        gameControl.control.knowsDash = true;
+                        playerMovement.dashState = playerMovement.DashState.Ready;
+                        break;
+                    case Ability.dJump:
+                        gameControl.control.knowsDoubleJump = true;
+                        break;
+                    case Ability.slowTime:
+                        gameControl.control.knowsSlowTime = true;
+                        break;
+                }
+                break;
+
+            case Reward.money:
+                gameControl.control.money += q.rewardMoney;
+                break;
+
+            case Reward.weapon:
+                items.ownedItems.Add(q.rewardWeapon);
+                break;
+
+            case Reward.gun:
+                items.ownedItems.Add(q.rewardGun);
+                break;
+        }
     }
 
     /*public void QuestMarkVisited(int markNumber)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Events;
 
 public class minigame : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class minigame : MonoBehaviour {
     float[] positions;
     float timer = 0f;
     float maxTimer = 0.2f;
+    public UnityEvent winning;
 
 	void Start () {
         //checks if minigame is already completed
@@ -91,7 +93,10 @@ public class minigame : MonoBehaviour {
 
             //replace with something more exciting
             if (CorrectPositions())
-                print("win");
+            {
+                winning.Invoke();
+                ExitMiniGame();
+            }
         }
 	}
 
@@ -170,6 +175,7 @@ public class minigame : MonoBehaviour {
 
     public void StartMiniGame()
     {
+        
         //do transition animation or something
         ui.minigame = true;
         maincam.enabled = false;
