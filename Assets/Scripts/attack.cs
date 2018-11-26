@@ -106,6 +106,7 @@ public class attack : MonoBehaviour {
                 //normal shooting
                 case Shoot.Shooting:
                     attacking = true;
+                    anim.SetTrigger("shoot");
                     SetBulletPositions();
                     GameObject b = Instantiate(Resources.Load<GameObject>("bullet"));
                     b.transform.position = bulletPosition;
@@ -125,6 +126,7 @@ public class attack : MonoBehaviour {
                     if (bulletCount < bullets && !attacking)
                     {
                         attacking = true;
+                        anim.SetTrigger("shoot");
                         InvokeRepeating("RapidFire", 0.01f, 1 / speed);
                     }
                     else if (bulletCount >= bullets || gameControl.rapidAmmo <= 0)
@@ -138,6 +140,7 @@ public class attack : MonoBehaviour {
                 //shotgun
                 case Shoot.Shotgun:
                     attacking = true;
+                    anim.SetTrigger("shoot");
                     SetBulletPositions();
 
                     for (int i = 0; i < shotgunBulletRotations.Length; i++)
@@ -158,6 +161,7 @@ public class attack : MonoBehaviour {
 
                 //special gun attacks
                 case Shoot.Special:
+                    anim.SetTrigger("shoot");
                     switch (activeType)
                     {
                         case GunType.basic:
@@ -450,22 +454,9 @@ public class attack : MonoBehaviour {
         attacking = true;
         anim.SetTrigger("attack");
         attackNum = 1;
-        GameObject sw = Instantiate(Resources.Load("sword") as GameObject, transform.Find("hero_test").Find("Cube.008").transform);
+        GameObject sw = Instantiate(Resources.Load("sword") as GameObject, GameObject.Find("Ranne.R.001").transform);
         sw.transform.localPosition = Vector3.zero;
         sw.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        /*
-        GameObject sw = Instantiate(Resources.Load("sword") as GameObject, transform.position+Vector3.up, transform.rotation, transform);
-        
-        sw.transform.Rotate(0, -45, 0, Space.Self);
-        Quaternion from = sw.transform.rotation;
-        Quaternion to = sw.transform.rotation * Quaternion.Euler(axis * 90);
-        float t = 0f;
-        while (t < time)
-        {
-            sw.transform.rotation = Quaternion.Slerp(from, to, t / time);
-            t += Time.deltaTime;
-        }
-        sw.transform.rotation = to;*/
         yield return new WaitForSeconds(1);
         Destroy(sw);
         attacking = false;
@@ -479,8 +470,7 @@ public class attack : MonoBehaviour {
             yield break;
         attacking = true;
         attackNum = 2;
-        GameObject sw;
-        sw = Instantiate(Resources.Load("sword") as GameObject, transform.position+Vector3.up, transform.rotation, transform);
+        GameObject sw = Instantiate(Resources.Load("sword") as GameObject, GameObject.Find("Ranne.R.001").transform);
         float from = transform.eulerAngles.y;
         float to = from + 360f;
         float t = 0f;

@@ -10,7 +10,8 @@ public class playerMovement : MonoBehaviour
     public Animator anim;
     public float speed, rotationSpeed, jumpForce, dashForce;
     public bool runs, dashes;
-    bool canJump, canDoubleJump, canMove;
+    bool grounded, canDoubleJump, canMove;
+    int jumpCounter = 0;
     public static Vector3 savedPos;
 
     private Rigidbody rb;
@@ -85,7 +86,7 @@ public class playerMovement : MonoBehaviour
 
                 //prevents being stuck on wall
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, movement, out hit, 1.1f) || Physics.Raycast(transform.position+Vector3.down, movement, out hit, 1.1f))
+                if (Physics.Raycast(transform.position+Vector3.up, movement, out hit, 1.1f))
                     movement = Vector3.zero;
 
                 Vector3 pos = transform.position;
@@ -95,6 +96,8 @@ public class playerMovement : MonoBehaviour
                 transform.position = pos;
 
                 Vector3 localDir = transform.InverseTransformDirection(movement);
+                anim.SetFloat("movement_forward", localDir.z);
+                anim.SetFloat("movement_sideways", localDir.x);
                 //for walking animation, use localDir
                 //z for forward/backwards movement, x for left/right
                 //final walking animation here
@@ -124,31 +127,34 @@ public class playerMovement : MonoBehaviour
                 savedPos = transform.position;
 
             //JUMP AND DOUBLE JUMP
+            grounded = (Physics.Raycast(transform.position, Vector3.down, 0.5f, walkable));
+            anim.SetFloat("y_velocity", rb.velocity.y);
+            print(jumpCounter);
+            if (grounded)
+            {
+                tempPos = transform.position;
+                anim.SetBool("grounded", true);
+                jumpCounter = 0;
+            }
 
             if (Input.GetButtonDown("Jump"))
             {
-                canJump = (Physics.Raycast(transform.position+Vector3.down, Vector3.down, 2f));
-
-                if (canJump)
+                if (grounded)
                 {
                     savedPos = transform.position;
-                    canJump = false;
-                    canDoubleJump = true;
+                    jumpCounter += 1;
                     anim.SetTrigger("jump");
                     rb.velocity = new Vector3(0, jumpForce, 0);
                 }
-                else if (canDoubleJump && gameControl.control.knowsDoubleJump)
+                else
                 {
-                    canDoubleJump = false;
-                    anim.SetTrigger("jump");
-                    rb.velocity = new Vector3(0, jumpForce, 0);
+                    if(jumpCounter < 1 && gameControl.control.knowsDoubleJump)
+                    {
+                        jumpCounter += 1;
+                        anim.SetTrigger("jump");
+                        rb.velocity = new Vector3(0, jumpForce, 0);
+                    }
                 }
-            }
-
-            RaycastHit h;
-            if(Physics.Raycast(transform.position, Vector3.down, out h, 3f, walkable) && rb.velocity.y <= 0.1f)
-            {
-                tempPos = transform.position;
             }
 
             //DASHING
@@ -314,14 +320,14 @@ public class playerMovement : MonoBehaviour
         //prevents from spawning too close to the edge
         Vector3 d = pos - transform.position;
         d.y = 0;
-        if (d.z > 1)
-            d.z = 1;
-        else if (d.z < -1)
-            d.z = -1;
-        if (d.x > 1)
-            d.x = 1;
-        else if (d.x < -1)
-            d.x = -1;
+        if (d.z > 3)
+            d.z = 3;
+        else if (d.z < -3)
+            d.z = -3;
+        if (d.x > 3)
+            d.x = 3;
+        else if (d.x < -3)
+            d.x = -3;
 
         while (t < time)
         {

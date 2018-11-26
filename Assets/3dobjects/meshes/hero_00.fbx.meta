@@ -280,6 +280,7 @@ ModelImporter:
     7400044: Armature|hit
     7400046: Armature|shooting
     7400048: Armature|use
+    7400050: falling
     9500000: //RootNode
     13700000: Cube.002
     13700002: Cube.003
@@ -381,7 +382,7 @@ ModelImporter:
     - serializedVersion: 16
       name: fallen
       takeName: fallen
-      firstFrame: 0
+      firstFrame: 5
       lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
@@ -746,7 +747,7 @@ ModelImporter:
       name: Armature|jump
       takeName: Armature|jump
       firstFrame: 0
-      lastFrame: 30
+      lastFrame: 9.7
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -898,7 +899,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
