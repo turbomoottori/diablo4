@@ -8,8 +8,12 @@ public class interactable : MonoBehaviour {
     public Type type;
     [Tooltip("use only if type is door")]
     public string levelToLoad;
+    [Tooltip("the name of the gameobject this door will take to")]
+    public string nextPositionName;
     [Tooltip("use only if this object is delivery location")]
     public string deliveryQuest;
+    [Tooltip("use only if type is inspectable")]
+    public string thought;
 
     private void Start()
     {
@@ -26,7 +30,8 @@ public class interactable : MonoBehaviour {
 
     public void ShowE()
     {
-        e.SetActive(true);
+        if(!ui.anyOpen)
+            e.SetActive(true);
         if (type == Type.merchant)
             GetComponent<merchant>().ChangeItems();
     }
@@ -44,6 +49,8 @@ public class interactable : MonoBehaviour {
         bookcase,
         npc,
         door,
-        deliveryLocation
+        deliveryLocation,
+        workbench,
+        inspectable
     }
 }

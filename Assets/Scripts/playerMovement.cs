@@ -6,10 +6,12 @@ using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 {
+    public static playerMovement p;
     public Animator anim;
     public float speed, rotationSpeed, jumpForce, dashForce;
     public bool runs, dashes;
     bool canJump, canDoubleJump, canMove;
+    public static Vector3 savedPos;
 
     private Rigidbody rb;
     Vector3 refVelocity;
@@ -42,6 +44,7 @@ public class playerMovement : MonoBehaviour
 
     void Start()
     {
+
         if (gameControl.control.knowsDash == false)
             dashState = DashState.Off;
         else
@@ -116,6 +119,10 @@ public class playerMovement : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10 * Time.deltaTime);
             }
 
+            //saves position when esc is pressed
+            if (Input.GetKeyDown(KeyCode.Escape) && (Physics.Raycast(transform.position + Vector3.down, Vector3.down, 2f)))
+                savedPos = transform.position;
+
             //JUMP AND DOUBLE JUMP
 
             if (Input.GetButtonDown("Jump"))
@@ -124,6 +131,7 @@ public class playerMovement : MonoBehaviour
 
                 if (canJump)
                 {
+                    savedPos = transform.position;
                     canJump = false;
                     canDoubleJump = true;
                     anim.SetTrigger("jump");

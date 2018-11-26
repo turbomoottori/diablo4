@@ -6,6 +6,36 @@ using System.Linq;
 public class quests : MonoBehaviour {
 
     public static List<Quest> questList = new List<Quest>();
+    public static int workbenchStage = 0;
+    public static List<Minigame> minigames;
+
+    private void Start()
+    {
+        string mainQuestName = "Main quest";
+        string mainQuestDesc = "win lol";
+
+        if (questList.FirstOrDefault(q => q.questName == mainQuestName) == null)
+        {
+            questList.Add(new Quest() {
+                questName = mainQuestName,
+                isMainQuest = true,
+                completed = false,
+                questDesc = mainQuestDesc
+            });
+        }
+
+        if (minigames == null)
+            minigames = new List<Minigame>();
+    }
+
+    public static void workbenchUse()
+    {
+        Item[] questItems = items.ownedItems.FindAll(i => i.name == "part").ToArray();
+        if (questItems.Length == 3 && !gameControl.control.knowsDash)
+            workbenchStage = 1;
+        if (gameControl.control.knowsDash)
+            workbenchStage = 2;
+    }
 
     public static void QuestCompleted(string qName)
     {
@@ -92,6 +122,7 @@ public class Quest
     [TextArea]
     public string questDesc;
     public bool completed;
+    public bool isMainQuest;
     public Reward reward;
     public Ability rewardAbility;
     public int rewardMoney;
@@ -111,8 +142,8 @@ public class FetchQuest: Quest
 public class DeliveryQuest : Quest
 {
     public Item itemToDeliver;
-    [Tooltip("location must have collider")]
-    public GameObject[] whereToDeliver;
+    [Tooltip("location must have collider and have unique name")]
+    public string[] whereToDeliver;
     [Tooltip("must be same size as 'where to deliver'")]
     public bool[] delivered;
 }

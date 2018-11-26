@@ -16,10 +16,6 @@ public class menuscene : MonoBehaviour {
         "Saved game 2",
         "Saved game 3" };
 
-    int hp, maxhp = 50;
-    int money = 0;
-    bool knowsDoubleJump, knowsDash, knowsSlowTime;
-
     void Start () {
         cont = GameObject.Find("buttonCont");
         main = Instantiate(Resources.Load("ui/mainmenu/container") as GameObject, cont.transform, false);
@@ -28,11 +24,6 @@ public class menuscene : MonoBehaviour {
         CreateButton("Options", main);
         CreateButton("Exit game", main);
         volumeVal = gameControl.control.volume;
-
-        hp = maxhp;
-        knowsDash = false;
-        knowsDoubleJump = false;
-        knowsSlowTime = false;
 	}
 
     //creates new text
@@ -146,20 +137,32 @@ public class menuscene : MonoBehaviour {
     //starts a new game
     void StartNewGame()
     {
-        gameControl.control.hp = hp;
-        gameControl.control.maxhp = maxhp;
-        gameControl.control.money = money;
-        gameControl.control.knowsDash = knowsDash;
-        gameControl.control.knowsDoubleJump = knowsDoubleJump;
-        gameControl.control.knowsSlowTime = knowsSlowTime;
+        gameControl.control.hp = 50;
+        gameControl.control.maxhp = 50;
+        gameControl.control.money = 0;
+        gameControl.control.knowsDash = false;
+        gameControl.control.knowsDoubleJump = false;
+        gameControl.control.knowsSlowTime = false;
+
+        if (items.storedItems == null)
+            items.storedItems = new List<Item>();
+
+        items.storedItems.Add(new Weapon() {
+            name = "Sword",
+            id = 0,
+            baseValue = 20,
+            damage = 1,
+            questItem = false,
+            speed = 0.2f,
+            stackable = false,
+            weight = 1 });
+
         SceneManager.LoadScene(1);
     }
 
     void LoadGame(int save)
     {
         gameControl.control.LoadGame(save);
-        //check which level to load etc here
-        SceneManager.LoadScene(1); //placeholder
     }
 
     //shows saved games

@@ -5,18 +5,13 @@ using System.Linq;
 
 public class newCollectible : MonoBehaviour
 {
-    //WORK IN PROGRESS
-    //TEST 
-    //IT'S A TEST
-    //DO U GET IT
-    //IT'S A TEST SCRIPT
     public Type itemType;
     public Item item;
+    public Consumable consumable;
     public Weapon weapon;
     public Gun gun;
     public Book book;
     public float batteryEnergy;
-    //public Battery battery;
     string collectibleName = " ";
     public int ammoAmount;
 
@@ -96,6 +91,9 @@ public class newCollectible : MonoBehaviour
             case Type.ShotgunAmmo:
                 gameControl.shotgunAmmo += ammoAmount;
                 break;
+            case Type.Consumable:
+                items.ownedItems.Add(consumable);
+                break;
         }
     }
 
@@ -128,7 +126,8 @@ public class newCollectible : MonoBehaviour
         Battery,
         BasicAmmo,
         RapidAmmo,
-        ShotgunAmmo
+        ShotgunAmmo,
+        Consumable
     }
 }
 

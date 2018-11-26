@@ -86,7 +86,7 @@ public class Item
 {
     public string name;
     public int id, baseValue, weight;
-    public bool stackable;
+    public bool stackable, questItem;
 }
 
 [System.Serializable]
@@ -115,6 +115,12 @@ public class Battery : Item
 {
     public float energy;
     public bool isEmpty;
+}
+
+[System.Serializable]
+public class Consumable : Item
+{
+    public int healAmount;
 }
 
 public enum GunType

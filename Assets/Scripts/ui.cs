@@ -7,17 +7,17 @@ using UnityEngine.EventSystems;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class ui : MonoBehaviour {
 
     Transform canv;
-    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup;
+    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup, tBox;
     GameObject itemContainer, chest_itemContainer, chest_storedContainer, merchant_owned, merchant_selling, dNpc, dPl;
     GameObject[] pauseWindows, answers, books;
-    KeyCode keyInventory, keyInteract;
     public static bool anyOpen;
-    bool choice, bookReading, hoverOn, eHoverOn;
-    string buttonName = "";
+    bool choice, bookReading, hoverOn, eHoverOn, changeKeys;
+    string keyToChange, buttonName, lastButton = "";
     int tempInt = 0;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
@@ -28,25 +28,35 @@ public class ui : MonoBehaviour {
     float showItemTimer = 0f;
     public static float priceMultiplier;
     int tempHp, ammoBuyMode, tempAmmoAmount, finalValue;
+    public static bool minigame = false;
+    bool consequence = false;
+    UnityEvent tempEvent;
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
-        DefaultKeys();
         LoadUI();
         tempHp = gameControl.control.hp;
 	}
 
-    //sets default keys
-    void DefaultKeys()
+    private void OnGUI()
     {
-        keyInventory = KeyCode.Tab;
-        keyInteract = KeyCode.E;
+        if (changeKeys && Input.anyKeyDown)
+        {
+            if (Event.current.isKey)
+                ChangeKeys(keyToChange, Event.current.keyCode);
+            else if (Event.current.isMouse)
+            {
+                string mouseKeyText = "Mouse" + Event.current.button.ToString();
+                KeyCode mouseKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), mouseKeyText);
+                ChangeKeys(keyToChange, mouseKey);
+            }
+        }
     }
 
     void Update () {
         if (showItemTimer < 2f)
             showItemTimer += Time.deltaTime;
-        if (showItemTimer > 2f)
+        if (showItemTimer > 2f || anyOpen)
             newItem.SetActive(false);
 
         if (gameControl.control.hp != tempHp)
@@ -60,77 +70,41 @@ public class ui : MonoBehaviour {
         if (eHoverOn)
             HoverEquip(tempInt);
 
-        switch (anyOpen)
+        if (!minigame)
         {
-            case true:
+            switch (anyOpen)
+            {
+                case true:
+                    //closing active windows
+                    if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(keys.savedKeys.inventoryKey))
+                        Esc();
 
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    if (inv.activeInHierarchy)
-                        Close(inv);
-                    if (pauseWindows[1].activeInHierarchy || pauseWindows[2].activeInHierarchy || pauseWindows[3].activeInHierarchy)
-                        CloseAllPauseMenusExcept(0);
-                    if (pauseWindows[0].activeInHierarchy)
-                        Close(pausemenu);
-                    if (chest.activeInHierarchy)
-                        Close(chest);
-                    if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
-                        Close(merchant);
-                    if (dBox.activeInHierarchy && !choice)
-                        Dialogue();
-                    if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        Close(bookcase);
-                    if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                    if (merchant_popup.activeInHierarchy)
-                        merchant_popup.SetActive(false);
-                }
-
-                if (Input.GetKeyDown(keyInventory) || Input.GetKeyDown(keyInteract))
-                {
-                    if(inv.activeInHierarchy)
-                        Close(inv);
-                    if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
-                        Close(merchant);
-                    if (chest.activeInHierarchy)
-                        Close(chest);
-                    if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        Close(bookcase);
-                    if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                    if (bookReading)
+                    if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(keys.savedKeys.interactKey))
                     {
-                        bookcase.transform.Find("bookText").gameObject.SetActive(false);
-                        bookReading = false;
+                        if (bookcase.activeInHierarchy)
+                        {
+                            if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+                                bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
+                            if (bookReading)
+                            {
+                                bookcase.transform.Find("bookText").gameObject.SetActive(false);
+                                bookReading = false;
+                            }
+                        }
+                        if (dBox.activeInHierarchy && !choice)
+                            Dialogue();
+                        if (tBox.activeInHierarchy)
+                            Close(tBox);
                     }
-                    if (merchant_popup.activeInHierarchy)
-                        merchant_popup.SetActive(false);
-                }
+                    break;
+                case false:
+                    if (Input.GetKeyDown(keys.savedKeys.inventoryKey))
+                        OpenInventory();
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                        OpenPauseMenu();
 
-                if ((dBox.activeInHierarchy && !choice) && (Input.GetKeyDown(keyInteract) || Input.GetMouseButtonDown(0)))
-                    Dialogue();
-
-                if (bookcase.activeInHierarchy && Input.GetMouseButtonDown(0))
-                {
-                    if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
-                        bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
-                    if (bookReading)
-                    {
-                        bookcase.transform.Find("bookText").gameObject.SetActive(false);
-                        bookReading = false;
-                    }
-                }
-
-                break;
-            case false:
-
-                if (Input.GetKeyDown(keyInventory))
-                    OpenInventory();
-                if (Input.GetKeyDown(KeyCode.Escape))
-                    OpenPauseMenu();
-                if (Input.GetKeyDown(keyInteract))
-                {
-                    if (interactableObject != null)
+                    //interacting
+                    if (Input.GetKeyDown(keys.savedKeys.interactKey) && interactableObject != null)
                     {
                         switch (interactableObject.gameObject.GetComponent<interactable>().type)
                         {
@@ -154,13 +128,13 @@ public class ui : MonoBehaviour {
                                 OpenBookcase();
                                 break;
                             case interactable.Type.door:
-                                SceneManager.LoadScene(interactableObject.GetComponent<interactable>().levelToLoad);
+                                spawns.LoadLevel(interactableObject.GetComponent<interactable>().levelToLoad, interactableObject.GetComponent<interactable>().nextPositionName);
                                 break;
                             case interactable.Type.deliveryLocation:
                                 DeliveryQuest dq = quests.questList.FirstOrDefault(i => i.questName == interactableObject.GetComponent<interactable>().deliveryQuest) as DeliveryQuest;
-                                for(int i = 0; i < dq.whereToDeliver.Length; i++)
+                                for (int i = 0; i < dq.whereToDeliver.Length; i++)
                                 {
-                                    if (dq.whereToDeliver[i] == interactableObject && dq.delivered[i] == false)
+                                    if (GameObject.Find(dq.whereToDeliver[i]) == interactableObject && dq.delivered[i] == false)
                                     {
                                         dq.delivered[i] = true;
                                         items.ownedItems.Remove(dq.itemToDeliver);
@@ -170,12 +144,71 @@ public class ui : MonoBehaviour {
                                     }
                                 }
                                 break;
+                            case interactable.Type.workbench:
+                                quests.workbenchUse();
+                                switch (quests.workbenchStage)
+                                {
+                                    case 0:
+                                        OpenThought("It's my workbench. I don't need it right now");
+                                        break;
+                                    case 1:
+                                        //here we should have some animations or sounds or whatever
+                                        //indicating that the player has built a dash backpack thing
+                                        //also after the cutscene or whatever it's gonna be
+                                        //you should remember to change the dash variable thing to true
+                                        //because u know, it doesn't work if you don't do it
+                                        break;
+                                    case 2:
+                                        OpenThought("You already know what tf this is and I'm damn sure I already used it so gtfo");
+                                        break;
+                                }
+                                break;
+                            case interactable.Type.inspectable:
+                                OpenThought(interactableObject.GetComponent<interactable>().thought);
+                                break;
                         }
                     }
-                }
-                break;
+                    break;
+            }
         }
 	}
+
+    //check which window to close
+    void Esc()
+    {
+        if (inv.activeInHierarchy)
+            Close(inv);
+        if (pauseWindows[1].activeInHierarchy || pauseWindows[2].activeInHierarchy || pauseWindows[3].activeInHierarchy)
+            CloseAllPauseMenusExcept(0);
+        if (pauseWindows[0].activeInHierarchy)
+            Close(pausemenu);
+        if (chest.activeInHierarchy)
+            Close(chest);
+        if (dBox.activeInHierarchy && !choice)
+            Dialogue();
+        if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
+            Close(merchant);
+        if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+            Close(bookcase);
+        if (bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
+            bookcase.transform.Find("addedbooks").gameObject.SetActive(false);
+        if (bookReading)
+        {
+            bookcase.transform.Find("bookText").gameObject.SetActive(false);
+            bookReading = false;
+        }
+        if (merchant_popup.activeInHierarchy)
+            merchant_popup.SetActive(false);
+        if (pauseWindows[4].activeInHierarchy)
+        {
+            if (changeKeys)
+                changeKeys = false;
+            else
+                CloseAllPauseMenusExcept(1);
+        }
+        if (tBox.activeInHierarchy)
+            Close(tBox);
+    }
 
     void OpenInventory()
     {
@@ -244,6 +277,14 @@ public class ui : MonoBehaviour {
         }
     }
 
+    void OpenThought(string thought)
+    {
+        anyOpen = true;
+        TogglePause();
+        tBox.SetActive(true);
+        tBox.transform.Find("Text").GetComponent<Text>().text = thought;
+    }
+
     void Dialogue()
     {
         int maxPages = currentConvo.Length;
@@ -255,6 +296,7 @@ public class ui : MonoBehaviour {
                 anyOpen = true;
                 dBox.SetActive(true);
                 TogglePause();
+                tempEvent = null;
             }
 
             //npc talks
@@ -288,13 +330,18 @@ public class ui : MonoBehaviour {
                 }
             }
         }
+        //end dialogue
         else
         {
+            if (tempEvent != null)
+                tempEvent.Invoke();
+
             currentPage = 0;
             Close(dBox);
         }
     }
 
+    //adds ammo as "item" in merchant's list
     void AddAmmoIcons(string ammoType)
     {
         GameObject i = Instantiate(Resources.Load("ui/inventory/item") as GameObject, merchant_selling.transform, false);
@@ -330,14 +377,17 @@ public class ui : MonoBehaviour {
             if (!inv.transform.Find("quests").transform.Find("quest" + activeQuest.questName))
                 AddQuest(activeQuest.questName, activeQuest.questDesc);
 
-
         string completedText = "DONE";
         foreach (Quest quest in quests.questList)
         {
             if (quest.completed)
             {
                 inv.transform.Find("quests").transform.Find("quest" + quest.questName).transform.Find(quest.questName + "desc").GetComponent<Text>().text = completedText;
+                inv.transform.Find("quests").transform.Find("quest" + quest.questName).SetAsLastSibling();
             }
+
+            if (quest.isMainQuest && !quest.completed)
+                inv.transform.Find("quests").transform.Find("quest" + quest.questName).SetAsFirstSibling();
         }
     }
 
@@ -425,9 +475,10 @@ public class ui : MonoBehaviour {
         merchant.transform.Find("moneyammo").Find("rapidAmmo").Find("amount").GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
         merchant.transform.Find("moneyammo").Find("shotgunAmmo").Find("amount").GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
 
+        //changes color of the items that can't be sold
         foreach (Item i in items.ownedItems)
         {
-            if (i == items.equippedOne || i == items.equippedTwo)
+            if (i == items.equippedOne || i == items.equippedTwo || i.questItem)
             {
                 merchant_owned.transform.Find(i.name + i.id).GetComponent<Image>().color = Color.gray;
                 merchant_owned.transform.Find(i.name + i.id).GetComponent<buttonScript>().type = buttonScript.buttonType.cantSell;
@@ -439,6 +490,7 @@ public class ui : MonoBehaviour {
             }
         }
 
+        //changes color of the items that can't be bought
         foreach (Item i in merchantItems)
         {
             if (NewValue(i) > gameControl.control.money)
@@ -457,18 +509,21 @@ public class ui : MonoBehaviour {
     //shows equipped items
     void ShowEquips()
     {
-        GameObject e1, e2, b, a1, a2, a3;
+        GameObject e1, e2, b, a1, a2, a3, m;
         e1 = inv.transform.Find("active").Find("equip1").gameObject;
         e2 = inv.transform.Find("active").Find("equip2").gameObject;
         b = inv.transform.Find("active").Find("battery").gameObject;
+        m = inv.transform.Find("active").Find("playerMoney").GetChild(0).gameObject;
         a1 = inv.transform.Find("active").Find("ammoBasic").GetChild(0).gameObject;
         a2 = inv.transform.Find("active").Find("ammoRapid").GetChild(0).gameObject;
         a3 = inv.transform.Find("active").Find("ammoShotgun").GetChild(0).gameObject;
 
+        m.GetComponent<Text>().text = gameControl.control.money.ToString();
         a1.GetComponent<Text>().text = gameControl.basicAmmo.ToString();
         a2.GetComponent<Text>().text = gameControl.rapidAmmo.ToString();
         a3.GetComponent<Text>().text = gameControl.shotgunAmmo.ToString();
 
+        //displays equip 1
         if (items.equippedOne != null)
         {
             e1.transform.Find("title").GetComponent<Text>().text = items.equippedOne.name;
@@ -498,6 +553,7 @@ public class ui : MonoBehaviour {
             e1.transform.Find("ammo").gameObject.SetActive(false);
         }
 
+        //displays equip 2
         if (items.equippedTwo != null)
         {
             e2.transform.Find("title").GetComponent<Text>().text = items.equippedTwo.name;
@@ -527,6 +583,7 @@ public class ui : MonoBehaviour {
             e2.transform.Find("ammo").gameObject.SetActive(false);
         }
 
+        //displays battery in use
         if (items.inUse != null)
         {
             b.transform.Find("slot").Find("BatteryHpContainer").GetChild(0).GetComponent<Image>().fillAmount = items.inUse.energy;
@@ -547,7 +604,7 @@ public class ui : MonoBehaviour {
     }
 
     //toggles pause
-    void TogglePause()
+    public static void TogglePause()
     {
         switch (playerMovement.paused)
         {
@@ -575,10 +632,12 @@ public class ui : MonoBehaviour {
         }
     }
 
+    //clicking any item
     public void ClickedItem(bool leftClick, buttonScript.buttonType type, string name)
     {
         switch (type)
         {
+            //item is in inventory
             case buttonScript.buttonType.inventoryItem:
                 Item t = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
                 if (t != null)
@@ -590,7 +649,7 @@ public class ui : MonoBehaviour {
                         //equipping a weapon in slot 1
                         if (leftClick)
                         {
-                            //if some item is already equipped on slot 1
+                            //some item is already equipped on slot 1
                             if (items.equippedOne != null)
                             {
                                 if (items.equippedOne.name + items.equippedOne.id != name)
@@ -619,7 +678,7 @@ public class ui : MonoBehaviour {
                         //equipping a weapon in slot 2
                         else if (!leftClick)
                         {
-                            //if some item is already equipped in slot 2
+                            //ome item is already equipped in slot 2
                             if (items.equippedTwo != null)
                             {
                                 if (items.equippedTwo.name + items.equippedTwo.id != name)
@@ -665,11 +724,23 @@ public class ui : MonoBehaviour {
                         else
                             print("this battery is empty");
                     }
+                    else if(t is Consumable)
+                    {
+                        Consumable c = t as Consumable;
+                        if (gameControl.control.hp + c.healAmount <= gameControl.control.maxhp)
+                            gameControl.control.hp += c.healAmount;
+                        else if (gameControl.control.hp + c.healAmount > gameControl.control.maxhp)
+                            gameControl.control.hp = gameControl.control.maxhp;
+
+                        StopHover();
+                        items.ownedItems.Remove(c);
+                    }
                 }
                 ShowItems(itemContainer, items.ownedItems, buttonScript.buttonType.inventoryItem);
                 ShowEquips();
                 break;
 
+            //buy item
             case buttonScript.buttonType.readyToBuy:
                 StopHover();
                 Item tempItem = merchantItems.FirstOrDefault(i => i.name + i.id == name);
@@ -692,6 +763,7 @@ public class ui : MonoBehaviour {
                 CheckValuesAndEquips();
                 break;
 
+            //sell item
             case buttonScript.buttonType.readyToSell:
                 StopHover();
                 tempItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
@@ -706,14 +778,17 @@ public class ui : MonoBehaviour {
                 CheckValuesAndEquips();
                 break;
 
+            //can't buy item
             case buttonScript.buttonType.cantBuy:
                 print("can't buy");
                 break;
 
+            //can't sell item
             case buttonScript.buttonType.cantSell:
                 print("can't sell");
                 break;
 
+            //store item in chest
             case buttonScript.buttonType.readyToStore:
                 tempItem = items.ownedItems.FirstOrDefault(i => i.name + i.id == name);
                 if (tempItem != null && tempItem != items.equippedOne && tempItem != items.equippedTwo && tempItem != items.inUse)
@@ -726,6 +801,7 @@ public class ui : MonoBehaviour {
                 }
                 break;
 
+            //take item from chest
             case buttonScript.buttonType.readyToTake:
                 StopHover();
                 tempItem = items.storedItems.FirstOrDefault(i => i.name + i.id == name);
@@ -737,6 +813,8 @@ public class ui : MonoBehaviour {
                     ShowItems(chest_storedContainer, items.storedItems, buttonScript.buttonType.readyToTake);
                 }
                 break;
+
+            //buy ammo
             case buttonScript.buttonType.ammo:
                 StopHover();
                 merchant_popup.SetActive(true);
@@ -754,10 +832,10 @@ public class ui : MonoBehaviour {
         }
     }
 
+    //click a button in pause menu
     void PauseClickListener()
     {
         string btn = EventSystem.current.currentSelectedGameObject.name;
-        string lastButton = "";
 
         if (!btn.Contains("saveslot"))
             savecaution.SetActive(false);
@@ -770,56 +848,76 @@ public class ui : MonoBehaviour {
             CloseAllPauseMenusExcept(2);
         else if (btn == "savequit")
             CloseAllPauseMenusExcept(3);
+        else if (btn == "keybinds")
+            CloseAllPauseMenusExcept(4);
         else if (btn == "backButton")
             CloseAllPauseMenusExcept(0);
+        else if (btn.Contains("changekey_"))
+        {
+            string end = btn.Replace("changekey_", "");
+            GameObject.Find(btn).GetComponent<Button>().image.color = Color.gray;
+            changeKeys = true;
+            keyToChange = end;
+        }
+        else if (btn == "defaults")
+        {
+            keys.DefaultKeys();
+            ShowKeyBinds();
+        }
         else if (btn.Contains("saveslot"))
         {
-            if (btn == "saveslot1")
+            int num = int.Parse(btn.Replace("saveslot", ""));
+            if (File.Exists(Application.persistentDataPath + "/save" + num.ToString() + ".dat") && lastButton != btn)
             {
-                if (File.Exists(Application.persistentDataPath + "/save1.dat") && lastButton!=btn)
-                {
-                    savecaution.SetActive(true);
-                }
-                else
-                {
-                    gameControl.control.SaveGame(1);
-                    savecaution.SetActive(false);
-                    if (pauseWindows[3].activeInHierarchy)
-                        print("exitgame");
-                }
+                savecaution.SetActive(true);
             }
-            else if (btn == "saveslot2")
+            else
             {
-                if (File.Exists(Application.persistentDataPath + "/save2.dat") && lastButton != btn)
-                {
-                    savecaution.SetActive(true);
-                }
-                else
-                {
-                    gameControl.control.SaveGame(2);
-                    savecaution.SetActive(false);
-                    if (pauseWindows[3].activeInHierarchy)
-                        print("exitgame");
-                }
-            }
-            else if (btn == "saveslot3")
-            {
-                if (File.Exists(Application.persistentDataPath + "/save3.dat") && lastButton != btn)
-                {
-                    savecaution.SetActive(true);
-                }
-                else
-                {
-                    gameControl.control.SaveGame(3);
-                    savecaution.SetActive(false);
-                    if (pauseWindows[3].activeInHierarchy)
-                        print("exitgame");
-                }
+                gameControl.control.SaveGame(num);
+                savecaution.SetActive(false);
+                if (pauseWindows[3].activeInHierarchy)
+                    print("exítgame");
             }
         }
         lastButton = btn;
     }
 
+    //change keybinds
+    void ChangeKeys(string keyToChange, KeyCode newKey)
+    {
+        GameObject.Find("changekey_" + keyToChange).GetComponent<Button>().image.color = Color.white;
+
+        if (keys.AcceptNewKey(newKey))
+        {
+            switch (keyToChange)
+            {
+                case "inventory":
+                    keys.savedKeys.inventoryKey = newKey;
+                    break;
+                case "interact":
+                    keys.savedKeys.interactKey = newKey;
+                    break;
+                case "dash":
+                    keys.savedKeys.dashKey = newKey;
+                    break;
+                case "slowtime":
+                    keys.savedKeys.slowtimeKey = newKey;
+                    break;
+                case "attack":
+                    keys.savedKeys.attackKey = newKey;
+                    break;
+                case "spAttack":
+                    keys.savedKeys.spAttackKey = newKey;
+                    break;
+            }
+            pauseWindows[4].transform.Find("changekey_" + keyToChange).Find("keycode").GetComponent<Text>().text = newKey.ToString();
+        }
+
+        if(newKey != KeyCode.Escape)
+            changeKeys = false;
+    }
+
+    //choose an answer in dialogue
     void ClickAnswer()
     {
         string ans = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text;
@@ -830,13 +928,15 @@ public class ui : MonoBehaviour {
                 dPl.SetActive(false);
                 dNpc.SetActive(true);
                 dNpc.transform.Find("txt").GetComponent<Text>().text = currentConvo[currentPage].player[i].reactionToAnswer;
-                currentConvo[currentPage].player[i].consequenceToAnswer.Invoke();
+                tempEvent = currentConvo[currentPage].player[i].consequenceToAnswer;
+                //currentConvo[currentPage].player[i].consequenceToAnswer.Invoke();
             }
         }
         currentPage += 1;
         choice = false;
     }
 
+    //open a book
     void ClickBook()
     {
         string b = EventSystem.current.currentSelectedGameObject.name;
@@ -846,6 +946,7 @@ public class ui : MonoBehaviour {
         bookcase.transform.Find("bookText").GetChild(0).GetComponent<Text>().text = tBook.text;
     }
 
+    //unequip a weapon or battery
     public void ClickEquip(int equipNum)
     {
         switch (equipNum)
@@ -864,6 +965,7 @@ public class ui : MonoBehaviour {
         ShowEquips();
     }
 
+    //buying ammo
     public void MerchantAmmoClicks()
     {
         string buttonName = EventSystem.current.currentSelectedGameObject.name;
@@ -908,6 +1010,7 @@ public class ui : MonoBehaviour {
                     interactableObject.GetComponent<merchant>().basicAmmo = merchantAmmoB;
                     interactableObject.GetComponent<merchant>().rapidAmmo = merchantAmmoR;
                     interactableObject.GetComponent<merchant>().shotgunAmmo = merchantAmmoS;
+                    interactableObject.GetComponent<merchant>().SaveAmmoAmont();
                 }
                 break;
         }
@@ -917,6 +1020,7 @@ public class ui : MonoBehaviour {
         merchant_popup.transform.Find("container").Find("amount").GetComponent<Text>().text = tempAmmoAmount.ToString() + " (costs " + finalValue.ToString() + ")";
     }
 
+    //checks if the next piece of ammo is affordable or not
     public bool CanAffordNextAmmo(int ammoType)
     {
         int newValue, nextValue = 0;
@@ -943,6 +1047,7 @@ public class ui : MonoBehaviour {
             return true;
     }
 
+    //toggle auto battery
     void BtrToggle(bool toggleOn)
     {
         if (toggleOn)
@@ -953,6 +1058,40 @@ public class ui : MonoBehaviour {
         }
         else
             gameControl.control.autoBattery = false;
+    }
+
+    //displays key binds
+    void ShowKeyBinds()
+    {
+        foreach(Transform t in pauseWindows[4].transform)
+        {
+            if (t.name.Contains("changekey_"))
+            {
+                string keyToCheck = t.name.Replace("changekey_", "");
+                switch (keyToCheck)
+                {
+                    case "inventory":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.inventoryKey.ToString();
+                        break;
+                    case "interact":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.interactKey.ToString();
+                        break;
+                    case "dash":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.dashKey.ToString();
+                        break;
+                    case "slowtime":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.slowtimeKey.ToString();
+                        break;
+                    case "attack":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.attackKey.ToString();
+                        break;
+                    case "spAttack":
+                        t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.spAttackKey.ToString();
+                        break;
+                }
+                t.GetComponent<Button>().image.color = Color.white;
+            }
+        }
     }
 
     //shows item info on popup
@@ -1045,6 +1184,7 @@ public class ui : MonoBehaviour {
         popup.SetActive(false);
     }
 
+    //controls pause menu
     void CloseAllPauseMenusExcept(int num)
     {
         for (int i = 0; i < pauseWindows.Length; i++)
@@ -1055,13 +1195,35 @@ public class ui : MonoBehaviour {
                 pauseWindows[i].SetActive(true);
         }
 
+        if (num == 0)
+            savecaution.SetActive(false);
+
         if (num == 1)
             gameControl.control.SaveOptions();
 
-        if (num == 0)
-            savecaution.SetActive(false);
+        if (num == 2)
+        {
+            if (File.Exists(Application.persistentDataPath + "/save1.dat"))
+                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = Color.gray;
+            else
+                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = Color.white;
+
+            if (File.Exists(Application.persistentDataPath + "/save2.dat"))
+                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = Color.gray;
+            else
+                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = Color.white;
+
+            if (File.Exists(Application.persistentDataPath + "/save3.dat"))
+                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.gray;
+            else
+                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.white;
+        }
+
+        if (num == 4)
+            ShowKeyBinds();
     }
 
+    //displays name and image of recently collected item
     public void ShowCollectedItem(string itemName)
     {
         showItemTimer = 0;
@@ -1069,10 +1231,16 @@ public class ui : MonoBehaviour {
         newItem.transform.Find("collectedName").GetComponent<Text>().text = itemName;
     }
 
+    //loads every element in ui
     void LoadUI()
     {
         if (hp == null)
             hp = Instantiate(Resources.Load("ui/healthBar") as GameObject, canv, false);
+        if (tBox == null)
+        {
+            tBox = Instantiate(Resources.Load("ui/thoughtbox") as GameObject, canv, false);
+            tBox.SetActive(false);
+        }
         if (inv == null)
         {
             inv = Instantiate(Resources.Load("ui/inventory/inv") as GameObject, canv, false);
@@ -1086,11 +1254,12 @@ public class ui : MonoBehaviour {
         if (pausemenu == null)
         {
             pausemenu = Instantiate(Resources.Load("ui/pauseWindow") as GameObject, canv, false);
-            pauseWindows = new GameObject[4];
+            pauseWindows = new GameObject[5];
             pauseWindows[0] = pausemenu.transform.Find("general").gameObject;
             pauseWindows[1] = pausemenu.transform.Find("options").gameObject;
             pauseWindows[2] = pausemenu.transform.Find("saves").gameObject;
             pauseWindows[3] = pausemenu.transform.Find("exit").gameObject;
+            pauseWindows[4] = pausemenu.transform.Find("keys").gameObject;
             Button[] tempArray;
             tempArray = pausemenu.GetComponentsInChildren<Button>().ToArray();
             for (int i = 0; i < tempArray.Length; i++)
@@ -1159,6 +1328,7 @@ public class ui : MonoBehaviour {
         popup.transform.SetAsLastSibling();
     }
 
+    //calculates the price merchant will sell an item
     public int NewValue(Item item)
     {
         float tempValue = item.baseValue * priceMultiplier;

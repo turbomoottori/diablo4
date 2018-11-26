@@ -26,7 +26,9 @@ public class gameControl : MonoBehaviour
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
+    public List<QuestGivers> questGivers;
     public string currentScene;
+    public PlayerPos playerPos;
 
     void Awake()
     {
@@ -50,6 +52,8 @@ public class gameControl : MonoBehaviour
             collectibles = new List<Collectibles>();
         if (enemies == null)
             enemies = new List<EnemyList>();
+        if (questGivers == null)
+            questGivers = new List<QuestGivers>();
 
         //delete later
         basicAmmo = 5;
@@ -72,6 +76,7 @@ public class gameControl : MonoBehaviour
     {
         if (scene.name != "mainmenu")
             AutoSave();
+        currentScene = scene.name;
     }
 
     public void SaveGame(int saveFile)
@@ -104,6 +109,9 @@ public class gameControl : MonoBehaviour
         data.rapidAmmo = rapidAmmo;
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
+        data.playerPos = new PlayerPos() { x = playerMovement.savedPos.x, y = playerMovement.savedPos.y, z = playerMovement.savedPos.z };
+        data.minigames = quests.minigames;
+        data.questGivers = questGivers;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -143,6 +151,10 @@ public class gameControl : MonoBehaviour
         data.rapidAmmo = rapidAmmo;
         data.autoBattery = autoBattery;
         data.batteryId = batteryId;
+        if(spawns.nextSpawn!=null)
+            data.playerPos = spawns.nextSpawn.position;
+        data.minigames = quests.minigames;
+        data.questGivers = questGivers;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -185,6 +197,10 @@ public class gameControl : MonoBehaviour
             autoBattery = data.autoBattery;
             batteryId = data.batteryId;
             currentScene = data.currentScene;
+            playerPos = data.playerPos;
+            spawns.loadPos = playerPos;
+            quests.minigames = data.minigames;
+            questGivers = data.questGivers;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -223,6 +239,9 @@ public class gameControl : MonoBehaviour
             autoBattery = data.autoBattery;
             batteryId = data.batteryId;
             currentScene = data.currentScene;
+            playerPos = data.playerPos;
+            quests.minigames = data.minigames;
+            questGivers = data.questGivers;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -236,6 +255,7 @@ public class gameControl : MonoBehaviour
         file = File.Create(Application.persistentDataPath + "/options.dat");
         OptionsData data = new OptionsData();
         data.volume = volume;
+        data.savedKeys = keys.savedKeys;
 
         bf.Serialize(file, data);
         file.Close();
@@ -252,6 +272,7 @@ public class gameControl : MonoBehaviour
             file.Close();
 
             volume = data.volume;
+            keys.savedKeys = data.savedKeys;
         }
     }
 }
@@ -267,9 +288,13 @@ class PlayerData
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
+    public List<QuestGivers> questGivers;
     public List<Book> bookcaseBooks;
     public string currentScene;
+    public PlayerPos playerPos;
+    public List<Minigame> minigames;
 }
+
 
 [System.Serializable]
 public class MerchantData
@@ -283,6 +308,7 @@ public class MerchantData
 class OptionsData
 {
     public int volume;
+    public SavedKeys savedKeys;
 }
 
 [System.Serializable]
@@ -296,4 +322,24 @@ public class Collectibles
 public class EnemyList
 {
     public float posX, posZ, posY;
+}
+
+[System.Serializable]
+public class QuestGivers
+{
+    public string name;
+    public int questStage;
+}
+
+[System.Serializable]
+public class PlayerPos
+{
+    public float x, y, z;
+}
+
+[System.Serializable]
+public class Minigame
+{
+    public string name;
+    public bool completed;
 }
