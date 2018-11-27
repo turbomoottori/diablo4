@@ -5,14 +5,15 @@ using System.Collections;
 public class edge : MonoBehaviour
 {
     public float threshold;
+	public float edgeSize;
     public float dimmer;
     public Color edgeColor;
-    private Material material;
+    public Material material;
 
     // Creates a private material used to the effect
     void Awake()
     {
-        material = new Material(Shader.Find("Hidden/EdgeDetectionShader"));
+        //material = new Material(Shader.Find("Hidden/EdgeDetectionShader"));
     }
 
     // Postprocess the image
@@ -28,6 +29,7 @@ public class edge : MonoBehaviour
         material.SetFloat("_Threshold", threshold);
         material.SetFloat("_Dimmer", dimmer);
         material.SetColor("_EdgeColor", edgeColor);
+		material.SetFloat("_Edgesize", edgeSize);
         Graphics.Blit(source, destination, material);
     }
 }

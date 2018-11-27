@@ -6,6 +6,7 @@ Shader "Hidden/EdgeDetectionShader"
         _Threshold("Threshold", float) = 0.20
         _EdgeColor("Edge color", Color) = (0,0,0,1)
 		_Dimmer("Dimmer", float) = 0.40
+		_Edgesize("_Edgesize", float) = 100
     }
     SubShader
     {
@@ -46,6 +47,7 @@ Shader "Hidden/EdgeDetectionShader"
             float4 _MainTex_TexelSize;
             float _Threshold;
 			float _Dimmer;
+			float _Edgesize;
             fixed4 _EdgeColor;
  
             float4 getNormalsAndDepth(in float2 uv)
@@ -53,10 +55,15 @@ Shader "Hidden/EdgeDetectionShader"
                 half3 normal;
                 float depth;
                 DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, uv), depth, normal);
-                return fixed4(normal, depth);
+                
+				
+				//depth = 1.0 / depth;
+				
+				return fixed4(normal, 1/(depth));
 				
 				//pelkkä syvyys, unohdetaan normaalit
-				//return fixed4(depth, depth, depth, depth)
+				//return fixed4(depth, depth, depth, depth);
+				
             }
  
 			//käytännössä shader alkaa tästä.
@@ -69,16 +76,19 @@ Shader "Hidden/EdgeDetectionShader"
 				
 				//nykyisen pikselin kohdalta normal- ja depth-arvot ylös
                 fixed4 orValue = getNormalsAndDepth(i.uv);
+				float aB = orValue.a/_Edgesize;
+				//float aB = 1.0 - (_Edgesize/orValue.a);
+				
 				float2 offsets[8] =
 				{
-                    float2(-0.5, -0.5),
-                    float2(-1.0,  0.0),
-                    float2(-0.5,  0.5),
-                    float2( 0.0, -1.0),
-                    float2( 0.0,  1.0),
-                    float2( 0.5, -0.5),
-                    float2( 1.0,  0.0),
-                    float2( 0.5,  0.5)
+                    float2(-0.5*aB, -0.5*aB),
+                    float2(-1.0*aB,  0.0*aB),
+                    float2(-0.5*aB,  0.5*aB),
+                    float2( 0.0*aB, -1.0*aB),
+                    float2( 0.0*aB,  1.0*aB),
+                    float2( 0.5*aB, -0.5*aB),
+                    float2( 1.0*aB,  0.0*aB),
+                    float2( 0.5*aB,  0.5*aB)
                 };
 				
                 fixed4 sampledValue = fixed4(0,0,0,0);
@@ -87,6 +97,7 @@ Shader "Hidden/EdgeDetectionShader"
                 }
                 
 				sampledValue /= 8;
+				
                 
 				fixed4 dd = fixed4(_Dimmer, _Dimmer, _Dimmer, _Dimmer);
 				fixed4 dom = (col * dd) * _EdgeColor;
