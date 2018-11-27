@@ -86,7 +86,7 @@ public class playerMovement : MonoBehaviour
 
                 //prevents being stuck on wall
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position+Vector3.up, movement, out hit, 1.1f))
+                if (Physics.Raycast(transform.position+Vector3.up, movement, out hit, 1.4f))
                     movement = Vector3.zero;
 
                 Vector3 pos = transform.position;
@@ -129,7 +129,6 @@ public class playerMovement : MonoBehaviour
             //JUMP AND DOUBLE JUMP
             grounded = (Physics.Raycast(transform.position, Vector3.down, 0.5f, walkable));
             anim.SetFloat("y_velocity", rb.velocity.y);
-            print(jumpCounter);
             if (grounded)
             {
                 tempPos = transform.position;

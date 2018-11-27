@@ -10,6 +10,7 @@ public class cameraMovement : MonoBehaviour {
     Vector3 offset, target;
     float min, max, angle;
     float minFov, maxFov;
+    public LayerMask mask;
 
 	void Start () {
         savedOffset = new Vector3(0, 9.5f, -7.9f);
@@ -58,12 +59,14 @@ public class cameraMovement : MonoBehaviour {
         
         //hides objects between camera and player
         RaycastHit hit, h;
-        if (Physics.Linecast(transform.position, targetPos - transform.position, out hit) && Physics.Linecast(targetPos, transform.position, out h))
+        if (Physics.Linecast(transform.position, targetPos - transform.position, out hit, mask) && Physics.Linecast(targetPos, transform.position, out h, mask))
         {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
                 StartCoroutine(FadeOut(FindHideableGameObject(hit.collider.gameObject).gameObject, hit.collider.gameObject));
             if (h.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
                 StartCoroutine(FadeOut(FindHideableGameObject(h.collider.gameObject).gameObject, h.collider.gameObject));
+
+            print(hit.collider.name + h.collider.name);
         }
     
     }
@@ -71,6 +74,7 @@ public class cameraMovement : MonoBehaviour {
     //fades gameobject out
     IEnumerator FadeOut(GameObject g, GameObject objectWithCollider)
     {
+        print("fadeout");
         if (g.GetComponent<Animator>().GetBool("fade") == true)
             yield return null;
         else

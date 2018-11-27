@@ -53,6 +53,7 @@ public class consequences : MonoBehaviour {
         if (gameControl.control.money < tempAmount)
         {
             self.GetComponent<npc>().dialogues[self.GetComponent<npc>().currentDialogue].dialogue[self.GetComponent<npc>().dialogues[self.GetComponent<npc>().currentDialogue].dialogue.Length - 1].npc.talk = "NOT ENOUGH MONEY!!!! DIE";
+            ui.currentConvo[self.GetComponent<npc>().currentDialogue].npc.talk="NOT ENOUGH MONEY";
             TurnHostile(self);
         }
         else

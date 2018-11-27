@@ -77,6 +77,7 @@ public class gameControl : MonoBehaviour
         if (scene.name != "mainmenu")
             AutoSave();
         currentScene = scene.name;
+        print(currentScene);
     }
 
     public void SaveGame(int saveFile)
@@ -329,6 +330,7 @@ public class QuestGivers
 {
     public string name;
     public int questStage;
+    public bool questCompleted;
 }
 
 [System.Serializable]

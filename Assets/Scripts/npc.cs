@@ -16,9 +16,12 @@ public class npc : MonoBehaviour {
     {
         QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
         if (q == null)
-            gameControl.control.questGivers.Add(new QuestGivers() { name = this.name, questStage = currentDialogue });
+            gameControl.control.questGivers.Add(new QuestGivers() { name = this.name, questStage = currentDialogue, questCompleted = qCompleted });
         else if (q != null)
+        {
             currentDialogue = q.questStage;
+            qCompleted = q.questCompleted;
+        }
     }
 
     public void Interact()
@@ -54,6 +57,7 @@ public class npc : MonoBehaviour {
                 quests.QuestCompleted(GetComponent<deliveryQuest>().questToStart.questName);
                 qCompleted = true;
                 currentDialogue += 1;
+                print(currentDialogue);
             }
         }
 
@@ -63,9 +67,10 @@ public class npc : MonoBehaviour {
             if (currentDialogue > dialogues.Length)
                 currentDialogue = 1;
         }
-
+        print(currentDialogue);
         QuestGivers q = gameControl.control.questGivers.FirstOrDefault(a => a.name == this.name);
         q.questStage = currentDialogue;
+        q.questCompleted = qCompleted;
     }
 
     public void NextConvo()

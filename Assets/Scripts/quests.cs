@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class quests : MonoBehaviour {
 
     public static List<Quest> questList = new List<Quest>();
     public static int workbenchStage = 0;
-    public static List<Minigame> minigames;
+    public static List<Minigame> minigames = new List<Minigame>();
 
     private void Start()
     {
@@ -26,6 +27,29 @@ public class quests : MonoBehaviour {
 
         if (minigames == null)
             minigames = new List<Minigame>();
+
+        Quest[] qq = questList.FindAll(q => q is DeliveryQuest && q.completed == false).ToArray();
+        if (qq.Length != 0)
+        {
+            foreach (DeliveryQuest d in qq)
+            {
+                for (int i = 0; i < d.levelforDelivery.Length; i++)
+                {
+                    if (SceneManager.GetActiveScene().name == d.levelforDelivery[i])
+                    {
+                        GameObject location = GameObject.Find(d.whereToDeliver[i]);
+                        if (!d.delivered[i])
+                        {
+                            if (location.gameObject.GetComponent<interactable>() == null)
+                                location.gameObject.AddComponent<interactable>();
+
+                            location.GetComponent<interactable>().type = interactable.Type.deliveryLocation;
+                            location.GetComponent<interactable>().deliveryQuest = d.questName;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static void workbenchUse()
@@ -142,6 +166,8 @@ public class FetchQuest: Quest
 public class DeliveryQuest : Quest
 {
     public Item itemToDeliver;
+    [Tooltip("must be same size as the rest")]
+    public string[] levelforDelivery;
     [Tooltip("location must have collider and have unique name")]
     public string[] whereToDeliver;
     [Tooltip("must be same size as 'where to deliver'")]
