@@ -281,6 +281,7 @@ ModelImporter:
     7400046: Armature|shooting
     7400048: Armature|use
     7400050: falling
+    7400052: Armature|walk_strafe_right
     9500000: //RootNode
     13700000: Cube.002
     13700002: Cube.003
@@ -295,7 +296,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.002
-    second: {fileID: 2100000, guid: ed6b28bf4782bea4fa3dcb6b9358f6e6, type: 2}
+    second: {fileID: 2100000, guid: 0a3aac94781d2a64d9fcff768a3911e1, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -324,10 +325,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle
-      takeName: Idle
+      name: Armature|walk_strafe_right
+      takeName: Armature|walk_strafe_right
       firstFrame: 0
-      lastFrame: 25
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -899,6 +900,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
