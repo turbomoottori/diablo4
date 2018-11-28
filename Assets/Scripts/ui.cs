@@ -21,7 +21,6 @@ public class ui : MonoBehaviour {
     int tempInt = 0;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
-    public static Dialogue[] npcDialogue;
     public static Dialogue[] currentConvo;
     public static int merchantAmmoB, merchantAmmoR, merchantAmmoS;
     int currentPage;
