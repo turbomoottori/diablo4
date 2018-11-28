@@ -57,9 +57,10 @@ Shader "Hidden/EdgeDetectionShader"
                 DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, uv), depth, normal);
                 
 				
-				//depth = 1.0 / depth;
+				depth = 1.0 / (depth*100);
+				depth = clamp(0, 1, depth);
 				
-				return fixed4(normal, 1/(depth));
+				return fixed4(normal, depth);
 				
 				//pelkkä syvyys, unohdetaan normaalit
 				//return fixed4(depth, depth, depth, depth);
@@ -77,6 +78,7 @@ Shader "Hidden/EdgeDetectionShader"
 				//nykyisen pikselin kohdalta normal- ja depth-arvot ylös
                 fixed4 orValue = getNormalsAndDepth(i.uv);
 				float aB = orValue.a/_Edgesize;
+				//aB -= 0.5f;
 				//float aB = 1.0 - (_Edgesize/orValue.a);
 				
 				float2 offsets[8] =
@@ -104,7 +106,9 @@ Shader "Hidden/EdgeDetectionShader"
 				
 				//palautetaan lineaarinen interpolointi jossa tulos lasketaan nykyisen etäisyyden ja viereisten etäisyyksien mukaan.
                 return lerp(col, dom, step(_Threshold, length(orValue - sampledValue)));
-            }
+				//orValue.a = 1.0f;
+				//return orValue;
+			}
             ENDCG
         }
     }

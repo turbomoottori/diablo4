@@ -8,12 +8,12 @@ public class edge : MonoBehaviour
 	public float edgeSize;
     public float dimmer;
     public Color edgeColor;
-    public Material material;
+    private Material material;
 
     // Creates a private material used to the effect
     void Awake()
     {
-        //material = new Material(Shader.Find("Hidden/EdgeDetectionShader"));
+        material = new Material(Shader.Find("Hidden/EdgeDetectionShader"));
     }
 
     // Postprocess the image
