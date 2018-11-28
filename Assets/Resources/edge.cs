@@ -5,6 +5,7 @@ using System.Collections;
 public class edge : MonoBehaviour
 {
     public float threshold;
+	public float edgeSize;
     public float dimmer;
     public Color edgeColor;
     private Material material;
@@ -28,6 +29,7 @@ public class edge : MonoBehaviour
         material.SetFloat("_Threshold", threshold);
         material.SetFloat("_Dimmer", dimmer);
         material.SetColor("_EdgeColor", edgeColor);
+		material.SetFloat("_Edgesize", edgeSize);
         Graphics.Blit(source, destination, material);
     }
 }
