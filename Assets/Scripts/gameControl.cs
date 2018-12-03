@@ -23,6 +23,7 @@ public class gameControl : MonoBehaviour
     public static List<Item> itemsStored = new List<Item>();
     public static List<Book> bookcaseBooks = new List<Book>();
 
+    public List<NPC> npcs;
     public List<MerchantData> merchs;
     public List<Collectibles> collectibles;
     public List<EnemyList> enemies;
@@ -113,6 +114,7 @@ public class gameControl : MonoBehaviour
         data.playerPos = new PlayerPos() { x = playerMovement.savedPos.x, y = playerMovement.savedPos.y, z = playerMovement.savedPos.z };
         data.minigames = quests.minigames;
         data.questGivers = questGivers;
+        data.npcs = npcs;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -156,6 +158,7 @@ public class gameControl : MonoBehaviour
             data.playerPos = spawns.nextSpawn.position;
         data.minigames = quests.minigames;
         data.questGivers = questGivers;
+        data.npcs = npcs;
 
         Scene cScene = SceneManager.GetActiveScene();
         data.currentScene = cScene.name;
@@ -202,6 +205,7 @@ public class gameControl : MonoBehaviour
             spawns.loadPos = playerPos;
             quests.minigames = data.minigames;
             questGivers = data.questGivers;
+            npcs = data.npcs;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -243,6 +247,7 @@ public class gameControl : MonoBehaviour
             playerPos = data.playerPos;
             quests.minigames = data.minigames;
             questGivers = data.questGivers;
+            npcs = data.npcs;
 
             SceneManager.LoadScene(data.currentScene);
         }
@@ -294,6 +299,7 @@ class PlayerData
     public string currentScene;
     public PlayerPos playerPos;
     public List<Minigame> minigames;
+    public List<NPC> npcs;
 }
 
 
@@ -323,6 +329,14 @@ public class Collectibles
 public class EnemyList
 {
     public float posX, posZ, posY;
+}
+
+[System.Serializable]
+public class NPC
+{
+    public string name;
+    public bool canBeEnemy, enemyKilled, hasQuest, questCompleted;
+    public int dialoqueState;
 }
 
 [System.Serializable]

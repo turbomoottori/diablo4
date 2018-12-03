@@ -41,9 +41,27 @@ public class enemy : MonoBehaviour {
         hostile = false;
         lastPos = transform.position;
 
-        foreach(EnemyList e in gameControl.control.enemies)
-            if(e.posX == startPos.x && e.posY == startPos.y && e.posZ == startPos.z)
+        NPC thisNpc = gameControl.control.npcs.FirstOrDefault(n => n.name == name);
+        if (thisNpc != null)
+        {
+            if (thisNpc.enemyKilled)
                 Destroy(this.gameObject);
+        }
+        else
+        {
+            //if this NPC doesn't have dialogue but has this script, add it to the list of NPCs
+            //if this NPC has dialogue, it's added to the list in dialogue script
+            if (GetComponent<dialogue_testnpc>() != null)
+            {
+                gameControl.control.npcs.Add(new NPC()
+                {
+                    name = name,
+                    canBeEnemy = true,
+                    enemyKilled = false,
+                    hasQuest = false
+                });
+            }
+        }
     }
 
     public float Distance(Vector3 st, Vector3 en)
@@ -271,7 +289,8 @@ public class enemy : MonoBehaviour {
             yield return null;
         }
 
-        gameControl.control.enemies.Add(new EnemyList() { posX = startPos.x, posY = startPos.y, posZ = startPos.z });
+        NPC thisNpc = gameControl.control.npcs.FirstOrDefault(n => n.name == name);
+        thisNpc.enemyKilled = true;
 
         Destroy(hpb);
         Destroy(this.gameObject);

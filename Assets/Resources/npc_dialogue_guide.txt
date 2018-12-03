@@ -1,0 +1,17 @@
+NPC dialogue guide
+____________
+- separates dialogues
+| separates talker name, function calls and actual dialogue texts
+> to separate npc texts to different pages
+< to separate player choices
+# to separate player choice and consequence to said choice
+____________
+1. always start with talker
+2. separate with |
+3. if you want a function to be invoken before dialogue, put invoke_NUMBER next
+4. then write the first page
+5. if there's more than one page, separate them with >
+6.a) if the dialogue ends and there's more dialogues after it, separate them with -
+6.b) if the dialogue doesn't end but the talker changes, write | and go back to step 1
+6.c) if the dialogue ends and there is not more dialogue, just save and exit
+____________
