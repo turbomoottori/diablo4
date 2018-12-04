@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
-public class dialogue_test : MonoBehaviour {
+public class dialogueui : MonoBehaviour {
 
     GameObject dBox;
     Button[] ansBoxes;
     public static int talker = 0; // 0 is npc, 1 is player
+    public static bool isOpen;
     string nextText = "";
     string[] ans; //answer options
     int[] cons; //consequenses to their respective answers
@@ -19,6 +21,7 @@ public class dialogue_test : MonoBehaviour {
     string txt; //the whole dialogue tree of current npc
     string[] allValues; //all dialogues
     NPC currentNpc;
+    string id;
 
     void Start () {
         dBox = Instantiate(Resources.Load("ui/dialoguebox") as GameObject, GameObject.Find("Canvas").transform, false);
@@ -28,13 +31,6 @@ public class dialogue_test : MonoBehaviour {
             ansBoxes[i].onClick.AddListener(ClickAnswer);
 
         dBox.SetActive(false);
-    }
-
-    private void Update()
-    {
-        //for testing only
-        if (Input.GetKeyDown(KeyCode.U) && talker != 1)
-            CheckDialogue();
     }
 
     //activate when initiating dialogue with new npc
@@ -48,7 +44,7 @@ public class dialogue_test : MonoBehaviour {
     }
 
     //checks which text to show
-    void CheckDialogue()
+    public void CheckDialogue()
     {
         string[] e = allValues[dl].Split(separators[0], separators[2]);
         max = e.Length;
@@ -60,14 +56,14 @@ public class dialogue_test : MonoBehaviour {
         {
             if (e[cur].StartsWith("npc_"))
             {
-                print("npc is talking");
+                id = e[cur];
                 talker = 0;
                 cur += 1;
                 CheckDialogue();
             }
             else if (e[cur].StartsWith("pl_"))
             {
-                print("player is talking");
+                id = e[cur];
                 talker = 1;
                 cur += 1;
                 CheckDialogue();
@@ -100,7 +96,6 @@ public class dialogue_test : MonoBehaviour {
             CloseDialogue();
             cur = 0;
         }
-
         currentNpc.dialoqueState = dl;
     }
 
@@ -139,6 +134,26 @@ public class dialogue_test : MonoBehaviour {
         }
     }
 
+    void FindResponse(string to)
+    {
+        for(int i =0;i<allValues.Length;i++)
+            if (allValues[i].StartsWith("npc_" + to) || allValues[i].StartsWith("pl_" + to))
+                dl = i;
+
+        cur = 0;
+    }
+
+    string NpcReaction(int answerNumber)
+    {
+        string talker;
+        if (id.StartsWith("npc_"))
+            talker = "npc_";
+        else
+            talker = "pl_";
+
+        return id.Replace(talker, "") + answerNumber.ToString();
+    }
+
     void ClickAnswer()
     {
         string clickedAnswer = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text;
@@ -151,32 +166,116 @@ public class dialogue_test : MonoBehaviour {
 
     public void OpenDialogue()
     {
+        if (!ui.anyOpen)
+            ui.TogglePause();
+
         dBox.SetActive(true);
+        isOpen = true;
+        ui.anyOpen = true;
     }
 
     public void CloseDialogue()
     {
+        if (ui.anyOpen)
+            ui.TogglePause();
+
         dBox.SetActive(false);
+        isOpen = false;
+        ui.anyOpen = false;
     }
 
+    //stuff that can happen because of dialogue
     public void Happening(int consequence)
     {
         switch (consequence)
         {
+            //cycles to the beginning
             case 0:
-                print("start quest");
+                dl = 0;
                 break;
+            //next conversation
             case 1:
-                print("change dialogue");
                 dl += 1;
                 break;
+            //finds npc's response number 1
             case 2:
-                print("yes");
+                FindResponse(NpcReaction(1));
                 CheckDialogue();
                 break;
+            //finds npc's response number 2
             case 3:
-                print("no");
+                FindResponse(NpcReaction(2));
                 CheckDialogue();
+                break;
+            //finds npc's response number 3
+            case 4:
+                FindResponse(NpcReaction(3));
+                CheckDialogue();
+                break;
+            //starts assigned quest
+            case 5:
+                if (ui.interactableObject.GetComponent<startquest>() != null)
+                    ui.interactableObject.GetComponent<startquest>().CheckQuest();
+                break;
+            //if quest is completed, go to next conversation
+            case 6:
+                if(ui.interactableObject.GetComponent<startquest>()!=null)
+                {
+                    bool isCompleted;
+                    if (ui.interactableObject.GetComponent<startquest>().type == startquest.questType.fetch)
+                        isCompleted = quests.CheckIfCompleted(ui.interactableObject.GetComponent<startquest>().fQuest.questName);
+                    else if (ui.interactableObject.GetComponent<startquest>().type == startquest.questType.delivery)
+                        isCompleted = quests.CheckIfCompleted(ui.interactableObject.GetComponent<startquest>().dQuest.questName);
+                    else
+                        isCompleted = quests.CheckIfCompleted(ui.interactableObject.GetComponent<startquest>().quest.questName);
+
+                    if (isCompleted)
+                    {
+                        dl += 1;
+                        cur = 0;
+                        CheckDialogue();
+                    }
+                }
+                break;
+            //counts if player has enough money
+            case 7:
+                if (ui.interactableObject.name == "metalthingdude")
+                {
+                    if(gameControl.control.money>=20)
+                    {
+                        gameControl.control.money -= 20;
+                        Happening(3);
+                    }
+                    else
+                        Happening(2);
+                }
+                break;
+            //become hostile
+            case 8:
+                ui.interactableObject.GetComponent<civilian>().TurnHostile();
+                break;
+            //check if a quest is started
+            case 9:
+                if (ui.interactableObject.name == "metalthingdude")
+                {
+                    Quest a = quests.questList.FirstOrDefault(x => x.questName == "Help blacksmith");
+                    if (a != null && !a.completed)
+                    {
+                        dl += 1;
+                        cur = 0;
+                        CheckDialogue();
+                    }
+                }
+                break;
+            case 10:
+                GameObject blacksmith = ui.interactableObject;
+                Destroy(blacksmith.GetComponent<dialogue_npc>());
+                ui.interactableObject.AddComponent<merchant>();
+                List<Item> listToAdd = new List<Item>();
+                listToAdd.Add(new Weapon() { name = "cool sword", damage = 2, id = 1, baseValue = 20, speed = 0.15f, weight = 2, stackable = false, questItem = false });
+                blacksmith.GetComponent<merchant>().items = listToAdd;
+                blacksmith.GetComponent<merchant>().priceMultiplier = 2;
+                blacksmith.GetComponent<interactable>().type = interactable.Type.merchant;
                 break;
         }
     }

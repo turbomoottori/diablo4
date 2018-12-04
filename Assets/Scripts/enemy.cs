@@ -51,7 +51,7 @@ public class enemy : MonoBehaviour {
         {
             //if this NPC doesn't have dialogue but has this script, add it to the list of NPCs
             //if this NPC has dialogue, it's added to the list in dialogue script
-            if (GetComponent<dialogue_testnpc>() != null)
+            if (GetComponent<dialogue_npc>() != null)
             {
                 gameControl.control.npcs.Add(new NPC()
                 {

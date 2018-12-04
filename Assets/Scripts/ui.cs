@@ -90,8 +90,8 @@ public class ui : MonoBehaviour {
                                 bookReading = false;
                             }
                         }
-                        if (dBox.activeInHierarchy && !choice)
-                            Dialogue();
+                        if (dialogueui.isOpen && dialogueui.talker != 1)
+                            SendMessage("CheckDialogue");
                         if (tBox.activeInHierarchy)
                             Close(tBox);
                     }
@@ -118,10 +118,8 @@ public class ui : MonoBehaviour {
                                 OpenChestWindow();
                                 break;
                             case interactable.Type.npc:
-                                interactableObject.GetComponent<npc>().Interact();
-                                currentConvo = interactableObject.GetComponent<npc>().dialogues[interactableObject.GetComponent<npc>().currentDialogue].dialogue;
-                                currentPage = 0;
-                                Dialogue();
+                                interactableObject.GetComponent<dialogue_npc>().SendText();
+                                SendMessage("CheckDialogue");
                                 break;
                             case interactable.Type.bookcase:
                                 OpenBookcase();

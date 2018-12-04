@@ -15,3 +15,22 @@ ____________
 6.b) if the dialogue doesn't end but the talker changes, write | and go back to step 1
 6.c) if the dialogue ends and there is not more dialogue, just save and exit
 ____________
+EXAMPLE
+
+npc_0|Hello>Do you want to start a quest?|pl_0|Yes#invoke_2<No#invoke_3
+-npc_01|Okay cool-npc_02|Fine, die then
+
+NPC says: Hello
+NPC says: Do you want to start a quest?
+PLAYER'S OPTIONS: Yes / No
+NPC'S REACTION TO YES: Okay cool
+NPC'S REACTION TO NO: Fine, die then
+____________
+MOST COMMON FUNCTIONS TO CALL
+
+1: Next conversation
+2: takes the last id (for example pl_0), adds 1 after it and finds a response (resulting in 01)
+3: same than 2 but instead adds 2 (resulting in 02)
+4: same than 2 and 3 but instead adds 3
+5: starts quest
+6: checks if quest is completed, and if yes, goes to next conversation

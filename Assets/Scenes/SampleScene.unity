@@ -6150,9 +6150,8 @@ GameObject:
   - component: {fileID: 589307884}
   - component: {fileID: 589307883}
   - component: {fileID: 589307882}
-  - component: {fileID: 589307881}
-  - component: {fileID: 589307880}
   - component: {fileID: 589307879}
+  - component: {fileID: 589307880}
   m_Layer: 9
   m_Name: Civilian (2)
   m_TagString: enemy
@@ -6184,167 +6183,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 589307878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b96babd5144bcc4b8e851e1b466e0c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 995c14c572c18334d81554d578d0a353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogues:
-  - dialogue:
-    - who: 0
-      npc:
-        talk: wanna take a ques t?????????
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-    - who: 1
-      npc:
-        talk: wanna take a ques t?????????
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player:
-      - answer: yes
-        reactionToAnswer: COOOL
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 589307881}
-              m_MethodName: CheckQuest
-              m_Mode: 1
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-            - m_Target: {fileID: 589307880}
-              m_MethodName: NextConvo
-              m_Mode: 1
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      - answer: no
-        reactionToAnswer: ddieee
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: TurnHostile
-              m_Mode: 2
-              m_Arguments:
-                m_ObjectArgument: {fileID: 589307878}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-  - dialogue:
-    - who: 0
-      npc:
-        talk: go get the thinggggsss
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 0}
-              m_MethodName: 
-              m_Mode: 1
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: 
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  - dialogue:
-    - who: 0
-      npc:
-        talk: ty
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  - dialogue:
-    - who: 0
-      npc:
-        talk: i don't wanna talk 2 u
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  cycleText: 0
-  currentDialogue: 0
---- !u!114 &589307881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 589307878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72f49250d38c7a943ae3bd30c5695e05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questToStart:
-    questName: get things
-    questDesc: just get sum things this is a work in progress
-    completed: 0
-    isMainQuest: 0
-    reward: 0
-    rewardAbility: 0
-    rewardMoney: 300
-    rewardItem:
-      name: 
-      id: 0
-      baseValue: 0
-      weight: 0
-      stackable: 0
-      questItem: 0
-    rewardWeapon:
-      name: 
-      id: 0
-      baseValue: 0
-      weight: 0
-      stackable: 0
-      questItem: 0
-      damage: 0
-      speed: 0
-    rewardGun:
-      name: 
-      id: 0
-      baseValue: 0
-      weight: 0
-      stackable: 0
-      questItem: 0
-      damage: 0
-      speed: 0
-      type: 0
-      range: 0
-    howMany: 3
-    what: thing
+  dialogue: {fileID: 4900000, guid: 5edf7a9a321055741886def86a567785, type: 3}
+  enemy: 1
+  quest: 0
 --- !u!54 &589307882
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12214,12 +12058,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: eef537476ecd6ba4b96c0fd4210560c7,
     type: 3}
   m_PrefabInternal: {fileID: 1140697218}
---- !u!114 &1148378811 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114906127736105656, guid: a91fcd8f07744724bada5ea02d7bd308,
-    type: 2}
-  m_PrefabInternal: {fileID: 214801544}
-  m_Script: {fileID: 11500000, guid: c99209a331aa1ba49b7c9f7fb47675d9, type: 3}
 --- !u!4 &1151721589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 7ea17e19baf8f9f4c8b4bb915827a7b0,
@@ -14299,185 +14137,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1291274246}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b96babd5144bcc4b8e851e1b466e0c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 995c14c572c18334d81554d578d0a353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogues:
-  - dialogue:
-    - who: 0
-      npc:
-        talk: what a nice day to take my METAL THING for a walk
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  - dialogue:
-    - who: 0
-      npc:
-        talk: i really love my METAL THING
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-    - who: 0
-      npc:
-        talk: huh? you want it? i mean i COULD give it to you but also i'm short on
-          rent so i need you to pay me 20 money
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player:
-      - answer: 
-        reactionToAnswer: 
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      - answer: 
-        reactionToAnswer: 
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-    - who: 1
-      npc:
-        talk: 
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player:
-      - answer: No problem, here's your 20 money
-        reactionToAnswer: Nice, let me count
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: ChangeAmount
-              m_Mode: 3
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 20
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: GiveMoney
-              m_Mode: 2
-              m_Arguments:
-                m_ObjectArgument: {fileID: 1291274246}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      - answer: What if i kill u instead
-        reactionToAnswer: '!!!!!!'
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: TurnHostile
-              m_Mode: 2
-              m_Arguments:
-                m_ObjectArgument: {fileID: 1291274246}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      - answer: Nevermind
-        reactionToAnswer: Fine, get back to me when you have the money
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-    - who: 0
-      npc:
-        talk: I'll be waiting here
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player:
-      - answer: No problem, here's your 20 money
-        reactionToAnswer: Nice, let me count
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: ChangeAmount
-              m_Mode: 3
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 20
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: GiveMoney
-              m_Mode: 2
-              m_Arguments:
-                m_ObjectArgument: {fileID: 1291274246}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      - answer: What if i kill u instead
-        reactionToAnswer: '!!!!!!'
-        consequenceToAnswer:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1148378811}
-              m_MethodName: TurnHostile
-              m_Mode: 2
-              m_Arguments:
-                m_ObjectArgument: {fileID: 1291274246}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-  - dialogue:
-    - who: 0
-      npc:
-        talk: thank
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  cycleText: 0
-  currentDialogue: 0
+  dialogue: {fileID: 4900000, guid: 8b76612063c96cc4d94c5c10cf51f1c5, type: 3}
+  enemy: 1
+  quest: 1
 --- !u!54 &1291274248
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17740,10 +17405,83 @@ MonoBehaviour:
   m_GameObject: {fileID: 1540039628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f6edb12816d78442bcf9f9acffa05a6, type: 3}
+  m_Script: {fileID: 11500000, guid: e93329871a4efd648b2fee5332b1512e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questToStart:
+  type: 2
+  quest:
+    questName: 
+    questDesc: 
+    completed: 0
+    isMainQuest: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 0
+    rewardItem:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
+  fQuest:
+    questName: 
+    questDesc: 
+    completed: 0
+    isMainQuest: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 0
+    rewardItem:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
+    howMany: 0
+    what: 
+  dQuest:
     questName: a delivery
     questDesc: 'test test test bring the goods to the cartwheel '
     completed: 0
@@ -17782,10 +17520,11 @@ MonoBehaviour:
       name: package
       id: 0
       baseValue: 0
-      weight: 6
+      weight: 0
       stackable: 0
       questItem: 1
-    levelforDelivery: []
+    levelforDelivery:
+    - SampleScene
     whereToDeliver:
     - test_deliveryLocation
     delivered: 00
@@ -17930,43 +17669,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1540039628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b96babd5144bcc4b8e851e1b466e0c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 995c14c572c18334d81554d578d0a353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogues:
-  - dialogue:
-    - who: 0
-      npc:
-        talk: 'deliver this '
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 1540039629}
-              m_MethodName: CheckQuest
-              m_Mode: 1
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  - dialogue:
-    - who: 0
-      npc:
-        talk: kewl
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  cycleText: 0
-  currentDialogue: 0
+  dialogue: {fileID: 4900000, guid: 4d523a725d3b98743a2a8b6e3bce9224, type: 3}
+  enemy: 1
+  quest: 1
 --- !u!114 &1540039638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21585,6 +21293,22 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.009383444, y: -0.025199851, z: 0.00079788174}
     m_Extent: {x: 0.005471157, y: 0.0028138831, z: 0.0051544383}
   m_DirtyAABB: 0
+--- !u!1 &1849423187 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1899049026886632, guid: a91fcd8f07744724bada5ea02d7bd308,
+    type: 2}
+  m_PrefabInternal: {fileID: 214801544}
+--- !u!114 &1849423194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1849423187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53b1d0ff1ca6f5d4aa0ba7a591a111ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1850541935 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100060, guid: bbfbe077bcc5624489f9f0c1e9b85fd2,
@@ -23779,6 +23503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 0.3
+  edgeSize: 0.9
   dimmer: 0
   edgeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &2042971802

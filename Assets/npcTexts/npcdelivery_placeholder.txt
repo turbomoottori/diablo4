@@ -1,0 +1,4 @@
+npc_0|hey u!!!!! Deliver this thing|invoke_5|invoke_1
+-npc_1|invoke_6|well are u gonna finish the quest or what
+-npc_2|thank for delivering|invoke_1
+-npc_3|welp, all done now

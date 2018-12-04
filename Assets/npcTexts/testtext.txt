@@ -1,0 +1,3 @@
+npc_0|hello>2 page>third page|invoke_1
+-npc_1|what u think|pl_0|yes#invoke_2<no#invoke_3
+-npc_01|cool-npc_02|not cool

@@ -1,0 +1,5 @@
+npc_0|invoke_9|ahh my METAL THING is amazing i could never give it away
+-npc_1|you know this METAL THING is really such an amazing thing>oh? u mean u want it?????>well i guess if you happened to have 20 money on you i mIGHT give it to you....|pl_0|ok here's your 20 money#invoke_2#<what if i kill u instead#invoke_3<nvm i'll come back later#invoke_4|npc_01|oh cool wait till i count them|invoke_7|npc_02|not if i kill u first!!!|invoke_8|npc_03|ok i'll be waiting here then
+-npc_2|wait.... there's not enough money!!!|invoke_8
+-npc_3|wow cool thx|invoke_1
+-npc_4|sajkjksdhfskjdhf

@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 
-public class dialogue_testnpc : MonoBehaviour {
+public class dialogue_npc : MonoBehaviour {
 
     public TextAsset dialogue;
     GameObject control;
@@ -39,8 +39,8 @@ public class dialogue_testnpc : MonoBehaviour {
         }
     }
 
-    void Update () {
-        if (Input.GetKeyDown(KeyCode.F) && dialogue_test.talker != 1)
-            control.GetComponent<dialogue_test>().NewDialogue(dialogue.text, name);
-	}
+    public void SendText()
+    {
+        control.GetComponent<dialogueui>().NewDialogue(dialogue.text, name);
+    }
 }
