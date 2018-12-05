@@ -119,7 +119,7 @@ public class ui : MonoBehaviour {
                                 break;
                             case interactable.Type.npc:
                                 interactableObject.GetComponent<dialogue_npc>().SendText();
-                                SendMessage("CheckDialogue");
+                                //SendMessage("CheckDialogue");
                                 break;
                             case interactable.Type.bookcase:
                                 OpenBookcase();

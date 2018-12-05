@@ -124,6 +124,11 @@ public class quests : MonoBehaviour {
             if (AllDelivered(dq))
                 return true;
         }
+        else
+        {
+            if (q.completed)
+                return true;
+        }
         return false;
     }
 

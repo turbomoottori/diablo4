@@ -17,7 +17,7 @@ public class dialogueui : MonoBehaviour {
     int[] cons; //consequenses to their respective answers
 
     char[] separators = { '|', '-', '>', '<' };
-    int dl, cur, max; //dl is current dialogue, cur is current page of current dl, max is all pages in current dl
+    public int dl, cur, max; //dl is current dialogue, cur is current page of current dl, max is all pages in current dl
     string txt; //the whole dialogue tree of current npc
     string[] allValues; //all dialogues
     NPC currentNpc;
@@ -41,6 +41,7 @@ public class dialogueui : MonoBehaviour {
         dl = currentNpc.dialoqueState;
         cur = 0;
         allValues = txt.Split(separators[1]);
+        CheckDialogue();
     }
 
     //checks which text to show
@@ -48,7 +49,6 @@ public class dialogueui : MonoBehaviour {
     {
         string[] e = allValues[dl].Split(separators[0], separators[2]);
         max = e.Length;
-
         if (cur == 0)
             OpenDialogue();
 
@@ -86,8 +86,8 @@ public class dialogueui : MonoBehaviour {
                 else
                 {
                     nextText = e[cur];
+                    cur += 1;
                 }
-                cur += 1;
             }
             ChangeText();
         }
@@ -136,8 +136,8 @@ public class dialogueui : MonoBehaviour {
 
     void FindResponse(string to)
     {
-        for(int i =0;i<allValues.Length;i++)
-            if (allValues[i].StartsWith("npc_" + to) || allValues[i].StartsWith("pl_" + to))
+        for (int i = 0; i < allValues.Length; i++)
+            if (allValues[i].StartsWith("npc_" + to + separators[0]) || allValues[i].StartsWith("pl_" + to + separators[0]))
                 dl = i;
 
         cur = 0;
@@ -191,25 +191,39 @@ public class dialogueui : MonoBehaviour {
         {
             //cycles to the beginning
             case 0:
+                CloseDialogue();
                 dl = 0;
                 break;
             //next conversation
             case 1:
-                dl += 1;
+                string talker;
+                if (id.StartsWith("npc_"))
+                    talker = "npc_";
+                else
+                    talker = "pl_";
+
+                int newId = int.Parse(id.Replace(talker, "").Substring(0,1)) + 1;
+                print(newId);
+                for(int i = 0; i < allValues.Length; i++)
+                    if(allValues[i].StartsWith("npc_"+newId+separators[0])|| allValues[i].StartsWith("pl_" + newId + separators[0]))
+                        dl = i;
                 break;
             //finds npc's response number 1
             case 2:
                 FindResponse(NpcReaction(1));
+                print(NpcReaction(1));
                 CheckDialogue();
                 break;
             //finds npc's response number 2
             case 3:
                 FindResponse(NpcReaction(2));
+                print(NpcReaction(2));
                 CheckDialogue();
                 break;
             //finds npc's response number 3
             case 4:
                 FindResponse(NpcReaction(3));
+                print(NpcReaction(3));
                 CheckDialogue();
                 break;
             //starts assigned quest
@@ -231,7 +245,7 @@ public class dialogueui : MonoBehaviour {
 
                     if (isCompleted)
                     {
-                        dl += 1;
+                        Happening(1);
                         cur = 0;
                         CheckDialogue();
                     }
@@ -267,6 +281,7 @@ public class dialogueui : MonoBehaviour {
                     }
                 }
                 break;
+            //changes blacksmith's type to merchant
             case 10:
                 GameObject blacksmith = ui.interactableObject;
                 Destroy(blacksmith.GetComponent<dialogue_npc>());
@@ -276,6 +291,21 @@ public class dialogueui : MonoBehaviour {
                 blacksmith.GetComponent<merchant>().items = listToAdd;
                 blacksmith.GetComponent<merchant>().priceMultiplier = 2;
                 blacksmith.GetComponent<interactable>().type = interactable.Type.merchant;
+                break;
+            //starts watchmaker's minigame
+            case 11:
+                CloseDialogue();
+                cur = 0;
+                dl = 6;
+                SendMessage("StartMiniGame");
+                break;
+            //gives dash part thing to player
+            case 12:
+                items.ownedItems.Add(new Item() {
+                    name = "part",
+                    questItem = true,
+                    stackable = true
+                });
                 break;
         }
     }

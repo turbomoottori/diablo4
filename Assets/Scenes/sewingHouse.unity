@@ -124,10 +124,10 @@ GameObject:
   - component: {fileID: 11849377}
   - component: {fileID: 11849376}
   - component: {fileID: 11849375}
-  - component: {fileID: 11849374}
   - component: {fileID: 11849373}
   - component: {fileID: 11849372}
   - component: {fileID: 11849371}
+  - component: {fileID: 11849374}
   - component: {fileID: 11849370}
   - component: {fileID: 11849369}
   m_Layer: 9
@@ -167,10 +167,83 @@ MonoBehaviour:
   m_GameObject: {fileID: 11849368}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f6edb12816d78442bcf9f9acffa05a6, type: 3}
+  m_Script: {fileID: 11500000, guid: e93329871a4efd648b2fee5332b1512e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questToStart:
+  type: 2
+  quest:
+    questName: 
+    questDesc: 
+    completed: 0
+    isMainQuest: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 0
+    rewardItem:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
+  fQuest:
+    questName: 
+    questDesc: 
+    completed: 0
+    isMainQuest: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 0
+    rewardItem:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
+    howMany: 0
+    what: 
+  dQuest:
     questName: Deliver products
     questDesc: sweing guy wants you to deliver products to people's houses
     completed: 0
@@ -269,70 +342,17 @@ MonoBehaviour:
 --- !u!114 &11849374
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114978144697837092, guid: 800c194556ce28a4b99de8ed0830bcd8,
-    type: 2}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 11849368}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b96babd5144bcc4b8e851e1b466e0c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 995c14c572c18334d81554d578d0a353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogues:
-  - dialogue:
-    - who: 0
-      npc:
-        talk: have quest
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 11849370}
-              m_MethodName: CheckQuest
-              m_Mode: 1
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  - dialogue:
-    - who: 0
-      npc:
-        talk: thank for do ques t
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls:
-            - m_Target: {fileID: 11849374}
-              m_MethodName: NextConvo
-              m_Mode: 1
-              m_Arguments:
-                m_ObjectArgument: {fileID: 0}
-                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-                m_IntArgument: 0
-                m_FloatArgument: 0
-                m_StringArgument: 
-                m_BoolArgument: 0
-              m_CallState: 2
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  - dialogue:
-    - who: 0
-      npc:
-        talk: now i m hapi
-        consequenseWithoutAction:
-          m_PersistentCalls:
-            m_Calls: []
-          m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-      player: []
-  cycleText: 0
-  currentDialogue: 0
+  dialogue: {fileID: 4900000, guid: 075b7657c31dfed4387a277dd80b8ee6, type: 3}
+  enemy: 0
+  quest: 1
 --- !u!23 &11849375
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1479,6 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 0.3
+  edgeSize: 0.9
   dimmer: 0
   edgeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &581432462

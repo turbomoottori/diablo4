@@ -28,7 +28,7 @@ NPC'S REACTION TO NO: Fine, die then
 ____________
 MOST COMMON FUNCTIONS TO CALL
 
-1: Next conversation
+1: Goes to next conversation (ignores subconvos, so goes from 0 to 1 but also from 0111 to 1. Don't use this for two digit numbers)
 2: takes the last id (for example pl_0), adds 1 after it and finds a response (resulting in 01)
 3: same than 2 but instead adds 2 (resulting in 02)
 4: same than 2 and 3 but instead adds 3

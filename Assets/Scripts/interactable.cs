@@ -53,4 +53,10 @@ public class interactable : MonoBehaviour {
         workbench,
         inspectable
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "interactzone")
+            HideE();
+    }
 }

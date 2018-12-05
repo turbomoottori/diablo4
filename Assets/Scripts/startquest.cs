@@ -24,6 +24,8 @@ public class startquest : MonoBehaviour {
                 }
                 else
                     quests.questList.Add(quest);
+
+                print(quest.questName + "started");
                 break;
             case questType.fetch:
                 if (quests.questList != null)
