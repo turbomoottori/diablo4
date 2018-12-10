@@ -33,7 +33,7 @@ public class attack : MonoBehaviour {
 
     void SetBulletPositions()
     {
-        bulletPosition = transform.position + transform.forward;
+        bulletPosition = transform.position + transform.forward + (transform.up * 2);
         bulletRotation = transform.rotation;
 
         shotgunBulletPositions = new Vector3[]

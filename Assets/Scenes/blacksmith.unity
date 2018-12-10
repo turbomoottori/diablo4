@@ -3595,8 +3595,8 @@ GameObject:
   - component: {fileID: 1889652408}
   - component: {fileID: 1889652407}
   - component: {fileID: 1889652406}
-  - component: {fileID: 1889652405}
   - component: {fileID: 1889652404}
+  - component: {fileID: 1889652405}
   m_Layer: 9
   m_Name: blacksmith
   m_TagString: Untagged
@@ -3612,20 +3612,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1889652403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72f49250d38c7a943ae3bd30c5695e05, type: 3}
+  m_Script: {fileID: 11500000, guid: e93329871a4efd648b2fee5332b1512e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questToStart:
-    questName: Help blacksmith
-    questDesc: blacksmith has problems finding a METAL THING by themself so maybe
-      just go and help them
+  type: 1
+  quest:
+    questName: 
+    questDesc: 
     completed: 0
     isMainQuest: 0
-    reward: 1
+    reward: 0
     rewardAbility: 0
     rewardMoney: 0
     rewardItem:
-      name: part
+      name: 
       id: 0
       baseValue: 0
       weight: 0
@@ -3651,8 +3651,89 @@ MonoBehaviour:
       speed: 0
       type: 0
       range: 0
+  fQuest:
+    questName: Help blacksmith
+    questDesc: blacksmith has problems finding a METAL THING by themself so maybe
+      just go and help them
+    completed: 0
+    isMainQuest: 0
+    reward: 1
+    rewardAbility: 0
+    rewardMoney: 0
+    rewardItem:
+      name: part
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 1
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
     howMany: 1
     what: METAL THING
+  dQuest:
+    questName: 
+    questDesc: 
+    completed: 0
+    isMainQuest: 0
+    reward: 0
+    rewardAbility: 0
+    rewardMoney: 0
+    rewardItem:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+    rewardWeapon:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+    rewardGun:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+      damage: 0
+      speed: 0
+      type: 0
+      range: 0
+    itemToDeliver:
+      name: 
+      id: 0
+      baseValue: 0
+      weight: 0
+      stackable: 0
+      questItem: 0
+    levelforDelivery: []
+    whereToDeliver: []
+    delivered: 
 --- !u!195 &1889652405
 NavMeshAgent:
   m_ObjectHideFlags: 0

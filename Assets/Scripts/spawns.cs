@@ -20,6 +20,7 @@ public class spawns : MonoBehaviour {
         nextSpawn = spawnPoints.FirstOrDefault(s => s.spawnName == nextSpawnName);
         if (nextSpawn != null)
         {
+            print("spawns in predetermined spot");
             Vector3 spawnPos = new Vector3(nextSpawn.position.x, nextSpawn.position.y, nextSpawn.position.z);
             GameObject.Find("Player").transform.position = spawnPos;
             gameControl.control.playerPos = nextSpawn.position;
@@ -28,6 +29,7 @@ public class spawns : MonoBehaviour {
         {
             Vector3 pos = new Vector3(loadPos.x, loadPos.y, loadPos.z);
             GameObject.Find("Player").transform.position=pos;
+            print("spawns in saved spot at " + pos.ToString());
         }
         
 	}

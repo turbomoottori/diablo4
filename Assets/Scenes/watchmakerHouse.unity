@@ -694,16 +694,16 @@ MonoBehaviour:
     questDesc: help watchmaker fix the robot
     completed: 0
     isMainQuest: 0
-    reward: 1
+    reward: 0
     rewardAbility: 0
     rewardMoney: 0
     rewardItem:
-      name: part
+      name: 
       id: 0
       baseValue: 0
       weight: 0
-      stackable: 1
-      questItem: 1
+      stackable: 0
+      questItem: 0
     rewardWeapon:
       name: 
       id: 0
@@ -1761,34 +1761,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00012472412, y: 0.005115684, z: -0.0003860416}
     m_Extent: {x: 0.011049774, y: 0.0043882793, z: 0.002777225}
   m_DirtyAABB: 0
---- !u!1 &608659311 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1899049026886632, guid: a91fcd8f07744724bada5ea02d7bd308,
-    type: 2}
-  m_PrefabInternal: {fileID: 1994881555}
---- !u!114 &608659319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 608659311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e91199bf6baaa214c82db4ca410ed4ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minigameName: Fix robot
-  minigameCam: {fileID: 1410928401}
-  level: 4
-  currentPos: 01000000020000000000000003000000
-  finalPos: 02000000020000000200000002000000
-  parts:
-  - {fileID: 571587182}
-  - {fileID: 1458895251}
-  - {fileID: 1959523317}
-  - {fileID: 1376812412}
-  minPos: -1
-  maxPos: 1
 --- !u!1001 &648465804
 Prefab:
   m_ObjectHideFlags: 0
@@ -2773,6 +2745,18 @@ Prefab:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 100054, guid: bbfbe077bcc5624489f9f0c1e9b85fd2, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 100058, guid: bbfbe077bcc5624489f9f0c1e9b85fd2, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 100236, guid: bbfbe077bcc5624489f9f0c1e9b85fd2, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbfbe077bcc5624489f9f0c1e9b85fd2, type: 3}
   m_IsPrefabAsset: 0
@@ -3268,7 +3252,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3383
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -4310,6 +4294,74 @@ Transform:
   m_Father: {fileID: 1914847289}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1694100544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694100548}
+  - component: {fileID: 1694100547}
+  - component: {fileID: 1694100546}
+  m_Layer: 0
+  m_Name: robotMinigame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1694100546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1694100544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91199bf6baaa214c82db4ca410ed4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minigameName: Fix robot
+  minigameCam: {fileID: 1410928401}
+  level: 4
+  currentPos: 01000000020000000000000003000000
+  finalPos: 02000000020000000200000002000000
+  parts:
+  - {fileID: 571587182}
+  - {fileID: 1458895251}
+  - {fileID: 1959523317}
+  - {fileID: 1376812412}
+  minPos: -1
+  maxPos: 1
+  mask:
+    serializedVersion: 2
+    m_Bits: 3383
+--- !u!65 &1694100547
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1694100544}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1694100548
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1694100544}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 404.62, y: 0.96, z: 99.56}
+  m_LocalScale: {x: 1, y: 5.9606, z: 3.623}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 25
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1706465622
 GameObject:
   m_ObjectHideFlags: 0
@@ -5145,7 +5197,8 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114906127736105656, guid: a91fcd8f07744724bada5ea02d7bd308, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: a91fcd8f07744724bada5ea02d7bd308, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &2059336756

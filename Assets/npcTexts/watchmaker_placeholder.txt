@@ -1,8 +1,6 @@
 npc_0|my robot thing is broken and i can't fix it on my own and i need it to not be broken because i need it to do my job boohoo>i'm embarrassed to ask you this but ..... help?????????????|pl_0|fine, let's see wtf is the problem#invoke_2<nah i've got something better to do lmao take care#invoke_3
 -npc_01|oh thank god!!!! there's this weird system where u gotta get all these things????? to a certain level and then bOOM IT'S FIXED so uhm have fun i guess|invoke_5|invoke_11
 -npc_02|boohoo :(|invoke_0
--npc_1|invoke_6|so ummm u didn't fix it yet???? wanna try again?|pl_1|yeah sure#invoke_2<no lol#invoke_3
--npc_11|great!!|invoke_5|invoke_11
--npc_12|damn fuck u|invoke_0
+-npc_1|invoke_6|so ummm u didn't fix it yet???? come back when you've done what you promised
 -npc_2|N I C E thanks now i don't have to die>oh also, have this thing idk what it is but maybe you'd like it|invoke_12|invoke_1
 -npc_3|yeeeeeaaaaaah i have nothing else to say ding dong fuck yeah

@@ -114,7 +114,7 @@ public class quests : MonoBehaviour {
                 {
                     items.ownedItems.Remove(tempList[i]);
                 }
-
+                QuestCompleted(fq.questName);
                 return true;
             }
         }
@@ -122,7 +122,10 @@ public class quests : MonoBehaviour {
         {
             DeliveryQuest dq = q as DeliveryQuest;
             if (AllDelivered(dq))
+            {
+                QuestCompleted(dq.questName);
                 return true;
+            }
         }
         else
         {

@@ -15,6 +15,8 @@ public class items : MonoBehaviour {
     public static int ammoValueB = 2;
     public static int ammoValueR = 1;
     public static int ammoValueS = 3;
+    int itemAmount = 0;
+    public static int carrywt;
 
 	void Start () {
         if (ownedItems == null)
@@ -44,6 +46,25 @@ public class items : MonoBehaviour {
                 }
             }
         }
+
+        if (ownedItems.Count != itemAmount)
+            ChangeCarryWeight();
+    }
+
+    //FIX U DUMB FUCKKKKKKKKK
+    //NOTICE THIS VDKJGHKJSGHF  GÖJL FSG
+   
+    void ChangeCarryWeight()
+    {
+        itemAmount = ownedItems.Count;
+        carrywt = 0;
+        foreach(Item i in ownedItems)
+            carrywt += i.weight;
+
+        float pr = (float)(carrywt / 100);
+        print(pr);
+        print("new carry weight is " + carrywt);
+        //playerMovement.p.currentSpeed = playerMovement.p.speed - carrywt;
     }
 
     public static void NewBattery()

@@ -9,14 +9,14 @@ public class playerMovement : MonoBehaviour
     public static playerMovement p;
     public Animator anim;
     public float speed, rotationSpeed, jumpForce, dashForce;
+    public float currentSpeed;
     public bool runs, dashes;
-    bool grounded, canDoubleJump, canMove;
+    bool canDoubleJump, canMove;
     int jumpCounter = 0;
     public static Vector3 savedPos;
 
     private Rigidbody rb;
     Vector3 refVelocity;
-    //RaycastHit hit;
 
     //dash variables
     public static DashState dashState;
@@ -45,7 +45,7 @@ public class playerMovement : MonoBehaviour
 
     void Start()
     {
-
+        currentSpeed = speed;
         if (gameControl.control.knowsDash == false)
             dashState = DashState.Off;
         else
@@ -66,6 +66,45 @@ public class playerMovement : MonoBehaviour
             slowmobar.gameObject.SetActive(true);
         else
             slowmobar.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (!paused)
+        {
+            anim.SetFloat("y_velocity", rb.velocity.y);
+            if (grounded())
+            {
+                tempPos = transform.position;
+                savedPos = transform.position;
+                anim.SetBool("grounded", true);
+                jumpCounter = 0;
+            }
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                print("jump button pressed");
+                if (grounded())
+                {
+                    savedPos = transform.position;
+                    jumpCounter += 1;
+                    anim.SetTrigger("jump");
+                    print("jump");
+                    rb.velocity = new Vector3(0, jumpForce, 0);
+                }
+
+                else
+                {
+                    if (jumpCounter < 1 && gameControl.control.knowsDoubleJump)
+                    {
+                        jumpCounter += 1;
+                        anim.SetTrigger("jump");
+                        print("doublejump");
+                        rb.velocity = new Vector3(0, jumpForce, 0);
+                    }
+                }
+            }
+        }
     }
 
     void FixedUpdate()
@@ -91,7 +130,7 @@ public class playerMovement : MonoBehaviour
 
                 Vector3 pos = transform.position;
                 Vector3 targ = transform.position + movement;
-                pos += (targ - pos) * Time.deltaTime * speed;
+                pos += (targ - pos) * Time.deltaTime * currentSpeed;
                 transform.position = pos;
                 transform.position = pos;
 
@@ -103,15 +142,7 @@ public class playerMovement : MonoBehaviour
                 //final walking animation here
             }
 
-            //LOOKAT MOVEMENT DIRECTION
-
-            /*if (movement != Vector3.zero) {
-                Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-            }*/
-
             //LOOKAT MOUSE POSITION
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Plane hPlane = new Plane(Vector3.up, transform.position);
             float direction = 0;
@@ -121,41 +152,6 @@ public class playerMovement : MonoBehaviour
                 var targetRot = Quaternion.LookRotation(target - transform.position);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10 * Time.deltaTime);
             }
-
-            //saves position when esc is pressed
-            if (Input.GetKeyDown(KeyCode.Escape) && (Physics.Raycast(transform.position + Vector3.down, Vector3.down, 2f)))
-                savedPos = transform.position;
-
-            //JUMP AND DOUBLE JUMP
-            grounded = (Physics.Raycast(transform.position, Vector3.down, 0.5f, walkable));
-            anim.SetFloat("y_velocity", rb.velocity.y);
-            if (grounded)
-            {
-                tempPos = transform.position;
-                anim.SetBool("grounded", true);
-                jumpCounter = 0;
-            }
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                if (grounded)
-                {
-                    savedPos = transform.position;
-                    jumpCounter += 1;
-                    anim.SetTrigger("jump");
-                    rb.velocity = new Vector3(0, jumpForce, 0);
-                }
-                else
-                {
-                    if(jumpCounter < 1 && gameControl.control.knowsDoubleJump)
-                    {
-                        jumpCounter += 1;
-                        anim.SetTrigger("jump");
-                        rb.velocity = new Vector3(0, jumpForce, 0);
-                    }
-                }
-            }
-
             //DASHING
 
             switch (dashState)
@@ -213,7 +209,6 @@ public class playerMovement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Alpha1) && !slowmocd && !paused && gameControl.control.knowsSlowTime)
             {
-                print("sldgdkj");
                 StartCoroutine(SlowTime(3f, 6f));
             }
         }
@@ -339,6 +334,15 @@ public class playerMovement : MonoBehaviour
         transform.position = pos + d;
         tempPos = pos;
         respawn = false;
+    }
+
+    bool grounded()
+    {
+        Vector3 size = new Vector3(1.2f, 0.6f, 1.2f);
+        Collider[] collides = Physics.OverlapBox(transform.position, size, Quaternion.identity, walkable);
+        if (collides.Length > 0)
+            return true;
+        return false;
     }
 
     //display slow motion bar

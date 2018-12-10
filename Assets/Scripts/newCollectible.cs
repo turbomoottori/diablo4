@@ -22,6 +22,9 @@ public class newCollectible : MonoBehaviour
             case Type.Item:
                 collectibleName = item.name;
                 break;
+            case Type.Consumable:
+                collectibleName = consumable.name;
+                break;
             case Type.Weapon:
                 collectibleName = weapon.name;
                 break;

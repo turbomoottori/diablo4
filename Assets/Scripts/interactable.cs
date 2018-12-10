@@ -51,7 +51,8 @@ public class interactable : MonoBehaviour {
         door,
         deliveryLocation,
         workbench,
-        inspectable
+        inspectable,
+        minigame
     }
 
     private void OnTriggerExit(Collider other)

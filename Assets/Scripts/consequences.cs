@@ -38,7 +38,7 @@ public class consequences : MonoBehaviour {
         blacksmith.AddComponent<merchant>();
         List<Item> listToAdd = new List<Item>();
         listToAdd.Add(new Weapon() { name = "cool sword", damage = 2, id = 1, baseValue = 20, speed = 0.15f, weight = 2, stackable = false, questItem = false });
-        blacksmith.GetComponent<merchant>().items = listToAdd;
+        blacksmith.GetComponent<merchant>().mitems = listToAdd;
         blacksmith.GetComponent<merchant>().priceMultiplier = 2;
         blacksmith.GetComponent<interactable>().type = interactable.Type.merchant;
     }

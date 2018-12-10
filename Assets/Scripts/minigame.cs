@@ -17,9 +17,12 @@ public class minigame : MonoBehaviour {
     float[] positions;
     float timer = 0f;
     float maxTimer = 0.2f;
+    public LayerMask mask;
+    Vector3 camPos;
 
 	void Start () {
         //checks if minigame is already completed
+        camPos = minigameCam.gameObject.transform.position;
         Minigame temp = quests.minigames.FirstOrDefault(q => q.name == minigameName);
         if (temp != null)
             if (temp.completed)
@@ -56,9 +59,6 @@ public class minigame : MonoBehaviour {
     }
 	
 	void Update () {
-        //for testing only
-        if (!gameOn && Input.GetKeyDown(KeyCode.H))
-            StartMiniGame();
 
         if (gameOn)
         {
@@ -67,12 +67,12 @@ public class minigame : MonoBehaviour {
 
             if (Input.GetMouseButtonDown(0))
             {
-                RaycastHit hit;
                 var ray = minigameCam.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit))
+                RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, mask);
+                for(int i = 0; i < hits.Length; i++)
                 {
-                    if (hit.collider.tag == "minigameButton")
-                        PressButton(int.Parse(hit.collider.name));
+                    if (hits[i].collider.tag == "minigameButton")
+                        PressButton(int.Parse(hits[i].collider.name));
                 }
             }
 
@@ -176,6 +176,7 @@ public class minigame : MonoBehaviour {
     {
         //do transition animation or something
         ui.minigame = true;
+        GetComponent<BoxCollider>().enabled = false;
         maincam.enabled = false;
         minigameCam.enabled = true;
         gameOn = true;
@@ -184,11 +185,24 @@ public class minigame : MonoBehaviour {
 
     public void ExitMiniGame()
     {
-        //some animation here too
         ui.minigame = false;
+        GetComponent<BoxCollider>().enabled = true;
         maincam.enabled = true;
         minigameCam.enabled = false;
         gameOn = false;
         ui.TogglePause();
+    }
+
+    //WIP FIX 
+    public IEnumerator ExitMinigame()
+    {
+        minigameCam.transform.position = Vector3.Lerp(camPos, maincam.transform.position, 3f);
+        ui.minigame = false;
+        GetComponent<BoxCollider>().enabled = true;
+        maincam.enabled = true;
+        minigameCam.enabled = false;
+        gameOn = false;
+        ui.TogglePause();
+        yield return new WaitUntil(() => minigameCam.transform.position == maincam.transform.position);
     }
 }

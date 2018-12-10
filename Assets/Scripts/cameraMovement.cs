@@ -65,8 +65,6 @@ public class cameraMovement : MonoBehaviour {
                 StartCoroutine(FadeOut(FindHideableGameObject(hit.collider.gameObject).gameObject, hit.collider.gameObject));
             if (h.collider.gameObject.layer == LayerMask.NameToLayer("CanHide"))
                 StartCoroutine(FadeOut(FindHideableGameObject(h.collider.gameObject).gameObject, h.collider.gameObject));
-
-            print(hit.collider.name + h.collider.name);
         }
     
     }
@@ -74,7 +72,6 @@ public class cameraMovement : MonoBehaviour {
     //fades gameobject out
     IEnumerator FadeOut(GameObject g, GameObject objectWithCollider)
     {
-        print("fadeout");
         if (g.GetComponent<Animator>().GetBool("fade") == true)
             yield return null;
         else

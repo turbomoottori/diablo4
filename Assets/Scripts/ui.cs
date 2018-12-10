@@ -151,9 +151,8 @@ public class ui : MonoBehaviour {
                                     case 1:
                                         //here we should have some animations or sounds or whatever
                                         //indicating that the player has built a dash backpack thing
-                                        //also after the cutscene or whatever it's gonna be
-                                        //you should remember to change the dash variable thing to true
-                                        //because u know, it doesn't work if you don't do it
+                                        gameControl.control.knowsDash = true;
+                                        items.ownedItems.RemoveAll(i => i.name == "part");
                                         break;
                                     case 2:
                                         OpenThought("You already know what tf this is and I'm damn sure I already used it so gtfo");
@@ -163,7 +162,11 @@ public class ui : MonoBehaviour {
                             case interactable.Type.inspectable:
                                 OpenThought(interactableObject.GetComponent<interactable>().thought);
                                 break;
+                            case interactable.Type.minigame:
+                                interactableObject.GetComponent<minigame>().StartMiniGame();
+                                break;
                         }
+                        interactableObject.GetComponent<interactable>().HideE();
                     }
                     break;
             }
@@ -1122,6 +1125,31 @@ public class ui : MonoBehaviour {
         {
             Battery b = hoveredItem as Battery;
             popup.transform.Find("name").GetComponent<Text>().text = "Battery " + ((b.energy / 1) * 100).ToString("F0") + "%";
+        }
+        else if(hoveredItem is Consumable)
+        {
+            Consumable c = hoveredItem as Consumable;
+            popup.transform.Find("name").GetComponent<Text>().text = "Heals " + c.healAmount.ToString() + " hp";
+        }
+        else if (buttonName.StartsWith("ammo"))
+        {
+            int costofone = 0;
+            switch (buttonName)
+            {
+                case "ammo_basic":
+                    popup.transform.Find("name").GetComponent<Text>().text = "Basic ammo";
+                    costofone= (int)(items.ammoValueB * priceMultiplier);
+                    break;
+                case "ammo_rapid":
+                    popup.transform.Find("name").GetComponent<Text>().text = "Rapid ammo";
+                    costofone = (int)(items.ammoValueR * priceMultiplier);
+                    break;
+                case "ammo_shotgun":
+                    popup.transform.Find("name").GetComponent<Text>().text = "Shotgun ammo";
+                    costofone = (int)(items.ammoValueS * priceMultiplier);
+                    break;
+            }
+            popup.transform.Find("valwt").GetComponent<Text>().text = "one costs " + costofone.ToString() + " coins";
         }
         else
             popup.transform.Find("name").GetComponent<Text>().text = hoveredItem.name;

@@ -8,7 +8,7 @@ public class merchant : MonoBehaviour {
     public float priceMultiplier;
     GameObject globals;
     public int basicAmmo, rapidAmmo, shotgunAmmo;
-    public List<Item> items;
+    public List<Item> mitems;
     public List<Weapon> swords;
     public List<Gun> guns;
     public List<Book> books;
@@ -20,8 +20,8 @@ public class merchant : MonoBehaviour {
         //load merchant's items
         if (m != null)
         {
-            items = new List<Item>();
-            items = m.merchantItems;
+            mitems = new List<Item>();
+            mitems = m.merchantItems;
             basicAmmo = m.basicAmmo;
             rapidAmmo = m.rapidAmmo;
             shotgunAmmo = m.shotgunAmmo;
@@ -30,18 +30,21 @@ public class merchant : MonoBehaviour {
         {
             if (swords != null)
                 foreach (Weapon w in swords)
-                    items.Add(w);
+                    mitems.Add(w);
 
             if (guns != null)
                 foreach (Gun g in guns)
-                    items.Add(g);
+                    mitems.Add(g);
 
             if (books != null)
                 foreach (Book b in books)
-                    items.Add(b);
+                    mitems.Add(b);
 
-            foreach (Item i in gameControl.invItems)
-                CheckItemDuplicates(i.name);
+            if (items.ownedItems != null)
+            {
+                foreach (Item i in items.ownedItems)
+                    CheckItemDuplicates(i.name);
+            }
 
             gameControl.control.merchs.Add(new MerchantData()
             {
@@ -49,7 +52,7 @@ public class merchant : MonoBehaviour {
                 basicAmmo = basicAmmo,
                 rapidAmmo = rapidAmmo,
                 shotgunAmmo = shotgunAmmo,
-                merchantItems = items
+                merchantItems = mitems
             });
         }
     }
@@ -65,9 +68,9 @@ public class merchant : MonoBehaviour {
     //removes items player already owns
     void CheckItemDuplicates(string name)
     {
-        Item temp = items.FirstOrDefault(i => i.name == name);
+        Item temp = mitems.FirstOrDefault(i => i.name == name);
         if (temp != null && !temp.stackable)
-            items.Remove(temp);
+            mitems.Remove(temp);
     }
 
     public void ChangeItems()
@@ -75,12 +78,7 @@ public class merchant : MonoBehaviour {
         ui.merchantAmmoB = basicAmmo;
         ui.merchantAmmoR = rapidAmmo;
         ui.merchantAmmoS = shotgunAmmo;
-        ui.merchantItems = items;
+        ui.merchantItems = mitems;
         ui.priceMultiplier = priceMultiplier;
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
 }

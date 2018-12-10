@@ -37,7 +37,7 @@ public class interact : MonoBehaviour {
 
     void CheckObjects()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2.12f);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.7f);
         float minDist = Mathf.Infinity;
         GameObject closest = null;
 

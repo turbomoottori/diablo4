@@ -256,7 +256,7 @@ MonoBehaviour:
       id: 0
       baseValue: 0
       weight: 0
-      stackable: 0
+      stackable: 1
       questItem: 1
     rewardWeapon:
       name: 

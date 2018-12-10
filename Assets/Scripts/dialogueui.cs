@@ -203,27 +203,24 @@ public class dialogueui : MonoBehaviour {
                     talker = "pl_";
 
                 int newId = int.Parse(id.Replace(talker, "").Substring(0,1)) + 1;
-                print(newId);
+                id = talker + newId.ToString();
                 for(int i = 0; i < allValues.Length; i++)
-                    if(allValues[i].StartsWith("npc_"+newId+separators[0])|| allValues[i].StartsWith("pl_" + newId + separators[0]))
+                    if(allValues[i].StartsWith("npc_"+newId+separators[0]) || allValues[i].StartsWith("pl_" + newId + separators[0]))
                         dl = i;
                 break;
             //finds npc's response number 1
             case 2:
                 FindResponse(NpcReaction(1));
-                print(NpcReaction(1));
                 CheckDialogue();
                 break;
             //finds npc's response number 2
             case 3:
                 FindResponse(NpcReaction(2));
-                print(NpcReaction(2));
                 CheckDialogue();
                 break;
             //finds npc's response number 3
             case 4:
                 FindResponse(NpcReaction(3));
-                print(NpcReaction(3));
                 CheckDialogue();
                 break;
             //starts assigned quest
@@ -247,7 +244,6 @@ public class dialogueui : MonoBehaviour {
                     {
                         Happening(1);
                         cur = 0;
-                        CheckDialogue();
                     }
                 }
                 break;
@@ -255,13 +251,15 @@ public class dialogueui : MonoBehaviour {
             case 7:
                 if (ui.interactableObject.name == "metalthingdude")
                 {
-                    if(gameControl.control.money>=20)
+                    if (gameControl.control.money >= 20)
                     {
                         gameControl.control.money -= 20;
                         Happening(3);
                     }
                     else
                         Happening(2);
+
+                    cur = 0;
                 }
                 break;
             //become hostile
@@ -288,7 +286,7 @@ public class dialogueui : MonoBehaviour {
                 ui.interactableObject.AddComponent<merchant>();
                 List<Item> listToAdd = new List<Item>();
                 listToAdd.Add(new Weapon() { name = "cool sword", damage = 2, id = 1, baseValue = 20, speed = 0.15f, weight = 2, stackable = false, questItem = false });
-                blacksmith.GetComponent<merchant>().items = listToAdd;
+                blacksmith.GetComponent<merchant>().mitems = listToAdd;
                 blacksmith.GetComponent<merchant>().priceMultiplier = 2;
                 blacksmith.GetComponent<interactable>().type = interactable.Type.merchant;
                 break;
@@ -296,8 +294,13 @@ public class dialogueui : MonoBehaviour {
             case 11:
                 CloseDialogue();
                 cur = 0;
-                dl = 6;
-                SendMessage("StartMiniGame");
+                dl = 3;
+                GameObject robotGame = GameObject.Find("robotMinigame");
+                if (robotGame.GetComponent<interactable>() == null)
+                {
+                    robotGame.gameObject.AddComponent<interactable>();
+                    robotGame.GetComponent<interactable>().type = interactable.Type.minigame;
+                }
                 break;
             //gives dash part thing to player
             case 12:
@@ -305,6 +308,13 @@ public class dialogueui : MonoBehaviour {
                     name = "part",
                     questItem = true,
                     stackable = true
+                });
+                break;
+            case 13:
+                items.ownedItems.Add(new Item()
+                {
+                    name = "METAL THING",
+                    questItem = true,
                 });
                 break;
         }

@@ -1244,6 +1244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 0.3
+  edgeSize: 0.9
   dimmer: 0
   edgeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &624557546
