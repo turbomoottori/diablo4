@@ -60,3 +60,9 @@ public class SavedKeys
     public KeyCode interactKey, inventoryKey, dashKey, slowtimeKey, attackKey, spAttackKey;
 }
 
+[System.Serializable]
+public class PinballKeys
+{
+    public KeyCode l, r, lbump, rbump, spring;
+}
+

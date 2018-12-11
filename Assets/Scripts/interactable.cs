@@ -24,7 +24,7 @@ public class interactable : MonoBehaviour {
     private void Update()
     {
         e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-        if (ui.anyOpen)
+        if (e.activeInHierarchy && (ui.anyOpen || Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) > 4))
             HideE();
     }
 

@@ -51,9 +51,6 @@ public class items : MonoBehaviour {
             ChangeCarryWeight();
     }
 
-    //FIX U DUMB FUCKKKKKKKKK
-    //NOTICE THIS VDKJGHKJSGHF  GÖJL FSG
-   
     void ChangeCarryWeight()
     {
         itemAmount = ownedItems.Count;
@@ -61,10 +58,8 @@ public class items : MonoBehaviour {
         foreach(Item i in ownedItems)
             carrywt += i.weight;
 
-        float pr = (float)(carrywt / 100);
-        print(pr);
-        print("new carry weight is " + carrywt);
-        //playerMovement.p.currentSpeed = playerMovement.p.speed - carrywt;
+        float pr = (float)carrywt / 100f;
+        playerMovement.speedmodifier = pr;
     }
 
     public static void NewBattery()

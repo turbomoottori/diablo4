@@ -24,7 +24,7 @@ public class interact : MonoBehaviour {
         if (ui.minigame == true)
             return false;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2.12f);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.8f);
         int i = 0;
         while (i < hitColliders.Length)
         {
@@ -37,7 +37,7 @@ public class interact : MonoBehaviour {
 
     void CheckObjects()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.7f);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.8f);
         float minDist = Mathf.Infinity;
         GameObject closest = null;
 

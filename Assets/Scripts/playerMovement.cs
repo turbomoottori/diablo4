@@ -6,14 +6,13 @@ using UnityEngine.UI;
 
 public class playerMovement : MonoBehaviour
 {
-    public static playerMovement p;
     public Animator anim;
     public float speed, rotationSpeed, jumpForce, dashForce;
-    public float currentSpeed;
     public bool runs, dashes;
     bool canDoubleJump, canMove;
     int jumpCounter = 0;
     public static Vector3 savedPos;
+    public static float speedmodifier = 0;
 
     private Rigidbody rb;
     Vector3 refVelocity;
@@ -39,13 +38,11 @@ public class playerMovement : MonoBehaviour
     bool uiActive = false;
 
     Transform canv;
-    Vector3 tempPos;
     public LayerMask walkable;
     bool respawn, hurt = false;
 
     void Start()
     {
-        currentSpeed = speed;
         if (gameControl.control.knowsDash == false)
             dashState = DashState.Off;
         else
@@ -75,8 +72,9 @@ public class playerMovement : MonoBehaviour
             anim.SetFloat("y_velocity", rb.velocity.y);
             if (grounded())
             {
-                tempPos = transform.position;
-                savedPos = transform.position;
+                if(Physics.Raycast(transform.position, Vector3.down,0.5f, walkable))
+                    savedPos = transform.position;
+
                 anim.SetBool("grounded", true);
                 jumpCounter = 0;
             }
@@ -89,17 +87,14 @@ public class playerMovement : MonoBehaviour
                     savedPos = transform.position;
                     jumpCounter += 1;
                     anim.SetTrigger("jump");
-                    print("jump");
                     rb.velocity = new Vector3(0, jumpForce, 0);
                 }
-
                 else
                 {
                     if (jumpCounter < 1 && gameControl.control.knowsDoubleJump)
                     {
                         jumpCounter += 1;
                         anim.SetTrigger("jump");
-                        print("doublejump");
                         rb.velocity = new Vector3(0, jumpForce, 0);
                     }
                 }
@@ -130,7 +125,7 @@ public class playerMovement : MonoBehaviour
 
                 Vector3 pos = transform.position;
                 Vector3 targ = transform.position + movement;
-                pos += (targ - pos) * Time.deltaTime * currentSpeed;
+                pos += (targ - pos) * Time.deltaTime * (speed - speedmodifier);
                 transform.position = pos;
                 transform.position = pos;
 
@@ -329,16 +324,14 @@ public class playerMovement : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
-
         transform.localScale = from;
         transform.position = pos + d;
-        tempPos = pos;
         respawn = false;
     }
 
     bool grounded()
     {
-        Vector3 size = new Vector3(1.2f, 0.6f, 1.2f);
+        Vector3 size = new Vector3(0.7f, 0.6f, 0.7f);
         Collider[] collides = Physics.OverlapBox(transform.position, size, Quaternion.identity, walkable);
         if (collides.Length > 0)
             return true;
@@ -367,7 +360,7 @@ public class playerMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "fall" && !respawn)
-            StartCoroutine(Fall(1f, tempPos));
+            StartCoroutine(Fall(1f, savedPos));
 
         if (other.gameObject.tag == "enemysword" && !hurt)
             StartCoroutine(Hurt(other.gameObject.GetComponent<enemyAttack>().dmg));
