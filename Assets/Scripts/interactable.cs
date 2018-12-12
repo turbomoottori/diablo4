@@ -24,7 +24,9 @@ public class interactable : MonoBehaviour {
     private void Update()
     {
         e.transform.position = Camera.main.WorldToScreenPoint(transform.position);
-        if (e.activeInHierarchy && (ui.anyOpen || Vector3.Distance(transform.position, GameObject.Find("Player").transform.position) > 4))
+        if (e.activeInHierarchy && ui.anyOpen)
+            HideE();
+        if (e.activeInHierarchy && ui.interactableObject != gameObject)
             HideE();
     }
 
@@ -55,9 +57,5 @@ public class interactable : MonoBehaviour {
         minigame
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "interactzone")
-            HideE();
-    }
+
 }

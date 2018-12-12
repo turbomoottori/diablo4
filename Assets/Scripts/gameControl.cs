@@ -332,7 +332,7 @@ public class EnemyList
 public class NPC
 {
     public string name;
-    public bool canBeEnemy, enemyKilled, hasQuest, questCompleted;
+    public bool canBeEnemy, enemyKilled, hasQuest, questCompleted, isHostile;
     public int dialoqueState;
 }
 

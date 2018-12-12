@@ -1,25 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class pinball : MonoBehaviour {
 
     public state gamestate;
     float fullforce;
     float springpoint, losepoint;
-    Rigidbody ball, l, r;
+    public Rigidbody ball;
     PinballKeys pinballKeys;
     GameObject spring;
     float minS, maxS, timer, t;
     float percent = 0;
+    Vector3 defaultGravity;
+    Vector3 gravity = new Vector3(-10, -20, 0);
+    float scenetimer, scenetime;
 
 	// Use this for initialization
 	void Start () {
-        fullforce = 200;
+        fullforce = 100;
         timer = 1;
-        ball = GetComponent<Rigidbody>();
-        l = GameObject.Find("left").GetComponent<Rigidbody>();
-        r = GameObject.Find("right").GetComponent<Rigidbody>();
+        scenetimer = 20;
+        scenetime = 0;
         spring = GameObject.Find("Spring");
         minS = spring.transform.position.y;
         maxS = minS - 2f;
@@ -33,10 +36,19 @@ public class pinball : MonoBehaviour {
             rbump = KeyCode.E,
             spring = KeyCode.LeftShift
         };
+        defaultGravity = Physics.gravity;
+        Physics.gravity = gravity;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (scenetime < scenetimer)
+            scenetime += Time.deltaTime;
+        if (scenetime >= scenetimer)
+        {
+            Physics.gravity = defaultGravity;
+            SceneManager.LoadScene("heroroom");
+        }
 
         switch (gamestate)
         {
@@ -57,23 +69,38 @@ public class pinball : MonoBehaviour {
                 gamestate = state.shoot;
                 break;
             case state.shoot:
+                percent = 0;
                 Vector3 temp = spring.transform.position;
                 spring.transform.position = Vector3.Lerp(temp, new Vector3(temp.x ,minS, temp.z), 1f);
                 if (spring.transform.position.y == minS)
-                    gamestate = state.game;
+                {
+                    if (ball.transform.position.x < springpoint)
+                        gamestate = state.game;
+                }
                 break;
             case state.game:
-                if (transform.position.x > springpoint)
+                if (ball.transform.position.x > springpoint)
                     gamestate = state.cooldown;
-                if (transform.position.y < losepoint)
+                if (ball.transform.position.y < losepoint)
                     gamestate = state.lost;
                 break;
             case state.lost:
+                NewBall();
+                gamestate = state.cooldown;
                 break;
             case state.cooldown:
+                gamestate = state.ready;
                 break;
         }
 	}
+
+    void NewBall()
+    {
+        Vector3 ballPosition = new Vector3(-0.48f, -4.7f, -5.2f);
+        Destroy(ball.gameObject);
+        ball = Instantiate(Resources.Load("ball") as GameObject).GetComponent<Rigidbody>();
+        ball.gameObject.transform.position = ballPosition;
+    }
 
     public enum state
     {

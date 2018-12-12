@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class civilian : randomDestination {
 
@@ -88,6 +89,8 @@ public class civilian : randomDestination {
     public void TurnHostile()
     {
         hostile = true;
+        NPC thisNpc = gameControl.control.npcs.FirstOrDefault(n => n.name == name);
+        thisNpc.isHostile = true;
     }
 
     IEnumerator Attack(float cooldown, int atk)

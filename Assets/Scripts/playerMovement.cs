@@ -118,6 +118,13 @@ public class playerMovement : MonoBehaviour
                 else
                     anim.SetBool("movement", false);
 
+                //LOOK AT MOVEMENT DIRECTION
+                if (movement != Vector3.zero)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+                }
+
                 //prevents being stuck on wall
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position+Vector3.up, movement, out hit, 1.4f))
@@ -132,11 +139,8 @@ public class playerMovement : MonoBehaviour
                 Vector3 localDir = transform.InverseTransformDirection(movement);
                 anim.SetFloat("movement_forward", localDir.z);
                 anim.SetFloat("movement_sideways", localDir.x);
-                //for walking animation, use localDir
-                //z for forward/backwards movement, x for left/right
-                //final walking animation here
             }
-
+            /*
             //LOOKAT MOUSE POSITION
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Plane hPlane = new Plane(Vector3.up, transform.position);
@@ -146,7 +150,8 @@ public class playerMovement : MonoBehaviour
                 Vector3 target = ray.GetPoint(direction);
                 var targetRot = Quaternion.LookRotation(target - transform.position);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 10 * Time.deltaTime);
-            }
+            }*/
+
             //DASHING
 
             switch (dashState)

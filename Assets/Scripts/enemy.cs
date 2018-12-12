@@ -44,6 +44,8 @@ public class enemy : MonoBehaviour {
         NPC thisNpc = gameControl.control.npcs.FirstOrDefault(n => n.name == name);
         if (thisNpc != null)
         {
+            if (thisNpc.isHostile)
+                hostile = true;
             if (thisNpc.enemyKilled)
                 Destroy(this.gameObject);
         }

@@ -20,6 +20,7 @@ TagManager:
   - House
   - spawn
   - minigameButton
+  - ball
   layers:
   - Default
   - TransparentFX
