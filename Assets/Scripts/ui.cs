@@ -1154,7 +1154,7 @@ public class ui : MonoBehaviour {
         else
             popup.transform.Find("name").GetComponent<Text>().text = hoveredItem.name;
 
-        Vector3 offset = new Vector3(-50, 25, 0);
+        Vector3 offset = new Vector3(-5, -5, 0);
         Vector3 newPos = Input.mousePosition + offset;
         popup.transform.position = newPos;
     }

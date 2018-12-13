@@ -81,7 +81,6 @@ public class items : MonoBehaviour {
         }
 
         batteriesToUse.RemoveAll(b => b.isEmpty == true);
-        print("batteries checked, there's " + batteriesToUse.Count + " batteries");
         if (batteriesToUse.Count <= 0)
             inUse = null;
         if (batteriesToUse.Count > 0 && gameControl.control.autoBattery)

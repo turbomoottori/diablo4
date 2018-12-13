@@ -5,8 +5,15 @@ using UnityEngine.UI;
 
 public class keys : MonoBehaviour {
 
-    //WIP
-    public static SavedKeys savedKeys;
+    public static SavedKeys savedKeys = new SavedKeys()
+    {
+        interactKey = KeyCode.E,
+        inventoryKey = KeyCode.Tab,
+        dashKey = KeyCode.LeftShift,
+        slowtimeKey = KeyCode.Alpha1,
+        attackKey = KeyCode.Mouse0,
+        spAttackKey = KeyCode.Mouse1
+    };
     public static KeyCode[] deniedKeys = new KeyCode[]
     {
         KeyCode.Escape,

@@ -44,7 +44,7 @@ public class pinball : MonoBehaviour {
 	void Update () {
         if (scenetime < scenetimer)
             scenetime += Time.deltaTime;
-        if (scenetime >= scenetimer)
+        if (scenetime >= scenetimer || Input.GetKeyDown(KeyCode.Escape))
         {
             Physics.gravity = defaultGravity;
             SceneManager.LoadScene("heroroom");
