@@ -5,6 +5,7 @@ using UnityEngine;
 public class interact : MonoBehaviour {
 
     GameObject lastClosest = null;
+    public LayerMask mask;
 	
 	// Update is called once per frame
 	void Update () {
@@ -24,7 +25,7 @@ public class interact : MonoBehaviour {
         if (ui.minigame == true)
             return false;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.8f);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2f);
         int i = 0;
         while (i < hitColliders.Length)
         {
@@ -32,12 +33,17 @@ public class interact : MonoBehaviour {
                 return true;
             i++;
         }
+        RaycastHit h;
+        if(Physics.Raycast(transform.position+Vector3.up, transform.forward, out h, 2.1f, mask))
+            if (h.collider.gameObject.GetComponent<interactable>() != null)
+                return true;
+            
         return false;
     }
 
     void CheckObjects()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1.8f);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2f);
         float minDist = Mathf.Infinity;
         GameObject closest = null;
 
@@ -60,6 +66,15 @@ public class interact : MonoBehaviour {
                 }
             }
             i++;
+        }
+        RaycastHit h;
+        if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out h, 2.1f, mask))
+        {
+            if (h.collider.gameObject.GetComponent<interactable>() != null)
+            {
+                closest = h.collider.gameObject;
+                h.collider.gameObject.GetComponent<interactable>().ShowE();
+            }
         }
 
         for (int j = 0; j < hitColliders.Length; j++)

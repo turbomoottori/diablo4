@@ -71,8 +71,8 @@ public class dialogueui : MonoBehaviour {
             else if (e[cur].StartsWith("invoke_"))
             {
                 int newNumber = int.Parse(e[cur].Replace("invoke_", ""));
-                Happening(newNumber);
                 cur += 1;
+                Happening(newNumber);
                 CheckDialogue();
             }
             else
@@ -197,6 +197,7 @@ public class dialogueui : MonoBehaviour {
             //next conversation
             case 1:
                 string talker;
+                print(id);
                 if (id.StartsWith("npc_"))
                     talker = "npc_";
                 else
@@ -205,8 +206,10 @@ public class dialogueui : MonoBehaviour {
                 int newId = int.Parse(id.Replace(talker, "").Substring(0,1)) + 1;
                 id = talker + newId.ToString();
                 for(int i = 0; i < allValues.Length; i++)
-                    if(allValues[i].StartsWith("npc_"+newId+separators[0]) || allValues[i].StartsWith("pl_" + newId + separators[0]))
+                    if(allValues[i].StartsWith("npc_"+newId+separators[0]))
                         dl = i;
+
+                CloseDialogue();
                 break;
             //finds npc's response number 1
             case 2:

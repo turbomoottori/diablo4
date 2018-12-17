@@ -92,7 +92,7 @@ public class playerMovement : MonoBehaviour
 
                 //prevents being stuck on wall
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position + Vector3.up, movement, out hit, 1f))
+                if (Physics.Raycast(transform.position + Vector3.up, movement, out hit, 1.9f))
                     movement = Vector3.zero;
 
                 Vector3 pos = transform.position;

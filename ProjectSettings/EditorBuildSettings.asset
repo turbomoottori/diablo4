@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/watchmakerHouse.unity
     guid: 33752916338639945aaddf32507dde5e
+  - enabled: 1
+    path: Assets/Scenes/endscene.unity
+    guid: 7095b838e1185424eaba272345e636e7
   m_configObjects: {}

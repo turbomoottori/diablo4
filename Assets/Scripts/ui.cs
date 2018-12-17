@@ -35,7 +35,24 @@ public class ui : MonoBehaviour {
         canv = GameObject.Find("Canvas").transform;
         LoadUI();
         tempHp = gameControl.control.hp;
+        StartCoroutine(StartFade());
 	}
+
+    //fades from black
+    IEnumerator StartFade()
+    {
+        Image fade = Instantiate(Resources.Load("ui/fade") as GameObject, canv, false).GetComponent<Image>();
+        float f = 1;
+        Color fadeColor = fade.color;
+        while (f >= 0)
+        {
+            fadeColor.a = f;
+            fade.color = fadeColor;
+            f -= Time.deltaTime;
+            yield return null;
+        }
+        Destroy(fade.gameObject);
+    }
 
     private void OnGUI()
     {
@@ -153,6 +170,7 @@ public class ui : MonoBehaviour {
                                         //indicating that the player has built a dash backpack thing
                                         gameControl.control.knowsDash = true;
                                         items.ownedItems.RemoveAll(i => i.name == "part");
+                                        SendMessage("EndGame", "endscene");
                                         break;
                                     case 2:
                                         OpenThought("You already know what tf this is and I'm damn sure I already used it so gtfo");
@@ -876,7 +894,7 @@ public class ui : MonoBehaviour {
                 gameControl.control.SaveGame(num);
                 savecaution.SetActive(false);
                 if (pauseWindows[3].activeInHierarchy)
-                    print("exítgame");
+                    Application.Quit();
             }
         }
         lastButton = btn;

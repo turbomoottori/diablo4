@@ -14,12 +14,12 @@ public class pinball : MonoBehaviour {
     float minS, maxS, timer, t;
     float percent = 0;
     Vector3 defaultGravity;
-    Vector3 gravity = new Vector3(-10, -20, 0);
+    Vector3 gravity = new Vector3(-10, -14, 0);
     float scenetimer, scenetime;
 
 	// Use this for initialization
 	void Start () {
-        fullforce = 100;
+        fullforce = 400;
         timer = 1;
         scenetimer = 20;
         scenetime = 0;
@@ -55,7 +55,7 @@ public class pinball : MonoBehaviour {
             case state.ready:
                 if (Input.GetKey(pinballKeys.spring) && percent < 1)
                 {
-                    percent += 0.5f * Time.deltaTime;
+                    percent += 0.6f * Time.deltaTime;
                     Vector3 curr = spring.transform.position;
                     curr.y = percent * (maxS - minS) + minS;
                     spring.transform.position = curr;

@@ -1,3 +1,3 @@
-npc_0|i rly need METAL THING u wanna get it for me???>oh wait i won't even ask, just get it|invoke_5|invoke_1
+npc_0|i rly need METAL THING u wanna get it for me???>oh wait i won't even ask, just get it>that guy who looks just like me has one, so idk, go talk to him|invoke_5|invoke_1
 -npc_1|invoke_6|i SAID I NEED A METAL THING.......
 -npc_2|thanks for getting METAL THING for me!>also i am now a merchant!!!!|invoke_10

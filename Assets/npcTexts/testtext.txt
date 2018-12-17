@@ -1,3 +1,5 @@
-npc_0|hello>2 page>third page|invoke_1
--npc_1|what u think|pl_0|yes#invoke_2<no#invoke_3
--npc_01|cool-npc_02|not cool
+npc_0|hello|invoke_1
+-npc_1|how are you|pl_1|fine#invoke_2<not fine#invoke_3
+-npc_11|cool|invoke_1
+-npc_12|not cool|invoke_1
+-npc_2|hello again

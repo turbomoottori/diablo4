@@ -1,7 +1,7 @@
 npc_0|hi i made some stuff and i need them to be delivered>i usually would do it myself but i'm really busy and i'd appreciate it if you helped me|pl_0|k i'll help#invoke_2<what's in it for me?#invoke_3<nah i'm good#invoke_4
--npc_01|great! here's the stuff, deliver it to TESTLOCATION|invoke_5|invoke_1
+-npc_01|great! here's the stuff, deliver it to that red cube that's floating next to watchmaker's house>you know, since we don't have a 3d model for a mailbox yet|invoke_5|invoke_1
 -npc_02|i might just give you a thing you're definitely gonna need>so what's it gonna be|pl_021|fine i help u#invoke_2<nah#invoke_3
--npc_0211|great! here's the thing. Deliver it to TESTLOCATION|invoke_5|invoke_1
+-npc_0211|great! here's the thing. Deliver it to that floating red cube at watchmaker's front yard|invoke_5|invoke_1
 -npc_0212|fine :(|invoke_0
 -npc_03|well FINE :((|invoke_0
 -npc_1|invoke_6|i'm still waiting for you to deliver the products....

@@ -12,8 +12,8 @@ public class quests : MonoBehaviour {
 
     private void Start()
     {
-        string mainQuestName = "Main quest";
-        string mainQuestDesc = "win lol";
+        string mainQuestName = "Main quest DEMO";
+        string mainQuestDesc = "Find a way to build a backpack for dashing";
 
         if (questList.FirstOrDefault(q => q.questName == mainQuestName) == null)
         {
