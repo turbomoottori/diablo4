@@ -15,12 +15,20 @@ public class dialogue_npc : MonoBehaviour {
     private void Start()
     {
         control = GameObject.Find("Globals");
-        if (quest)
+        if (quest && GetComponent<startquest>() != null)
         {
-            if (GetComponent<fetchQuest>() != null)
-                questCompleted = GetComponent<fetchQuest>().questToStart.completed;
-            else if (GetComponent<deliveryQuest>() != null)
-                questCompleted = GetComponent<deliveryQuest>().questToStart.completed;
+            switch (GetComponent<startquest>().type)
+            {
+                case startquest.questType.regular:
+                    questCompleted = GetComponent<startquest>().quest.completed;
+                    break;
+                case startquest.questType.delivery:
+                    questCompleted = GetComponent<startquest>().dQuest.completed;
+                    break;
+                case startquest.questType.fetch:
+                    questCompleted = GetComponent<startquest>().fQuest.completed;
+                    break;
+            }
         }
 
         NPC thisNpc = gameControl.control.npcs.FirstOrDefault(n => n.name == name);

@@ -12,16 +12,15 @@ using UnityEngine.Events;
 public class ui : MonoBehaviour {
 
     Transform canv;
-    GameObject inv, hp, pausemenu, savecaution, chest, merchant, dBox, bookcase, newItem, popup, merchant_popup, tBox;
+    GameObject inv, hp, pausemenu, savecaution, chest, merchant, bookcase, newItem, popup, merchant_popup, tBox;
     GameObject itemContainer, chest_itemContainer, chest_storedContainer, merchant_owned, merchant_selling, dNpc, dPl;
-    GameObject[] pauseWindows, answers, books;
+    GameObject[] pauseWindows, books;
     public static bool anyOpen;
     bool choice, bookReading, hoverOn, eHoverOn, changeKeys;
     string keyToChange, buttonName, lastButton = "";
     int tempInt = 0;
     public static GameObject interactableObject;
     public static List<Item> merchantItems;
-    public static Dialogue[] currentConvo;
     public static int merchantAmmoB, merchantAmmoR, merchantAmmoS;
     int currentPage;
     float showItemTimer = 0f;
@@ -30,6 +29,8 @@ public class ui : MonoBehaviour {
     public static bool minigame = false;
     bool consequence = false;
     UnityEvent tempEvent;
+    string savecautiontext;
+    public Color pressedColor, unpressedColor;
 
 	void Start () {
         canv = GameObject.Find("Canvas").transform;
@@ -202,8 +203,6 @@ public class ui : MonoBehaviour {
             Close(pausemenu);
         if (chest.activeInHierarchy)
             Close(chest);
-        if (dBox.activeInHierarchy && !choice)
-            Dialogue();
         if (merchant.activeInHierarchy && !merchant_popup.activeInHierarchy)
             Close(merchant);
         if (bookcase.activeInHierarchy && !bookReading && !bookcase.transform.Find("addedbooks").gameObject.activeInHierarchy)
@@ -303,62 +302,6 @@ public class ui : MonoBehaviour {
         tBox.transform.Find("Text").GetComponent<Text>().text = thought;
     }
 
-    void Dialogue()
-    {
-        int maxPages = currentConvo.Length;
-
-        if (currentPage < maxPages)
-        {
-            if (currentPage == 0)
-            {
-                anyOpen = true;
-                dBox.SetActive(true);
-                TogglePause();
-                tempEvent = null;
-            }
-
-            //npc talks
-            if (currentConvo[currentPage].who == who.npc)
-            {
-                dPl.SetActive(false);
-                dNpc.SetActive(true);
-                dNpc.transform.Find("txt").GetComponent<Text>().text = currentConvo[currentPage].npc.talk;
-
-                if (currentConvo[currentPage].npc.consequenseWithoutAction != null)
-                    currentConvo[currentPage].npc.consequenseWithoutAction.Invoke();
-
-                currentPage += 1;
-            }
-            //player answers
-            else
-            {
-                dPl.SetActive(true);
-                dNpc.SetActive(false);
-                choice = true;
-
-                for (int i = 0; i < answers.Length; i++)
-                {
-                    if (i < currentConvo[currentPage].player.Length)
-                    {
-                        answers[i].SetActive(true);
-                        answers[i].transform.GetChild(0).GetComponent<Text>().text = currentConvo[currentPage].player[i].answer;
-                    }
-                    else if (i >= currentConvo[currentPage].player.Length)
-                        answers[i].SetActive(false);
-                }
-            }
-        }
-        //end dialogue
-        else
-        {
-            if (tempEvent != null)
-                tempEvent.Invoke();
-
-            currentPage = 0;
-            Close(dBox);
-        }
-    }
-
     //adds ammo as "item" in merchant's list
     void AddAmmoIcons(string ammoType)
     {
@@ -375,6 +318,18 @@ public class ui : MonoBehaviour {
         if (!itemToAdd.stackable)
             i.transform.Find("amount").gameObject.SetActive(false);
         i.GetComponent<buttonScript>().type = type;
+
+        int n = 0;
+        Sprite[] icons = Resources.LoadAll<Sprite>("ui/sprites/icons");
+        if (itemToAdd is Book)
+            n = 4;
+        else if (itemToAdd is Consumable)
+            n = 5;
+        else if (itemToAdd is Gun)
+            n = 6;
+        else if (itemToAdd is Weapon)
+            n = 7;
+        i.GetComponent<Image>().sprite = icons[n];
     }
 
     //adds quests to list
@@ -873,7 +828,7 @@ public class ui : MonoBehaviour {
         else if (btn.Contains("changekey_"))
         {
             string end = btn.Replace("changekey_", "");
-            GameObject.Find(btn).GetComponent<Button>().image.color = Color.gray;
+            GameObject.Find(btn).GetComponent<Button>().image.color = pressedColor;
             changeKeys = true;
             keyToChange = end;
         }
@@ -888,6 +843,7 @@ public class ui : MonoBehaviour {
             if (File.Exists(Application.persistentDataPath + "/save" + num.ToString() + ".dat") && lastButton != btn)
             {
                 savecaution.SetActive(true);
+                savecaution.GetComponent<Text>().text = savecautiontext;
             }
             else
             {
@@ -897,13 +853,25 @@ public class ui : MonoBehaviour {
                     Application.Quit();
             }
         }
+        else if (btn == "nosave")
+        {
+            if (lastButton != btn)
+            {
+                savecaution.SetActive(true);
+                savecaution.GetComponent<Text>().text = "Click again to confirm";
+            }
+            else
+            {
+                Application.Quit();
+            }
+        }
         lastButton = btn;
     }
 
     //change keybinds
     void ChangeKeys(string keyToChange, KeyCode newKey)
     {
-        GameObject.Find("changekey_" + keyToChange).GetComponent<Button>().image.color = Color.white;
+        GameObject.Find("changekey_" + keyToChange).GetComponent<Button>().image.color = unpressedColor;
 
         if (keys.AcceptNewKey(newKey))
         {
@@ -933,25 +901,6 @@ public class ui : MonoBehaviour {
 
         if(newKey != KeyCode.Escape)
             changeKeys = false;
-    }
-
-    //choose an answer in dialogue
-    void ClickAnswer()
-    {
-        string ans = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text;
-        for(int i = 0; i < currentConvo[currentPage].player.Length; i++)
-        {
-            if (ans == currentConvo[currentPage].player[i].answer)
-            {
-                dPl.SetActive(false);
-                dNpc.SetActive(true);
-                dNpc.transform.Find("txt").GetComponent<Text>().text = currentConvo[currentPage].player[i].reactionToAnswer;
-                tempEvent = currentConvo[currentPage].player[i].consequenceToAnswer;
-                //currentConvo[currentPage].player[i].consequenceToAnswer.Invoke();
-            }
-        }
-        currentPage += 1;
-        choice = false;
     }
 
     //open a book
@@ -1107,7 +1056,7 @@ public class ui : MonoBehaviour {
                         t.Find("keycode").GetComponent<Text>().text = keys.savedKeys.spAttackKey.ToString();
                         break;
                 }
-                t.GetComponent<Button>().image.color = Color.white;
+                t.GetComponent<Button>().image.color = unpressedColor;
             }
         }
     }
@@ -1247,19 +1196,19 @@ public class ui : MonoBehaviour {
         if (num == 2)
         {
             if (File.Exists(Application.persistentDataPath + "/save1.dat"))
-                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = Color.gray;
+                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = pressedColor;
             else
-                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = Color.white;
+                pauseWindows[2].transform.Find("saveslot1").GetComponent<Button>().image.color = unpressedColor;
 
             if (File.Exists(Application.persistentDataPath + "/save2.dat"))
-                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = Color.gray;
+                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = pressedColor;
             else
-                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = Color.white;
+                pauseWindows[2].transform.Find("saveslot2").GetComponent<Button>().image.color = unpressedColor;
 
             if (File.Exists(Application.persistentDataPath + "/save3.dat"))
-                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.gray;
+                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = pressedColor;
             else
-                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = Color.white;
+                pauseWindows[2].transform.Find("saveslot3").GetComponent<Button>().image.color = unpressedColor;
         }
 
         if (num == 4)
@@ -1309,6 +1258,7 @@ public class ui : MonoBehaviour {
                 tempArray[i].onClick.AddListener(PauseClickListener);
 
             savecaution = Instantiate(Resources.Load("ui/caution") as GameObject, pausemenu.transform, false);
+            savecautiontext = savecaution.GetComponent<Text>().text;
             savecaution.SetActive(false);
             pausemenu.SetActive(false);
         }
@@ -1331,21 +1281,6 @@ public class ui : MonoBehaviour {
             merchant_popup.transform.Find("container").Find("confirm").GetComponent<Button>().onClick.AddListener(MerchantAmmoClicks);
             merchant_popup.SetActive(false);
             merchant.SetActive(false);
-        }
-        if (dBox == null)
-        {
-            dBox = Instantiate(Resources.Load("ui/dialoguebox") as GameObject, canv, false);
-            dNpc = dBox.transform.Find("npc").gameObject;
-            dPl = dBox.transform.Find("player").gameObject;
-            //assign player sprite here
-            answers = new GameObject[dPl.transform.Find("answerCont").transform.childCount];
-            for (int i = 0; i < dPl.transform.Find("answerCont").transform.childCount; i++)
-            {
-                answers[i] = dPl.transform.Find("answerCont").transform.GetChild(i).gameObject;
-                answers[i].GetComponent<Button>().onClick.AddListener(ClickAnswer);
-            }
-
-            dBox.SetActive(false);
         }
         if (bookcase == null)
         {

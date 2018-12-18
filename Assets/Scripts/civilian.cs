@@ -38,7 +38,7 @@ public class civilian : randomDestination {
                     anim.SetBool("movement", false);
             }
 
-            if (gameObject.GetComponent<npc>() != null && Distance(player.transform.position, transform.position) < 2f && !hostile)
+            if (gameObject.GetComponent<dialogue_npc>() != null && Distance(player.transform.position, transform.position) < 2f && !hostile)
                 agent.isStopped = true;
             else
                 agent.isStopped = false;

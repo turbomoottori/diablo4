@@ -44,7 +44,7 @@ public class importantNpc : MonoBehaviour {
                     anim.SetBool("movement", false);
             }
 
-            if (gameObject.GetComponent<npc>() != null && Vector3.Distance(transform.position, player.transform.position)< 2f)
+            if (gameObject.GetComponent<dialogue_npc>() != null && Vector3.Distance(transform.position, player.transform.position)< 2f)
                 agent.isStopped = true;
             else
                 agent.isStopped = false;

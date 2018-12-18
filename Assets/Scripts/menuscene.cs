@@ -50,7 +50,7 @@ public class menuscene : MonoBehaviour {
     void CreateSlider(string name, int minValue, int maxValue, int value, GameObject group)
     {
         GameObject sl;
-        sl = Instantiate(Resources.Load("ui/slider") as GameObject, group.transform);
+        sl = Instantiate(Resources.Load("ui/mainmenu/menuslider") as GameObject, group.transform);
         sl.gameObject.name = name;
         Text txt, val;
         txt = sl.transform.Find("Name").GetComponent<Text>();

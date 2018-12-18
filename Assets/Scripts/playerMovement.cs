@@ -120,14 +120,12 @@ public class playerMovement : MonoBehaviour
                     
                     if (grounded())
                     {
-                        print("jump");
                         savedPos = transform.position;
                         jumpCounter += 1;
                         jump = true;
                     }
                     else if(!grounded() && jumpCounter < 1 && gameControl.control.knowsDoubleJump)
                     {
-                        print("double jump");
                         jumpCounter += 1;
                         jump = true;
                     }
