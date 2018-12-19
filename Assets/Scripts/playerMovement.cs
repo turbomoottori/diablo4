@@ -113,11 +113,12 @@ public class playerMovement : MonoBehaviour
                     anim.SetBool("grounded", true);
                     jumpCounter = 0;
                 }
+                else
+                    anim.SetBool("grounded", false);
 
-                
+
                 if (Input.GetButtonDown("Jump"))
                 {
-                    
                     if (grounded())
                     {
                         savedPos = transform.position;
@@ -125,7 +126,7 @@ public class playerMovement : MonoBehaviour
                         jump = true;
                     }
                     else if(!grounded() && jumpCounter < 1 && gameControl.control.knowsDoubleJump)
-                    {
+                    {  
                         jumpCounter += 1;
                         jump = true;
                     }
@@ -149,7 +150,7 @@ public class playerMovement : MonoBehaviour
                 case DashState.Dashing:
                     canMove = false;
                     dashes = true;
-                    anim.SetTrigger("dash");
+                    anim.SetBool("dash", true);
                     dashTimer += Time.deltaTime * 3;
                     if (dashTimer >= maxDash)
                     {
@@ -169,6 +170,7 @@ public class playerMovement : MonoBehaviour
                 case DashState.Cooldown:
                     canMove = true;
                     dashes = false;
+                    anim.SetBool("dash", false);
                     if (slowTime)
                         fakeGrav.relativeForce = gravForce;
                     else
